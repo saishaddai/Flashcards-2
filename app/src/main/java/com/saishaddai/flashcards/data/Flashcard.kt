@@ -1,3 +1,6 @@
 package com.saishaddai.flashcards.data
 
-data class Flashcard(val question: String, val answer: String)
+data class Flashcard(val id: String,
+                     val deckId: String,
+                     val question: String,
+                     val answer: String)

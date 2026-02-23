@@ -14,6 +14,6 @@ val decks = listOf(
     Deck("Security", 56, 0),
     Deck("Compose", 150, 62),
     Deck("Databases", 94, 33),
-    Deck("Dagger/Hilt", 0, 0),
-    Deck("Material 3", 0, 0)
+    Deck("Dagger/Hilt", 20, 0),
+    Deck("Material 3", 4, 0)
 )

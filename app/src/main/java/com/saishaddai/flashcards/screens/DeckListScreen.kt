@@ -44,6 +44,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -60,6 +64,9 @@ import com.saishaddai.flashcards.utils.getMasteryLevel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeckListScreen() {
+    var decksState by remember { mutableStateOf(decks) }
+    val selectedDeck = decksState.find { it.isSelected }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -110,8 +117,22 @@ fun DeckListScreen() {
                 .padding(innerPadding)
                 .fillMaxHeight()
         ) {
-            DeckGrid(modifier = Modifier.weight(1f))
+            DeckGrid(
+                decks = decksState,
+                onDeckSelected = { deck ->
+                    decksState = decksState.map {
+                        it.copy(isSelected = it.id == deck.id)
+                    }
+                },
+                modifier = Modifier.weight(1f)
+            )
             StartSessionButton(
+                onClick = {
+                    selectedDeck?.id?.let { deckId ->
+                        // You can now use the deckId
+                        println(": deckId: $deckId")
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -121,9 +142,9 @@ fun DeckListScreen() {
 }
 
 @Composable
-fun StartSessionButton(modifier: Modifier = Modifier) {
+fun StartSessionButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         modifier = modifier,
         shape = RoundedCornerShape(50),
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4D8EFF))
@@ -145,7 +166,11 @@ fun RowScope.BottomNavigationItem(text: String, icon: ImageVector, selected: Boo
 }
 
 @Composable
-fun DeckGrid(modifier: Modifier = Modifier) {
+fun DeckGrid(
+    decks: List<Deck>,
+    onDeckSelected: (Deck) -> Unit,
+    modifier: Modifier = Modifier
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier.padding(16.dp),
@@ -153,14 +178,18 @@ fun DeckGrid(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(decks) { deck ->
-            DeckCard(deck = deck)
+            DeckCard(deck = deck) {
+                onDeckSelected(deck)
+            }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeckCard(deck: Deck) {
+fun DeckCard(deck: Deck, onClick: () -> Unit) {
     Card(
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .height(150.dp),

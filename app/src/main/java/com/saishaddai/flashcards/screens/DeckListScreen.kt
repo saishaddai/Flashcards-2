@@ -52,8 +52,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.saishaddai.flashcards.data.Deck
-import com.saishaddai.flashcards.data.decks
+import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.model.decks
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.utils.getMasteryLevel
 

@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.saishaddai.flashcards.screens.DeckListScreen
+import com.saishaddai.flashcards.navigation.NavigationWrapper
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Flashcards2Theme {
-                DeckListScreen()
+                NavigationWrapper()
             }
         }
     }

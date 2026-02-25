@@ -3,8 +3,8 @@ package com.saishaddai.flashcards.utils
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import com.saishaddai.flashcards.R
-import com.saishaddai.flashcards.data.Deck
-import com.saishaddai.flashcards.data.Flashcard
+import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.model.Flashcard
 
 @VisibleForTesting
 fun getRandomList(size: Int = list.size, list: List<Flashcard>): List<Flashcard> =

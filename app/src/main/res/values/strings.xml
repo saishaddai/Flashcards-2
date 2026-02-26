@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">Flashcards</string>
+    <string name="decks_welcome">WELCOME BACK</string>
+    <string name="decks_learning_today">What are you learning today?</string>
+    <string name="decks_start_session_button">Start Session</string>
+    <string name="decks_bottom_nav_learn">Learn</string>
+    <string name="decks_bottom_nav_instructions">Instructions</string>
+    <string name="decks_bottom_nav_stats">Stats</string>
+    <string name="decks_bottom_nav_settings">Settings</string>
+    <string name="decks_card_count">%d Cards • %d%%</string>
     <string name="mastery_level_just_started">Just Started</string>
     <string name="mastery_level_getting_there">Getting There</string>
     <string name="mastery_level_mastered">Mastered</string>

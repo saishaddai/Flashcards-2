@@ -16,7 +16,7 @@ import com.saishaddai.flashcards.routes.Routes.Error
 import com.saishaddai.flashcards.routes.Routes.FlashcardList
 import com.saishaddai.flashcards.screens.DeckListScreen
 import com.saishaddai.flashcards.screens.ErrorScreen
-import com.saishaddai.flashcards.screens.FlashcardScreen
+import com.saishaddai.flashcards.screens.QuickListScreen
 import com.saishaddai.flashcards.utils.navigateBack
 import com.saishaddai.flashcards.utils.navigateTo
 
@@ -32,8 +32,8 @@ fun NavigationWrapper() {
             entry<DeckList> {
                 DeckListScreen { deckId -> backStack.navigateTo(FlashcardList(deckId)) }
             }
-            entry<FlashcardList> {
-                FlashcardScreen()
+            entry<FlashcardList> { value ->
+                QuickListScreen(value.deckId)
             }
             entry<Error> {
                 ErrorScreen { backStack.navigateBack() }

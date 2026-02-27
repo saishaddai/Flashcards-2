@@ -6,9 +6,7 @@ import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.Flashcard
 
-@VisibleForTesting
-fun getRandomList(size: Int = list.size, list: List<Flashcard>): List<Flashcard> =
-    list.shuffled().take(size)
+fun List<Flashcard>.random(size: Int): List<Flashcard> = shuffled().take(size)
 
 @StringRes
 fun Deck.getMasteryLevel(): Int {

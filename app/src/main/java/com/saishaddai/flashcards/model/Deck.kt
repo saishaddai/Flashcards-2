@@ -24,6 +24,6 @@ val decks = listOf(
     Deck(13, "Gradle", 4, 0),
     Deck(14, "Android OPS", 4, 0),
     Deck(15, "Libraries", 4, 0),
-    Deck(16, "Design Patters", 4, 0),
+    Deck(16, "Design Patterns", 4, 0),
     Deck(17, "Coroutines", 4, 0)
 )

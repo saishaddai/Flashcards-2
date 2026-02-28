@@ -14,8 +14,10 @@ import androidx.navigation3.ui.NavDisplay
 import com.saishaddai.flashcards.routes.Routes.DeckList
 import com.saishaddai.flashcards.routes.Routes.Error
 import com.saishaddai.flashcards.routes.Routes.FlashcardList
+import com.saishaddai.flashcards.routes.Routes.Instructions
 import com.saishaddai.flashcards.screens.DeckListScreen
 import com.saishaddai.flashcards.screens.ErrorScreen
+import com.saishaddai.flashcards.screens.InstructionsScreen
 import com.saishaddai.flashcards.screens.QuickListScreen
 import com.saishaddai.flashcards.utils.navigateBack
 import com.saishaddai.flashcards.utils.navigateTo
@@ -30,10 +32,19 @@ fun NavigationWrapper() {
         onBack = { backStack.removeLastOrNull() },
         entryProvider = entryProvider {
             entry<DeckList> {
-                DeckListScreen { deckId -> backStack.navigateTo(FlashcardList(deckId)) }
+                DeckListScreen(
+                    navigateToScreen = { deckId -> backStack.navigateTo(FlashcardList(deckId)) },
+                    navigateToInstructions = { backStack.navigateTo(Instructions) }
+                )
             }
             entry<FlashcardList> { value ->
                 QuickListScreen(value.deckId)
+            }
+            entry<Instructions> {
+                InstructionsScreen(
+                    onStartClick = { backStack.navigateBack() },
+                    onBackClick = { backStack.navigateBack() }
+                )
             }
             entry<Error> {
                 ErrorScreen { backStack.navigateBack() }

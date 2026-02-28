@@ -60,7 +60,10 @@ import com.saishaddai.flashcards.utils.getMasteryLevel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeckListScreen(navigateToScreen: (Int) -> Unit) {
+fun DeckListScreen(
+    navigateToScreen: (Int) -> Unit,
+    navigateToInstructions: () -> Unit
+) {
     var decksState by remember { mutableStateOf(decks) }
     val selectedDeck = decksState.find { it.isSelected }
 
@@ -95,20 +98,26 @@ fun DeckListScreen(navigateToScreen: (Int) -> Unit) {
                 BottomNavigationItem(
                     text = stringResource(R.string.decks_bottom_nav_learn),
                     icon = Icons.Default.School,
-                    selected = true)
+                    selected = true,
+                    onClick = { /* Already here */ }
+                )
                 BottomNavigationItem(
                     text = stringResource(R.string.decks_bottom_nav_instructions),
                     icon = Icons.Default.Info,
-                    selected = false)
+                    selected = false,
+                    onClick = navigateToInstructions
+                )
                 BottomNavigationItem(
                     text = stringResource(R.string.decks_bottom_nav_stats),
                     icon = Icons.Default.BarChart,
-                    selected = false
+                    selected = false,
+                    onClick = { /* TODO */ }
                 )
                 BottomNavigationItem(
                     text = stringResource(R.string.decks_bottom_nav_settings),
                     icon = Icons.Default.Settings,
-                    selected = false
+                    selected = false,
+                    onClick = { /* TODO */ }
                 )
             }
         },
@@ -160,10 +169,15 @@ fun StartSessionButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun RowScope.BottomNavigationItem(text: String, icon: ImageVector, selected: Boolean) {
+fun RowScope.BottomNavigationItem(
+    text: String,
+    icon: ImageVector,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
     NavigationBarItem(
         selected = selected,
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         label = { Text(text, fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal) },
         icon = { Icon(icon, contentDescription = text) }
     )

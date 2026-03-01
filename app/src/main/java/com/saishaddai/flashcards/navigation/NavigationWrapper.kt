@@ -33,8 +33,8 @@ fun NavigationWrapper() {
         entryProvider = entryProvider {
             entry<DeckList> {
                 DeckListScreen(
-                    navigateToScreen = { deckId -> backStack.navigateTo(FlashcardList(deckId)) },
-                    navigateToInstructions = { backStack.navigateTo(Instructions) }
+                    onStartSessionClick = { deckId -> backStack.navigateTo(FlashcardList(deckId)) },
+                    onInstructionsClick = { backStack.navigateTo(Instructions) }
                 )
             }
             entry<FlashcardList> { value ->
@@ -42,8 +42,9 @@ fun NavigationWrapper() {
             }
             entry<Instructions> {
                 InstructionsScreen(
-                    onStartClick = { backStack.navigateBack() },
-                    onBackClick = { backStack.navigateBack() }
+                    onLearnClick = { backStack.navigateBack() },
+                    onStatsClick = { backStack.navigateBack() },
+                    onSettingsClick = { backStack.navigateBack() }
                 )
             }
             entry<Error> {

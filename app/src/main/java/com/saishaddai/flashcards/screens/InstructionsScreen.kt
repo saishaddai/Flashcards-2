@@ -1,29 +1,88 @@
 package com.saishaddai.flashcards.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.CloudOff
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Layers
+import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 
 @Composable
-fun InstructionsScreen(onStartClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
+fun InstructionsScreen(
+    onLearnClick: () -> Unit = {},
+    onStatsClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {}
+) {
     Scaffold(
-        containerColor = Color(0xFF131321) // Slightly darker than the cards
+        containerColor = Color(0xFF131321), // Slightly darker than the cards
+        bottomBar = {
+            BottomAppBar(
+                containerColor = Color(0xFF1A1A2E),
+            ) {
+                InstructionsBottomNavigationItem(
+                    text = stringResource(R.string.decks_bottom_nav_learn),
+                    icon = Icons.Default.School,
+                    selected = false,
+                    onClick = onLearnClick
+                )
+                InstructionsBottomNavigationItem(
+                    text = stringResource(R.string.decks_bottom_nav_instructions),
+                    icon = Icons.Default.Info,
+                    selected = true,
+                    onClick = { /* Already here */ }
+                )
+                InstructionsBottomNavigationItem(
+                    text = stringResource(R.string.decks_bottom_nav_stats),
+                    icon = Icons.Default.BarChart,
+                    selected = false,
+                    onClick = onStatsClick
+                )
+                InstructionsBottomNavigationItem(
+                    text = stringResource(R.string.decks_bottom_nav_settings),
+                    icon = Icons.Default.Settings,
+                    selected = false,
+                    onClick = onSettingsClick
+                )
+            }
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -33,22 +92,6 @@ fun InstructionsScreen(onStartClick: () -> Unit = {}, onBackClick: () -> Unit = 
                 .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            
-            // Back Button
-            IconButton(
-                onClick = onBackClick,
-                modifier = Modifier
-                    .size(40.dp)
-                    .background(Color(0xFF2C2C4E), CircleShape)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back",
-                    tint = Color.White
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
                 text = "GUIDE",
@@ -87,7 +130,7 @@ fun InstructionsScreen(onStartClick: () -> Unit = {}, onBackClick: () -> Unit = 
             InstructionCard(
                 icon = Icons.Default.CloudOff,
                 title = "Offline First",
-                description = "Study anywhere, anytime. The app works entirely without an internet connection, syncing your progress once you're back online."
+                description = "Study anywhere, anytime. The app works entirely without an internet connection."
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -121,25 +164,25 @@ fun InstructionsScreen(onStartClick: () -> Unit = {}, onBackClick: () -> Unit = 
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Text(
                         text = "Each session presents 20 random flashcards tailored to your learning pace.",
                         color = Color(0xFFB0B0B0),
                         fontSize = 14.sp
                     )
-                    
+
                     Spacer(modifier = Modifier.height(20.dp))
-                    
+
                     // Nested info items
                     NestedInfoItem(
                         icon = Icons.Default.Visibility,
                         text = "Use 'Show Response' to reveal answers"
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     NestedInfoItem(
                         icon = Icons.Default.Close,
                         text = "Use 'Cancel Session' to stop anytime"
@@ -147,26 +190,24 @@ fun InstructionsScreen(onStartClick: () -> Unit = {}, onBackClick: () -> Unit = 
                 }
             }
 
-            Spacer(modifier = Modifier.height(48.dp))
-
-            Button(
-                onClick = onStartClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3366FF))
-            ) {
-                Text(
-                    text = "Got it, let's start",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
+}
+
+@Composable
+fun RowScope.InstructionsBottomNavigationItem(
+    text: String,
+    icon: ImageVector,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    NavigationBarItem(
+        selected = selected,
+        onClick = onClick,
+        label = { Text(text, fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal) },
+        icon = { Icon(icon, contentDescription = text) }
+    )
 }
 
 @Composable

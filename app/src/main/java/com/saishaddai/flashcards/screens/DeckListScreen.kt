@@ -61,8 +61,8 @@ import com.saishaddai.flashcards.utils.getMasteryLevel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeckListScreen(
-    navigateToScreen: (Int) -> Unit,
-    navigateToInstructions: () -> Unit
+    onStartSessionClick: (Int) -> Unit,
+    onInstructionsClick: () -> Unit
 ) {
     var decksState by remember { mutableStateOf(decks) }
     val selectedDeck = decksState.find { it.isSelected }
@@ -105,7 +105,7 @@ fun DeckListScreen(
                     text = stringResource(R.string.decks_bottom_nav_instructions),
                     icon = Icons.Default.Info,
                     selected = false,
-                    onClick = navigateToInstructions
+                    onClick = onInstructionsClick
                 )
                 BottomNavigationItem(
                     text = stringResource(R.string.decks_bottom_nav_stats),
@@ -140,7 +140,7 @@ fun DeckListScreen(
             StartSessionButton(
                 onClick = {
                     selectedDeck?.id?.let { deckId ->
-                        navigateToScreen(deckId)
+                        onStartSessionClick(deckId)
                     }
                 },
                 modifier = Modifier

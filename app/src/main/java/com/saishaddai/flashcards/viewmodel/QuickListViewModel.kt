@@ -3,13 +3,14 @@ package com.saishaddai.flashcards.viewmodel
 import androidx.lifecycle.ViewModel
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.FlashcardRepository
+import com.saishaddai.flashcards.repository.HardcodedFlashcardRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class QuickListViewModel(
     private val deckId: Int,
-    private val repository: FlashcardRepository = FlashcardRepository()
+    private val repository: FlashcardRepository<Flashcard> = HardcodedFlashcardRepository()
 ) : ViewModel() {
     private val _flashcards = MutableStateFlow<List<Flashcard>>(emptyList())
     val flashcards: StateFlow<List<Flashcard>> = _flashcards.asStateFlow()
@@ -19,6 +20,6 @@ class QuickListViewModel(
     }
 
     private fun loadFlashcards() {
-        _flashcards.value = repository.getFlashcards(deckId)
+        _flashcards.value = repository.getData(deckId)
     }
 }

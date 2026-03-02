@@ -4,11 +4,9 @@ import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.model.flashcards
 import com.saishaddai.flashcards.utils.random
 
-class FlashcardRepository {
+interface FlashcardRepository<A> {
 
-    fun getFlashcards(deckId: Int, size: Int = 20): List<Flashcard> {
-        return flashcards.filter { it.deckId == deckId }.random(size)
-    }
+    fun getData(id: Int, size: Int = 20): List<A>
 
 }
 

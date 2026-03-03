@@ -8,17 +8,24 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+
 class DecksViewModel(
     private val repository: DeckRepository<Deck> = HardcodedDeckRepository()
 ) : ViewModel() {
     private val _decks = MutableStateFlow<List<Deck>>(emptyList())
-    val flashcards: StateFlow<List<Deck>> = _decks.asStateFlow()
+    val decks: StateFlow<List<Deck>> = _decks.asStateFlow()
 
     init {
-        loadFlashcards()
+        loadDecks()
     }
 
-    private fun loadFlashcards() {
+    private fun loadDecks() {
         _decks.value = repository.getData()
+    }
+
+    fun onDeckSelected(selectedDeck: Deck) {
+        _decks.value = _decks.value.map {
+            it.copy(isSelected = it.id == selectedDeck.id)
+        }
     }
 }

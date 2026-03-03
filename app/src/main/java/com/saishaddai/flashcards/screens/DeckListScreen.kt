@@ -42,10 +42,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -53,18 +51,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
-import com.saishaddai.flashcards.model.decks
 import com.saishaddai.flashcards.utils.getMasteryLevel
+import com.saishaddai.flashcards.viewmodel.DecksViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeckListScreen(
+    viewModel: DecksViewModel = viewModel(),
     onStartSessionClick: (Int) -> Unit,
     onInstructionsClick: () -> Unit
 ) {
-    var decksState by remember { mutableStateOf(decks) }
+    val decksState by viewModel.decks.collectAsState()
     val selectedDeck = decksState.find { it.isSelected }
 
     Scaffold(
@@ -130,11 +130,7 @@ fun DeckListScreen(
         ) {
             DeckGrid(
                 decks = decksState,
-                onDeckSelected = { deck ->
-                    decksState = decksState.map {
-                        it.copy(isSelected = it.id == deck.id)
-                    }
-                },
+                onDeckSelected = viewModel::onDeckSelected,
                 modifier = Modifier.weight(1f)
             )
             StartSessionButton(
@@ -236,7 +232,7 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
             )
             Spacer(Modifier.weight(1f))
             Column {
-                if (deck.cardCount > 0) {
+                if (deck.cardCount >= 0) {
                     Text(
                         text = stringResource(R.string.decks_card_count, deck.cardCount, deck.mastery),
                         fontSize = 12.sp,

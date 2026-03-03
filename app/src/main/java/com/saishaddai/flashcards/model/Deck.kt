@@ -1,29 +1,34 @@
 package com.saishaddai.flashcards.model
 
 data class Deck(
-    val id : Int,
+    val id: Int,
     val name: String,
-    val cardCount: Int,
-    val mastery: Int,
+    var mastery: Int = 0,
+    var cardCount: Int = 0,
     val isSelected: Boolean = false
 )
 
 val decks = listOf(
-    Deck(1, "OOP", 124, 80),
-    Deck(2, "Android Core", 210, 45, true),
-    Deck(3, "Kotlin", 90, 45),
-    Deck(4, "Kotlin MP", 88, 12),
-    Deck(5, "Security", 56, 0),
-    Deck(6, "Compose", 150, 62),
-    Deck(7, "Databases", 94, 33),
-    Deck(8, "Dagger/Hilt", 20, 0),
-    Deck(9, "Material 3", 4, 0),
-    Deck(10, "Navigation", 4, 0),
-    Deck(11, "Jetpack", 4, 0),
-    Deck(12, "Unit Test", 4, 0),
-    Deck(13, "Gradle", 4, 0),
-    Deck(14, "Android OPS", 4, 0),
-    Deck(15, "Libraries", 4, 0),
-    Deck(16, "Design Patterns", 4, 0),
-    Deck(17, "Coroutines", 4, 0)
-)
+    Deck(1, "OOP", isSelected = true),
+    Deck(2, "Android Core"),
+    Deck(3, "Kotlin"),
+    Deck(4, "Kotlin MP"),
+    Deck(5, "Security"),
+    Deck(6, "Compose"),
+    Deck(7, "Databases"),
+    Deck(8, "Dagger/Hilt"),
+    Deck(9, "Material 3"),
+    Deck(10, "Navigation"),
+    Deck(11, "Jetpack"),
+    Deck(12, "Unit Test"),
+    Deck(13, "Gradle"),
+    Deck(14, "Android OPS"),
+    Deck(15, "Libraries"),
+    Deck(16, "Design Patterns"),
+    Deck(17, "Coroutines")
+).map {
+    it.apply {
+        cardCount = flashcards.count { flashcard -> flashcard.deckId == it.id }
+        mastery = sessions.find { session -> session.deckId == it.id }?.currentXP ?: 0
+    }
+}

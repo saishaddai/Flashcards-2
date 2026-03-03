@@ -232,7 +232,7 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
             )
             Spacer(Modifier.weight(1f))
             Column {
-                if (deck.cardCount > 0) {
+                if (deck.cardCount >= 0) {
                     Text(
                         text = stringResource(R.string.decks_card_count, deck.cardCount, deck.mastery),
                         fontSize = 12.sp,

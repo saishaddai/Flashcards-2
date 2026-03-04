@@ -93,6 +93,13 @@ val flashcards = listOf(
     Flashcard(2, 26, "What is ‘compile’ in Gradle?", ""),
     Flashcard(2, 26, "What is ‘implementation’ in Gradle?", ""),
     Flashcard(2, 26, "What is ‘api’ in Gradle?", ""),
+
+    Flashcard(2, 26, "What is 'libs.versions.toml‘ in Gradle?", ""),
+    Flashcard(2, 26, "What is the difference between build.gradle (Project and Module)?", ""),
+    Flashcard(2, 26, "What is versionName and versionCode in Gradle?", ""),
+    Flashcard(2, 26, "What are flavors in Gradle?", ""),
+    Flashcard(2, 26, "Flavors vs buildTypes?", ""),
+
     //add more about versions, build gradle, flavors, buildVersions, appTools, etc
     Flashcard(2, 26, "What is a Work Request?", ""),
     Flashcard(2, 26, "What are the result types in WorkManager?", ""),

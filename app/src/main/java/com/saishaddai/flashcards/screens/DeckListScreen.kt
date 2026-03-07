@@ -18,8 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.BubbleChart
-import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.Extension
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Navigation
@@ -47,6 +45,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -218,12 +217,23 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
                 .padding(16.dp)
                 .fillMaxHeight(),
         ) {
-            Icon(
-                imageVector = getIconForDeck(deck.name),
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            val icon = getIconForDeck(deck.name)
+            if (icon is ImageVector) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            } else if (icon is Int) {
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = null,
+                    tint = Color.White, // Usually custom icons have their own colors
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+            
             Text(
                 text = deck.name,
                 fontWeight = FontWeight.Bold,
@@ -250,16 +260,25 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
 }
 
 @Composable
-private fun getIconForDeck(name: String): ImageVector {
+private fun getIconForDeck(name: String): Any {
     return when (name) {
-        "Programming" -> Icons.Default.Code
-        "Android Core" -> Icons.Default.PhoneAndroid
-        "Kotlin MP" -> Icons.Default.Extension
+        "OOP" -> R.drawable.oop_icon
+        "Android Core" -> R.drawable.android_icon
+        "Kotlin" -> R.drawable.kotlin_icon
+        "Kotlin MP" -> Icons.Default.PhoneAndroid
         "Security" -> Icons.Default.Security
         "Compose" -> Icons.Default.BubbleChart
         "Databases" -> Icons.Default.Storage
         "Dagger/Hilt" -> Icons.Default.Link
         "Material 3" -> Icons.Default.Palette
+        "Navigation" -> R.drawable.navigation_icon
+        "Jetpack" -> R.drawable.jetpack_icon
+        "Unit Test" -> R.drawable.test_icon
+        "Gradle" -> R.drawable.gradle_icon
+        "Android OPS" -> R.drawable.ops_icon
+        "Libraries" -> R.drawable.libraries_icon
+        "Design Patterns" -> R.drawable.patterns_icon
+        "Coroutines" -> R.drawable.coroutines_icon
         else -> Icons.Default.Add
     }
 }

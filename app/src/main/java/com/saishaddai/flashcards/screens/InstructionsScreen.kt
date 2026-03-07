@@ -94,14 +94,14 @@ fun InstructionsScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "GUIDE",
+                text = stringResource(R.string.instructions_guide_label),
                 color = Color(0xFF4D8EFF),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
 
             Text(
-                text = "How it Works",
+                text = stringResource(R.string.instructions_title),
                 color = Color.White,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold
@@ -110,7 +110,7 @@ fun InstructionsScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Master Android development concepts with efficient, science-based study habits.",
+                text = stringResource(R.string.instructions_description),
                 color = Color(0xFFB0B0B0),
                 fontSize = 16.sp,
                 lineHeight = 24.sp
@@ -121,16 +121,16 @@ fun InstructionsScreen(
             // Instruction Cards
             InstructionCard(
                 icon = Icons.Default.CalendarToday,
-                title = "Daily Consistency",
-                description = "Build long-term retention by making progress every single day. Even 5 minutes of review keeps the forgetting curve at bay."
+                title = stringResource(R.string.instructions_daily_consistency_title),
+                description = stringResource(R.string.instructions_daily_consistency_desc)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             InstructionCard(
                 icon = Icons.Default.CloudOff,
-                title = "Offline First",
-                description = "Study anywhere, anytime. The app works entirely without an internet connection."
+                title = stringResource(R.string.instructions_offline_first_title),
+                description = stringResource(R.string.instructions_offline_first_desc)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -158,7 +158,7 @@ fun InstructionsScreen(
                         }
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
-                            text = "Learning Sessions",
+                            text = stringResource(R.string.instructions_sessions_title),
                             color = Color.White,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
@@ -168,7 +168,7 @@ fun InstructionsScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = "Each session presents 20 random flashcards tailored to your learning pace.",
+                        text = stringResource(R.string.instructions_sessions_desc),
                         color = Color(0xFFB0B0B0),
                         fontSize = 14.sp
                     )
@@ -178,14 +178,14 @@ fun InstructionsScreen(
                     // Nested info items
                     NestedInfoItem(
                         icon = Icons.Default.Visibility,
-                        text = "Use 'Show Response' to reveal answers"
+                        text = stringResource(R.string.instructions_sessions_show_response_tip)
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
 
                     NestedInfoItem(
                         icon = Icons.Default.Close,
-                        text = "Use 'Cancel Session' to stop anytime"
+                        text = stringResource(R.string.instructions_sessions_cancel_tip)
                     )
                 }
             }

@@ -43,10 +43,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +59,7 @@ fun FinishSessionScreen() {
             TopAppBar(
                 title = {
                     Text(
-                        text = "SESSION SUMMARY",
+                        text = stringResource(R.string.finish_top_bar_title),
                         modifier = Modifier.fillMaxWidth(),
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -67,7 +69,7 @@ fun FinishSessionScreen() {
                     IconButton(onClick = { /* TODO: Implement close */ }) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Close",
+                            contentDescription = stringResource(R.string.finish_nav_icon_content_desc),
                             tint = Color.White
                         )
                     }
@@ -76,7 +78,7 @@ fun FinishSessionScreen() {
                     IconButton(onClick = { /* TODO: Implement share */ }) {
                         Icon(
                             imageVector = Icons.Default.Share,
-                            contentDescription = "Share",
+                            contentDescription = stringResource(R.string.finish_action_share_content_desc),
                             tint = Color.White
                         )
                     }
@@ -99,14 +101,14 @@ fun FinishSessionScreen() {
             TrophyIcon()
             Spacer(modifier = Modifier.height(32.dp))
             Text(
-                text = "All Done!",
+                text = stringResource(R.string.finish_all_done),
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Great job on your Android prep today.",
+                text = stringResource(R.string.finish_great_job),
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.height(32.dp))
@@ -115,15 +117,15 @@ fun FinishSessionScreen() {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 InfoCard(
-                    title = "REVIEWED",
+                    title = stringResource(R.string.finish_card_label_reviewed),
                     value = "20",
-                    unit = "cards",
+                    unit = stringResource(R.string.finish_card_unit_cards),
                     icon = Icons.Default.Style
                 )
                 InfoCard(
-                    title = "DURATION",
+                    title = stringResource(R.string.finish_card_label_duration),
                     value = "12",
-                    unit = "mins",
+                    unit = stringResource(R.string.finish_card_unit_mins),
                     icon = Icons.Default.Timer
                 )
             }
@@ -147,7 +149,7 @@ fun TrophyIcon() {
     ) {
         Icon(
             imageVector = Icons.Default.EmojiEvents,
-            contentDescription = "Trophy",
+            contentDescription = null,
             tint = Color.White,
             modifier = Modifier.size(80.dp)
         )
@@ -208,7 +210,7 @@ fun DailyGoalReached() {
             tint = Color(0xFF00BFA5)
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = "Daily goal reached! +50 XP", color = Color(0xFF00BFA5))
+        Text(text = stringResource(R.string.finish_goal_reached), color = Color(0xFF00BFA5))
     }
 }
 
@@ -222,7 +224,7 @@ fun BackToTopicsButton(modifier: Modifier = Modifier) {
     ) {
         Icon(Icons.Default.GridView, contentDescription = null)
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = "Back to Topics")
+        Text(text = stringResource(R.string.finish_button_back_to_topics))
     }
 }
 
@@ -236,7 +238,7 @@ fun ReviewSessionButton(modifier: Modifier = Modifier) {
     ) {
         Icon(Icons.Default.History, contentDescription = null, tint = Color.White)
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = "Review Session", color = Color.White)
+        Text(text = stringResource(R.string.finish_button_review_session), color = Color.White)
     }
 }
 

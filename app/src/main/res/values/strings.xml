@@ -14,4 +14,42 @@
     <string name="mastery_level_experienced">Experienced</string>
     <string name="mastery_level_veteran">Veteran</string>
     <string name="mastery_level_mastered">Master</string>
+
+    <!-- FlashcardScreen -->
+    <string name="flashcard_top_bar_title">ANDROID DEVELOPMENT</string>
+    <string name="flashcard_top_bar_subtitle">Jetpack Compose Basics</string>
+    <string name="flashcard_nav_icon_content_desc">Close</string>
+    <string name="flashcard_action_settings_content_desc">Settings</string>
+    <string name="flashcard_progress_complete">%d%% Complete</string>
+    <string name="flashcard_card_label_question">QUESTION</string>
+    <string name="flashcard_card_tap_to_reveal">Tap below to reveal the answer</string>
+    <string name="flashcard_button_show_response">Show Response</string>
+    <string name="flashcard_button_cancel_session">CANCEL SESSION</string>
+
+    <!-- FinishSessionScreen -->
+    <string name="finish_top_bar_title">SESSION SUMMARY</string>
+    <string name="finish_nav_icon_content_desc">Close</string>
+    <string name="finish_action_share_content_desc">Share</string>
+    <string name="finish_all_done">All Done!</string>
+    <string name="finish_great_job">Great job on your Android prep today.</string>
+    <string name="finish_card_label_reviewed">REVIEWED</string>
+    <string name="finish_card_unit_cards">cards</string>
+    <string name="finish_card_label_duration">DURATION</string>
+    <string name="finish_card_unit_mins">mins</string>
+    <string name="finish_goal_reached">Daily goal reached! +50 XP</string>
+    <string name="finish_button_back_to_topics">Back to Topics</string>
+    <string name="finish_button_review_session">Review Session</string>
+
+    <!-- InstructionsScreen -->
+    <string name="instructions_guide_label">GUIDE</string>
+    <string name="instructions_title">How it Works</string>
+    <string name="instructions_description">Master Android development concepts with efficient, science-based study habits.</string>
+    <string name="instructions_daily_consistency_title">Daily Consistency</string>
+    <string name="instructions_daily_consistency_desc">Build long-term retention by making progress every single day. Even 5 minutes of review keeps the forgetting curve at bay.</string>
+    <string name="instructions_offline_first_title">Offline First</string>
+    <string name="instructions_offline_first_desc">Study anywhere, anytime. The app works entirely without an internet connection.</string>
+    <string name="instructions_sessions_title">Learning Sessions</string>
+    <string name="instructions_sessions_desc">Each session presents 20 random flashcards tailored to your learning pace.</string>
+    <string name="instructions_sessions_show_response_tip">Use \'Show Response\' to reveal answers</string>
+    <string name="instructions_sessions_cancel_tip">Use \'Cancel Session\' to stop anytime</string>
 </resources>

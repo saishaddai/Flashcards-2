@@ -31,11 +31,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,13 +52,13 @@ fun FlashcardScreen() {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "ANDROID DEVELOPMENT",
+                            text = stringResource(R.string.flashcard_top_bar_title),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFFB0B0B0)
                         )
                         Text(
-                            text = "Jetpack Compose Basics",
+                            text = stringResource(R.string.flashcard_top_bar_subtitle),
                             fontSize = 14.sp,
                             color = Color(0xFF4D8EFF)
                         )
@@ -66,7 +68,7 @@ fun FlashcardScreen() {
                     IconButton(onClick = { /* TODO: Implement close */ }) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Close",
+                            contentDescription = stringResource(R.string.flashcard_nav_icon_content_desc),
                             tint = Color.White
                         )
                     }
@@ -75,7 +77,7 @@ fun FlashcardScreen() {
                     IconButton(onClick = { /* TODO: Implement settings */ }) {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = "Settings",
+                            contentDescription = stringResource(R.string.flashcard_action_settings_content_desc),
                             tint = Color.White
                         )
                     }
@@ -119,14 +121,14 @@ fun ProgressIndicator(current: Int, total: Int) {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "${(progress * 100).toInt()}% Complete",
+                text = stringResource(R.string.flashcard_progress_complete, (progress * 100).toInt()),
                 color = Color(0xFF4D8EFF),
                 fontSize = 12.sp
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
         LinearProgressIndicator(
-            progress = progress,
+            progress = { progress },
             modifier = Modifier.fillMaxWidth(),
             color = Color(0xFF4D8EFF),
             trackColor = Color(0xFF2C2C4E)
@@ -153,7 +155,7 @@ fun Flashcard() {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "QUESTION",
+                text = stringResource(R.string.flashcard_card_label_question),
                 color = Color(0xFF4D8EFF),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
@@ -177,7 +179,11 @@ fun Flashcard() {
                     .width(60.dp)
             )
             Spacer(modifier = Modifier.height(32.dp))
-            Text(text = "Tap below to reveal the answer", color = Color.Gray, fontSize = 12.sp)
+            Text(
+                text = stringResource(R.string.flashcard_card_tap_to_reveal),
+                color = Color.Gray,
+                fontSize = 12.sp
+            )
         }
     }
 }
@@ -192,7 +198,7 @@ fun ShowResponseButton(modifier: Modifier = Modifier) {
     ) {
         Icon(Icons.Default.Visibility, contentDescription = null)
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = "Show Response")
+        Text(text = stringResource(R.string.flashcard_button_show_response))
     }
 }
 
@@ -204,7 +210,7 @@ fun CancelSessionButton(modifier: Modifier = Modifier) {
     ) {
         Icon(Icons.Default.Close, contentDescription = null, tint = Color.Gray)
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = "CANCEL SESSION", color = Color.Gray)
+        Text(text = stringResource(R.string.flashcard_button_cancel_session), color = Color.Gray)
     }
 }
 

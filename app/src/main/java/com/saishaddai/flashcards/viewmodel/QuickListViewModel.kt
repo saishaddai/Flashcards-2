@@ -1,12 +1,14 @@
 package com.saishaddai.flashcards.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.repository.HardcodedFlashcardRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class QuickListViewModel(
     private val deckId: Int,
@@ -20,6 +22,8 @@ class QuickListViewModel(
     }
 
     private fun loadFlashcards() {
-        _flashcards.value = repository.getData(deckId)
+        viewModelScope.launch {
+            _flashcards.value = repository.getData(deckId)
+        }
     }
 }

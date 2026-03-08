@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,13 +24,19 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.viewmodel.QuickListViewModel
+import java.util.UUID
 
 @Composable
 fun QuickListScreen(
     deckId: Int
 ) {
+    // Using a unique key for each entry into this screen ensures that a fresh 
+    // QuickListViewModel is created every time the user navigates here, 
+    // causing a new call to the repository and renewing the list.
+    val viewModelKey = remember(deckId) { "QuickListViewModel_${deckId}_${UUID.randomUUID()}" }
+    
     val viewModel: QuickListViewModel = viewModel(
-        key = "QuickListViewModel_$deckId",
+        key = viewModelKey,
         factory = viewModelFactory {
             initializer {
                 QuickListViewModel(deckId)

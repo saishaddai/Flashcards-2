@@ -17,6 +17,9 @@ class FlashcardViewModel(
     private val _flashcards = MutableStateFlow<List<Flashcard>>(emptyList())
     val flashcards: StateFlow<List<Flashcard>> = _flashcards.asStateFlow()
 
+    private val _showAnswer = MutableStateFlow(false)
+    val showAnswer: StateFlow<Boolean> = _showAnswer.asStateFlow()
+
     init {
         loadFlashcards()
     }
@@ -25,5 +28,9 @@ class FlashcardViewModel(
         viewModelScope.launch {
             _flashcards.value = repository.getData(deckId)
         }
+    }
+
+    fun onShowResponseClicked() {
+        _showAnswer.value = true
     }
 }

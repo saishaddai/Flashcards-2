@@ -47,7 +47,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
-import com.saishaddai.flashcards.viewmodel.QuickListViewModel
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,6 +65,7 @@ fun FlashcardScreen(
         }
     )
     val flashcards by viewModel.flashcards.collectAsState()
+    val showAnswer by viewModel.showAnswer.collectAsState()
     Log.i("FlashcardScreen", "flashcards: $flashcards")
 
     Scaffold(
@@ -124,8 +124,15 @@ fun FlashcardScreen(
             ProgressIndicator(5, 20)
             Spacer(modifier = Modifier.height(32.dp))
             Flashcard()
+            if (showAnswer) {
+                Spacer(modifier = Modifier.height(16.dp))
+                FlashcardAnswer()
+            }
             Spacer(modifier = Modifier.weight(1f))
-            ShowResponseButton(modifier = Modifier.fillMaxWidth())
+            ShowResponseButton(
+                onClick = { viewModel.onShowResponseClicked() },
+                modifier = Modifier.fillMaxWidth()
+            )
             CancelSessionButton(modifier = Modifier.fillMaxWidth())
         }
     }
@@ -166,7 +173,7 @@ fun Flashcard() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(400.dp),
+            .height(200.dp), // Reduced height to fit both cards if needed
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF2C2C4E)
@@ -189,34 +196,54 @@ fun Flashcard() {
             Text(
                 text = "What is a Composable function?",
                 color = Color.White,
-                fontSize = 24.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(32.dp))
-            // TODO: Replace with actual icon
-            Icon(
-                imageVector = Icons.Default.Visibility,
-                contentDescription = null,
-                tint = Color(0xFF4D8EFF),
-                modifier = Modifier
-                    .height(60.dp)
-                    .width(60.dp)
-            )
-            Spacer(modifier = Modifier.height(32.dp))
-            Text(
-                text = stringResource(R.string.flashcard_card_tap_to_reveal),
-                color = Color.Gray,
-                fontSize = 12.sp
             )
         }
     }
 }
 
 @Composable
-fun ShowResponseButton(modifier: Modifier = Modifier) {
+fun FlashcardAnswer() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF3366FF) // Different color for answer
+        ),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "ANSWER",
+                color = Color.White.copy(alpha = 0.7f),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "A function annotated with @Composable that defines a part of the UI.",
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+fun ShowResponseButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         modifier = modifier,
         shape = RoundedCornerShape(50),
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4D8EFF))

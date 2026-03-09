@@ -2,6 +2,7 @@ package com.saishaddai.flashcards.screens
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -173,32 +174,27 @@ fun Flashcard() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp), // Reduced height to fit both cards if needed
+            .height(200.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF2C2C4E)
         ),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
+        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
             Text(
                 text = stringResource(R.string.flashcard_card_label_question),
                 color = Color(0xFF4D8EFF),
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.TopCenter)
             )
-            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "What is a Composable function?",
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.align(Alignment.Center)
             )
         }
     }
@@ -212,29 +208,24 @@ fun FlashcardAnswer() {
             .height(200.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF3366FF) // Different color for answer
+            containerColor = Color(0xFF3366FF)
         ),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
+        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
             Text(
                 text = "ANSWER",
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.TopCenter)
             )
-            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "A function annotated with @Composable that defines a part of the UI.",
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.align(Alignment.Center)
             )
         }
     }

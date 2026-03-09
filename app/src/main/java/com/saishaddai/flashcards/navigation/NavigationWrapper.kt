@@ -35,7 +35,7 @@ fun NavigationWrapper() {
         entryProvider = entryProvider {
             entry<DeckList> {
                 DeckListScreen(
-                    onStartSessionClick = { deckId -> backStack.navigateTo(FlashcardSession(deckId)) },
+                    onStartSessionClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) },
                     onInstructionsClick = { backStack.navigateTo(Instructions) }
                 )
             }
@@ -43,7 +43,10 @@ fun NavigationWrapper() {
                 QuickListScreen(value.deckId)
             }
             entry<FlashcardSession> { value ->
-                FlashcardScreen(value.deckId)
+                FlashcardScreen(
+                    onCancelSessionClick = { backStack.navigateBack() },
+                    deck = value.deck
+                )
             }
             entry<Instructions> {
                 InstructionsScreen(

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -46,6 +45,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.saishaddai.flashcards.R
+import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
 import java.util.UUID
@@ -53,15 +53,16 @@ import java.util.UUID
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FlashcardScreen(
-    deckId: Int
+    onCancelSessionClick: () -> Unit,
+    deck: Deck
 ) {
-    val viewModelKey = remember(deckId) { "FlashcardViewModel_${deckId}_${UUID.randomUUID()}" }
+    val viewModelKey = remember(deck) { "FlashcardViewModel_${deck.id}_${UUID.randomUUID()}" }
 
     val viewModel: FlashcardViewModel = viewModel(
         key = viewModelKey,
         factory = viewModelFactory {
             initializer {
-                FlashcardViewModel(deckId)
+                FlashcardViewModel(deck.id)
             }
         }
     )
@@ -84,14 +85,14 @@ fun FlashcardScreen(
                             color = Color(0xFFB0B0B0)
                         )
                         Text(
-                            text = stringResource(R.string.flashcard_top_bar_subtitle),
+                            text = deck.name,
                             fontSize = 14.sp,
                             color = Color(0xFF4D8EFF)
                         )
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* TODO: Implement close */ }) {
+                    IconButton(onClick = onCancelSessionClick) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = stringResource(R.string.flashcard_nav_icon_content_desc),
@@ -99,15 +100,7 @@ fun FlashcardScreen(
                         )
                     }
                 },
-                actions = {
-                    IconButton(onClick = { /* TODO: Implement settings */ }) {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = stringResource(R.string.flashcard_action_settings_content_desc),
-                            tint = Color.White
-                        )
-                    }
-                },
+                actions = {},
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFF1A1A2E)
                 )
@@ -122,7 +115,7 @@ fun FlashcardScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ProgressIndicator(5, 20)
+            ProgressIndicator(5, if (flashcards.isEmpty()) 20 else flashcards.size)
             Spacer(modifier = Modifier.height(32.dp))
             Flashcard()
             if (showAnswer) {
@@ -134,14 +127,17 @@ fun FlashcardScreen(
                 onClick = { viewModel.onShowResponseClicked() },
                 modifier = Modifier.fillMaxWidth()
             )
-            CancelSessionButton(modifier = Modifier.fillMaxWidth())
+            CancelSessionButton(
+                onClick = onCancelSessionClick,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
 
 @Composable
 fun ProgressIndicator(current: Int, total: Int) {
-    val progress = current.toFloat() / total.toFloat()
+    val progress = if (total > 0) current.toFloat() / total.toFloat() else 0f
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -246,9 +242,9 @@ fun ShowResponseButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CancelSessionButton(modifier: Modifier = Modifier) {
+fun CancelSessionButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     TextButton(
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         modifier = modifier
     ) {
         Icon(Icons.Default.Close, contentDescription = null, tint = Color.Gray)
@@ -262,6 +258,9 @@ fun CancelSessionButton(modifier: Modifier = Modifier) {
 @Composable
 fun FlashcardScreenPreview() {
     Flashcards2Theme {
-        FlashcardScreen(1)
+        FlashcardScreen(
+            onCancelSessionClick = {},
+            deck = Deck(1, "Preview Text", "Long Name Preview Text",isSelected = false)
+        )
     }
 }

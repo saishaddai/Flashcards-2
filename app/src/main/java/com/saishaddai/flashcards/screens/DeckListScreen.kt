@@ -60,7 +60,7 @@ import com.saishaddai.flashcards.viewmodel.DecksViewModel
 @Composable
 fun DeckListScreen(
     viewModel: DecksViewModel = viewModel(),
-    onStartSessionClick: (Int) -> Unit,
+    onStartSessionClick: (Deck) -> Unit,
     onInstructionsClick: () -> Unit
 ) {
     val decksState by viewModel.decks.collectAsState()
@@ -134,8 +134,8 @@ fun DeckListScreen(
             )
             StartSessionButton(
                 onClick = {
-                    selectedDeck?.id?.let { deckId ->
-                        onStartSessionClick(deckId)
+                    selectedDeck?.let { deck ->
+                        onStartSessionClick(deck)
                     }
                 },
                 modifier = Modifier

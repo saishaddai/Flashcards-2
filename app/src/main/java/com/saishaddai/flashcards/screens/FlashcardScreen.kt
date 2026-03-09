@@ -1,6 +1,8 @@
 package com.saishaddai.flashcards.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,6 +30,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,12 +42,33 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
+import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FlashcardScreen() {
+fun FlashcardScreen(
+    deckId: Int
+) {
+    val viewModelKey = remember(deckId) { "FlashcardViewModel_${deckId}_${UUID.randomUUID()}" }
+
+    val viewModel: FlashcardViewModel = viewModel(
+        key = viewModelKey,
+        factory = viewModelFactory {
+            initializer {
+                FlashcardViewModel(deckId)
+            }
+        }
+    )
+    val flashcards by viewModel.flashcards.collectAsState()
+    val showAnswer by viewModel.showAnswer.collectAsState()
+    Log.i("FlashcardScreen", "flashcards: $flashcards")
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -99,8 +125,15 @@ fun FlashcardScreen() {
             ProgressIndicator(5, 20)
             Spacer(modifier = Modifier.height(32.dp))
             Flashcard()
+            if (showAnswer) {
+                Spacer(modifier = Modifier.height(16.dp))
+                FlashcardAnswer()
+            }
             Spacer(modifier = Modifier.weight(1f))
-            ShowResponseButton(modifier = Modifier.fillMaxWidth())
+            ShowResponseButton(
+                onClick = { viewModel.onShowResponseClicked() },
+                modifier = Modifier.fillMaxWidth()
+            )
             CancelSessionButton(modifier = Modifier.fillMaxWidth())
         }
     }
@@ -141,57 +174,67 @@ fun Flashcard() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(400.dp),
+            .height(200.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF2C2C4E)
         ),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
+        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
             Text(
                 text = stringResource(R.string.flashcard_card_label_question),
                 color = Color(0xFF4D8EFF),
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.TopCenter)
             )
-            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "What is a Composable function?",
                 color = Color.White,
-                fontSize = 24.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(32.dp))
-            // TODO: Replace with actual icon
-            Icon(
-                imageVector = Icons.Default.Visibility,
-                contentDescription = null,
-                tint = Color(0xFF4D8EFF),
-                modifier = Modifier
-                    .height(60.dp)
-                    .width(60.dp)
-            )
-            Spacer(modifier = Modifier.height(32.dp))
-            Text(
-                text = stringResource(R.string.flashcard_card_tap_to_reveal),
-                color = Color.Gray,
-                fontSize = 12.sp
+                textAlign = TextAlign.Center,
+                modifier = Modifier.align(Alignment.Center)
             )
         }
     }
 }
 
 @Composable
-fun ShowResponseButton(modifier: Modifier = Modifier) {
+fun FlashcardAnswer() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF3366FF)
+        ),
+    ) {
+        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+            Text(
+                text = "ANSWER",
+                color = Color.White.copy(alpha = 0.7f),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+            Text(
+                text = "A function annotated with @Composable that defines a part of the UI.",
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+    }
+}
+
+@Composable
+fun ShowResponseButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         modifier = modifier,
         shape = RoundedCornerShape(50),
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4D8EFF))
@@ -219,6 +262,6 @@ fun CancelSessionButton(modifier: Modifier = Modifier) {
 @Composable
 fun FlashcardScreenPreview() {
     Flashcards2Theme {
-        FlashcardScreen()
+        FlashcardScreen(1)
     }
 }

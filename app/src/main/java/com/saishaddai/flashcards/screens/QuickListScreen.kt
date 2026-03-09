@@ -30,9 +30,6 @@ import java.util.UUID
 fun QuickListScreen(
     deckId: Int
 ) {
-    // Using a unique key for each entry into this screen ensures that a fresh 
-    // QuickListViewModel is created every time the user navigates here, 
-    // causing a new call to the repository and renewing the list.
     val viewModelKey = remember(deckId) { "QuickListViewModel_${deckId}_${UUID.randomUUID()}" }
     
     val viewModel: QuickListViewModel = viewModel(

@@ -1,6 +1,7 @@
 package com.saishaddai.flashcards.routes
 
 import androidx.navigation3.runtime.NavKey
+import com.saishaddai.flashcards.model.Deck
 import kotlinx.serialization.Serializable
 
 object Routes {
@@ -15,7 +16,7 @@ object Routes {
     data object Instructions: NavKey
 
     @Serializable
-    data class FlashcardSession(val deckId: Int): NavKey
+    data class FlashcardSession(val deck: Deck): NavKey
 
 
     @Serializable

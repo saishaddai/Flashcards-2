@@ -16,8 +16,7 @@
     <string name="mastery_level_mastered">Master</string>
 
     <!-- FlashcardScreen -->
-    <string name="flashcard_top_bar_title">ANDROID DEVELOPMENT</string>
-    <string name="flashcard_top_bar_subtitle">Jetpack Compose Basics</string>
+    <string name="flashcard_top_bar_title">FLASHCARD SESSION</string>
     <string name="flashcard_nav_icon_content_desc">Close</string>
     <string name="flashcard_action_settings_content_desc">Settings</string>
     <string name="flashcard_progress_complete">%d%% Complete</string>

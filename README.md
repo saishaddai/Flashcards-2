@@ -42,10 +42,17 @@ All the designs are provided by Google Stitch
     <td><b>Instructions</b></td>
   </tr>
   <tr>
-    <td><img src="" width="300"></td>
-    <td><img src="" width="300"></td>
+    <td><img src="screenshots/decklist.png" width="300"></td>
+    <td><img src="screenshots/instructions.png" width="300"></td>
   </tr>
-  
+  <tr>
+    <td><b>Flashcard</b></td>
+    <td><b>Summary</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/flashcard.png" width="300"></td>
+    <td><img src="screenshots/summary.png" width="300"></td>
+  </tr>
   
   
 </table>

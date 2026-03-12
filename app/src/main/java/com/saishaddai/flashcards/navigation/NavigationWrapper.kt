@@ -5,7 +5,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -28,64 +31,79 @@ import com.saishaddai.flashcards.utils.navigateTo
 @Composable
 fun NavigationWrapper() {
     val backStack: NavBackStack<NavKey> = rememberNavBackStack(DeckList)
+    val currentKey = backStack.lastOrNull()
 
-    NavDisplay(
-        backStack = backStack,
-        onBack = { backStack.removeLastOrNull() },
-        entryProvider = entryProvider {
-            entry<DeckList> {
-                DeckListScreen(
-                    onStartSessionClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) },
-                    onInstructionsClick = { backStack.navigateTo(Instructions) }
+    Scaffold(
+        bottomBar = {
+            if (currentKey == DeckList || currentKey == Instructions) {
+                MainBottomNavigation(
+                    currentRoute = currentKey,
+                    onLearnClick = { if (currentKey != DeckList) backStack.navigateTo(DeckList) },
+                    onInstructionsClick = { if (currentKey != Instructions) backStack.navigateTo(Instructions) },
+                    onStatsClick = { /* TODO */ },
+                    onSettingsClick = { /* TODO */ }
                 )
             }
-            entry<FlashcardList> { value ->
-                QuickListScreen(value.deckId)
-            }
-            entry<FlashcardSession> { value ->
-                FlashcardScreen(
-                    onCancelSessionClick = { backStack.navigateBack() },
-                    deck = value.deck
-                )
-            }
-            entry<Instructions> {
-                InstructionsScreen(
-                    onLearnClick = { backStack.navigateBack() },
-                    onStatsClick = { backStack.navigateBack() },
-                    onSettingsClick = { backStack.navigateBack() }
-                )
-            }
-            entry<Error> {
-                ErrorScreen { backStack.navigateBack() }
-            }
-        },
-        transitionSpec = {
-            slideInHorizontally(
-                initialOffsetX = { it },
-                animationSpec = tween(1000)
-            ) togetherWith slideOutHorizontally(
-                targetOffsetX = { -it },
-                animationSpec = tween(1000)
-            )
-        },
-        popTransitionSpec = {
-            slideInHorizontally(
-                initialOffsetX = { -it },
-                animationSpec = tween(500)
-            ) togetherWith slideOutHorizontally(
-                targetOffsetX = { it },
-                animationSpec = tween(500)
-            )
-        },
-        predictivePopTransitionSpec = {
-            slideInHorizontally(
-                initialOffsetX = { -it },
-                animationSpec = tween(500)
-            ) togetherWith slideOutHorizontally(
-                targetOffsetX = { it },
-                animationSpec = tween(500)
-            )
         }
-    )
-
+    ) { innerPadding ->
+        NavDisplay(
+            modifier = Modifier.padding(innerPadding),
+            backStack = backStack,
+            onBack = { backStack.removeLastOrNull() },
+            entryProvider = entryProvider {
+                entry<DeckList> {
+                    DeckListScreen(
+                        onStartSessionClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) },
+                        onInstructionsClick = { backStack.navigateTo(Instructions) }
+                    )
+                }
+                entry<FlashcardList> { value ->
+                    QuickListScreen(value.deckId)
+                }
+                entry<FlashcardSession> { value ->
+                    FlashcardScreen(
+                        onCancelSessionClick = { backStack.navigateBack() },
+                        deck = value.deck
+                    )
+                }
+                entry<Instructions> {
+                    InstructionsScreen(
+                        onLearnClick = { backStack.navigateTo(DeckList) },
+                        onStatsClick = { /* TODO */ },
+                        onSettingsClick = { /* TODO */ }
+                    )
+                }
+                entry<Error> {
+                    ErrorScreen { backStack.navigateBack() }
+                }
+            },
+            transitionSpec = {
+                slideInHorizontally(
+                    initialOffsetX = { it },
+                    animationSpec = tween(1000)
+                ) togetherWith slideOutHorizontally(
+                    targetOffsetX = { -it },
+                    animationSpec = tween(1000)
+                )
+            },
+            popTransitionSpec = {
+                slideInHorizontally(
+                    initialOffsetX = { -it },
+                    animationSpec = tween(500)
+                ) togetherWith slideOutHorizontally(
+                    targetOffsetX = { it },
+                    animationSpec = tween(500)
+                )
+            },
+            predictivePopTransitionSpec = {
+                slideInHorizontally(
+                    initialOffsetX = { -it },
+                    animationSpec = tween(500)
+                ) togetherWith slideOutHorizontally(
+                    targetOffsetX = { it },
+                    animationSpec = tween(500)
+                )
+            }
+        )
+    }
 }

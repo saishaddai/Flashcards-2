@@ -46,6 +46,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
 import java.util.UUID
@@ -115,13 +116,17 @@ fun FlashcardScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ProgressIndicator(5, if (flashcards.isEmpty()) 20 else flashcards.size)
+            ProgressIndicator(1, if (flashcards.isEmpty()) 1 else flashcards.size)
             Spacer(modifier = Modifier.height(32.dp))
-            Flashcard()
-            if (showAnswer) {
-                Spacer(modifier = Modifier.height(16.dp))
-                FlashcardAnswer()
+            
+            flashcards.firstOrNull()?.let { currentCard ->
+                Flashcard(currentCard)
+                if (showAnswer) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    FlashcardAnswer(currentCard)
+                }
             }
+            
             Spacer(modifier = Modifier.weight(1f))
             ShowResponseButton(
                 onClick = { viewModel.onShowResponseClicked() },
@@ -166,7 +171,7 @@ fun ProgressIndicator(current: Int, total: Int) {
 }
 
 @Composable
-fun Flashcard() {
+fun Flashcard(flashcard: Flashcard) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -185,7 +190,7 @@ fun Flashcard() {
                 modifier = Modifier.align(Alignment.TopCenter)
             )
             Text(
-                text = "What is a Composable function?",
+                text = flashcard.question,
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -197,7 +202,7 @@ fun Flashcard() {
 }
 
 @Composable
-fun FlashcardAnswer() {
+fun FlashcardAnswer(flashcard: Flashcard) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -209,14 +214,14 @@ fun FlashcardAnswer() {
     ) {
         Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
             Text(
-                text = "ANSWER",
+                text = stringResource(R.string.flashcard_card_label_answer),
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
             Text(
-                text = "A function annotated with @Composable that defines a part of the UI.",
+                text = flashcard.answer,
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -260,7 +265,7 @@ fun FlashcardScreenPreview() {
     Flashcards2Theme {
         FlashcardScreen(
             onCancelSessionClick = {},
-            deck = Deck(1, "Preview Text", "Long Name Preview Text",isSelected = false)
+            deck = Deck(1, "Preview Text", "preview name long version", isSelected = false)
         )
     }
 }

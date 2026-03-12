@@ -3,7 +3,6 @@ package com.saishaddai.flashcards.screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,21 +14,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CloudOff
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Layers
-import androidx.compose.material.icons.filled.School
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,167 +39,117 @@ import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 
 @Composable
 fun InstructionsScreen(
-    onLearnClick: () -> Unit = {},
-    onStatsClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {}
+    onLearnClick: () -> Unit,
+    onStatsClick: () -> Unit,
+    onSettingsClick: () -> Unit
 ) {
-    Scaffold(
-        containerColor = Color(0xFF131321), // Slightly darker than the cards
-        bottomBar = {
-            BottomAppBar(
-                containerColor = Color(0xFF1A1A2E),
-            ) {
-                InstructionsBottomNavigationItem(
-                    text = stringResource(R.string.decks_bottom_nav_learn),
-                    icon = Icons.Default.School,
-                    selected = false,
-                    onClick = onLearnClick
-                )
-                InstructionsBottomNavigationItem(
-                    text = stringResource(R.string.decks_bottom_nav_instructions),
-                    icon = Icons.Default.Info,
-                    selected = true,
-                    onClick = { /* Already here */ }
-                )
-                InstructionsBottomNavigationItem(
-                    text = stringResource(R.string.decks_bottom_nav_stats),
-                    icon = Icons.Default.BarChart,
-                    selected = false,
-                    onClick = onStatsClick
-                )
-                InstructionsBottomNavigationItem(
-                    text = stringResource(R.string.decks_bottom_nav_settings),
-                    icon = Icons.Default.Settings,
-                    selected = false,
-                    onClick = onSettingsClick
-                )
-            }
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .padding(horizontal = 24.dp)
-                .verticalScroll(rememberScrollState())
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = stringResource(R.string.instructions_guide_label),
+            color = Color(0xFF4D8EFF),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Text(
+            text = stringResource(R.string.instructions_title),
+            color = Color.White,
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = stringResource(R.string.instructions_description),
+            color = Color(0xFFB0B0B0),
+            fontSize = 16.sp,
+            lineHeight = 24.sp
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Instruction Cards
+        InstructionCard(
+            icon = Icons.Default.CalendarToday,
+            title = stringResource(R.string.instructions_daily_consistency_title),
+            description = stringResource(R.string.instructions_daily_consistency_desc)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        InstructionCard(
+            icon = Icons.Default.CloudOff,
+            title = stringResource(R.string.instructions_offline_first_title),
+            description = stringResource(R.string.instructions_offline_first_desc)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Special Card for Learning Sessions
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A2E))
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = stringResource(R.string.instructions_guide_label),
-                color = Color(0xFF4D8EFF),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            Text(
-                text = stringResource(R.string.instructions_title),
-                color = Color.White,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = stringResource(R.string.instructions_description),
-                color = Color(0xFFB0B0B0),
-                fontSize = 16.sp,
-                lineHeight = 24.sp
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Instruction Cards
-            InstructionCard(
-                icon = Icons.Default.CalendarToday,
-                title = stringResource(R.string.instructions_daily_consistency_title),
-                description = stringResource(R.string.instructions_daily_consistency_desc)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            InstructionCard(
-                icon = Icons.Default.CloudOff,
-                title = stringResource(R.string.instructions_offline_first_title),
-                description = stringResource(R.string.instructions_offline_first_desc)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Special Card for Learning Sessions
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A2E))
-            ) {
-                Column(modifier = Modifier.padding(20.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Surface(
-                            modifier = Modifier.size(48.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            color = Color(0xFF2C2C4E)
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Icon(
-                                    imageVector = Icons.Default.Layers,
-                                    contentDescription = null,
-                                    tint = Color(0xFF4D8EFF)
-                                )
-                            }
+            Column(modifier = Modifier.padding(20.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Surface(
+                        modifier = Modifier.size(48.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        color = Color(0xFF2C2C4E)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Default.Layers,
+                                contentDescription = null,
+                                tint = Color(0xFF4D8EFF)
+                            )
                         }
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text(
-                            text = stringResource(R.string.instructions_sessions_title),
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
                     }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
+                    Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = stringResource(R.string.instructions_sessions_desc),
-                        color = Color(0xFFB0B0B0),
-                        fontSize = 14.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    // Nested info items
-                    NestedInfoItem(
-                        icon = Icons.Default.Visibility,
-                        text = stringResource(R.string.instructions_sessions_show_response_tip)
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    NestedInfoItem(
-                        icon = Icons.Default.Close,
-                        text = stringResource(R.string.instructions_sessions_cancel_tip)
+                        text = stringResource(R.string.instructions_sessions_title),
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = stringResource(R.string.instructions_sessions_desc),
+                    color = Color(0xFFB0B0B0),
+                    fontSize = 14.sp
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Nested info items
+                NestedInfoItem(
+                    icon = Icons.Default.Visibility,
+                    text = stringResource(R.string.instructions_sessions_show_response_tip)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                NestedInfoItem(
+                    icon = Icons.Default.Close,
+                    text = stringResource(R.string.instructions_sessions_cancel_tip)
+                )
             }
-
-            Spacer(modifier = Modifier.height(32.dp))
         }
-    }
-}
 
-@Composable
-fun RowScope.InstructionsBottomNavigationItem(
-    text: String,
-    icon: ImageVector,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
-    NavigationBarItem(
-        selected = selected,
-        onClick = onClick,
-        label = { Text(text, fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal) },
-        icon = { Icon(icon, contentDescription = text) }
-    )
+        Spacer(modifier = Modifier.height(32.dp))
+    }
 }
 
 @Composable
@@ -282,6 +224,10 @@ fun NestedInfoItem(icon: ImageVector, text: String) {
 @Composable
 fun InstructionsScreenPreview() {
     Flashcards2Theme {
-        InstructionsScreen()
+        InstructionsScreen(
+            onLearnClick = {},
+            onStatsClick = {},
+            onSettingsClick = {}
+        )
     }
 }

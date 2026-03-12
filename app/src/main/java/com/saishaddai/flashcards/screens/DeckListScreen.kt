@@ -3,7 +3,6 @@ package com.saishaddai.flashcards.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,26 +15,19 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.BubbleChart
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Navigation
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PhoneAndroid
-import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Security
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Storage
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -66,83 +58,48 @@ fun DeckListScreen(
     val decksState by viewModel.decks.collectAsState()
     val selectedDeck = decksState.find { it.isSelected }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.decks_welcome),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFFB0B0B0)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.decks_learning_today),
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1A1A2E)
-                )
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+    ) {
+        TopAppBar(
+            title = {
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.decks_welcome),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFB0B0B0)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.decks_learning_today),
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color(0xFF1A1A2E)
             )
-        },
-        bottomBar = {
-            BottomAppBar(
-                containerColor = Color(0xFF1A1A2E),
-            ) {
-                BottomNavigationItem(
-                    text = stringResource(R.string.decks_bottom_nav_learn),
-                    icon = Icons.Default.School,
-                    selected = true,
-                    onClick = { /* Already here */ }
-                )
-                BottomNavigationItem(
-                    text = stringResource(R.string.decks_bottom_nav_instructions),
-                    icon = Icons.Default.Info,
-                    selected = false,
-                    onClick = onInstructionsClick
-                )
-                BottomNavigationItem(
-                    text = stringResource(R.string.decks_bottom_nav_stats),
-                    icon = Icons.Default.BarChart,
-                    selected = false,
-                    onClick = { /* TODO */ }
-                )
-                BottomNavigationItem(
-                    text = stringResource(R.string.decks_bottom_nav_settings),
-                    icon = Icons.Default.Settings,
-                    selected = false,
-                    onClick = { /* TODO */ }
-                )
-            }
-        },
-        containerColor = Color(0xFF1A1A2E)
-    ) { innerPadding ->
-        Column(
+        )
+        
+        DeckGrid(
+            decks = decksState,
+            onDeckSelected = viewModel::onDeckSelected,
+            modifier = Modifier.weight(1f)
+        )
+        
+        StartSessionButton(
+            onClick = {
+                selectedDeck?.let { deck ->
+                    onStartSessionClick(deck)
+                }
+            },
             modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxHeight()
-        ) {
-            DeckGrid(
-                decks = decksState,
-                onDeckSelected = viewModel::onDeckSelected,
-                modifier = Modifier.weight(1f)
-            )
-            StartSessionButton(
-                onClick = {
-                    selectedDeck?.let { deck ->
-                        onStartSessionClick(deck)
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            )
-        }
+                .fillMaxWidth()
+                .padding(16.dp)
+        )
     }
 }
 
@@ -161,21 +118,6 @@ fun StartSessionButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(text = stringResource(R.string.decks_start_session_button))
     }
-}
-
-@Composable
-fun RowScope.BottomNavigationItem(
-    text: String,
-    icon: ImageVector,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
-    NavigationBarItem(
-        selected = selected,
-        onClick = onClick,
-        label = { Text(text, fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal) },
-        icon = { Icon(icon, contentDescription = text) }
-    )
 }
 
 @Composable
@@ -229,7 +171,7 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
                 Icon(
                     painter = painterResource(id = icon),
                     contentDescription = null,
-                    tint = Color.White, // Usually custom icons have their own colors
+                    tint = Color.White,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }

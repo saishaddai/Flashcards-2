@@ -21,6 +21,7 @@
     <string name="flashcard_action_settings_content_desc">Settings</string>
     <string name="flashcard_progress_complete">%d%% Complete</string>
     <string name="flashcard_card_label_question">QUESTION</string>
+    <string name="flashcard_card_label_answer">ANSWER</string>
     <string name="flashcard_card_tap_to_reveal">Tap below to reveal the answer</string>
     <string name="flashcard_button_show_response">Show Response</string>
     <string name="flashcard_button_cancel_session">CANCEL SESSION</string>

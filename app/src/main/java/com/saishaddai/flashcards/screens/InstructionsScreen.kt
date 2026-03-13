@@ -60,9 +60,9 @@ fun InstructionsScreen(
 
         Text(
             text = stringResource(R.string.instructions_title),
-            color = Color.White,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
         )
 
         Spacer(modifier = Modifier.height(16.dp))

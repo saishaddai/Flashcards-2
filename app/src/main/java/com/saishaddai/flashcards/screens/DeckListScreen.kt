@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -67,9 +68,9 @@ fun DeckListScreen(
                 Column {
                     Text(
                         text = stringResource(id = R.string.decks_welcome),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFB0B0B0)
+                        color = Color(0xFF4D8EFF),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = stringResource(id = R.string.decks_learning_today),
@@ -223,4 +224,13 @@ private fun getIconForDeck(name: String): Any {
         "Coroutines" -> R.drawable.coroutines_icon
         else -> Icons.Default.Add
     }
+}
+
+@Preview
+@Composable
+fun DeckListScreenPreview() {
+    DeckListScreen(
+        onStartSessionClick = {},
+        onInstructionsClick = {}
+    )
 }

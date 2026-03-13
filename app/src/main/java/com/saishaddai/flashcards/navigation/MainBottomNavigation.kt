@@ -50,7 +50,7 @@ fun MainBottomNavigation(
         BottomNavigationItem(
             text = stringResource(R.string.decks_bottom_nav_settings),
             icon = Icons.Default.Settings,
-            selected = false, // TODO: Add Settings route
+            selected = currentRoute == Routes.Settings,
             onClick = onSettingsClick
         )
     }

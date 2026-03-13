@@ -19,12 +19,14 @@ import com.saishaddai.flashcards.routes.Routes.Error
 import com.saishaddai.flashcards.routes.Routes.FlashcardList
 import com.saishaddai.flashcards.routes.Routes.FlashcardSession
 import com.saishaddai.flashcards.routes.Routes.Instructions
+import com.saishaddai.flashcards.routes.Routes.Settings
 import com.saishaddai.flashcards.routes.Routes.Stats
 import com.saishaddai.flashcards.screens.DeckListScreen
 import com.saishaddai.flashcards.screens.ErrorScreen
 import com.saishaddai.flashcards.screens.FlashcardScreen
 import com.saishaddai.flashcards.screens.InstructionsScreen
 import com.saishaddai.flashcards.screens.QuickListScreen
+import com.saishaddai.flashcards.screens.SettingsScreen
 import com.saishaddai.flashcards.screens.StatsScreen
 import com.saishaddai.flashcards.utils.navigateBack
 import com.saishaddai.flashcards.utils.navigateTo
@@ -37,13 +39,13 @@ fun NavigationWrapper() {
 
     Scaffold(
         bottomBar = {
-            if (currentKey == DeckList || currentKey == Instructions || currentKey == Stats) {
+            if (currentKey == DeckList || currentKey == Instructions || currentKey == Stats || currentKey == Settings) {
                 MainBottomNavigation(
                     currentRoute = currentKey,
                     onLearnClick = { if (currentKey != DeckList) backStack.navigateTo(DeckList) },
                     onInstructionsClick = { if (currentKey != Instructions) backStack.navigateTo(Instructions) },
                     onStatsClick = { if (currentKey != Stats) backStack.navigateTo(Stats) },
-                    onSettingsClick = { /* TODO */ }
+                    onSettingsClick = { if (currentKey != Settings) backStack.navigateTo(Settings) }
                 )
             }
         }
@@ -52,7 +54,7 @@ fun NavigationWrapper() {
             modifier = Modifier.padding(innerPadding),
             backStack = backStack,
             onBack = { backStack.removeLastOrNull() },
-            entryProvider = entryProvider{
+            entryProvider = entryProvider<NavKey> {
                 entry<DeckList> {
                     DeckListScreen(
                         onStartSessionClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) },
@@ -72,11 +74,14 @@ fun NavigationWrapper() {
                     InstructionsScreen(
                         onLearnClick = { backStack.navigateTo(DeckList) },
                         onStatsClick = { backStack.navigateTo(Stats) },
-                        onSettingsClick = { /* TODO */ }
+                        onSettingsClick = { backStack.navigateTo(Settings) }
                     )
                 }
                 entry<Stats> {
                     StatsScreen()
+                }
+                entry<Settings> {
+                    SettingsScreen()
                 }
                 entry<Error> {
                     ErrorScreen { backStack.navigateBack() }

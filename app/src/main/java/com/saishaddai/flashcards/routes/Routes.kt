@@ -16,6 +16,9 @@ object Routes {
     data object Instructions: NavKey
 
     @Serializable
+    data object Stats: NavKey
+
+    @Serializable
     data class FlashcardSession(val deck: Deck): NavKey
 
 

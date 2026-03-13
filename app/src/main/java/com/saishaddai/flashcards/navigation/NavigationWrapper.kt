@@ -19,11 +19,13 @@ import com.saishaddai.flashcards.routes.Routes.Error
 import com.saishaddai.flashcards.routes.Routes.FlashcardList
 import com.saishaddai.flashcards.routes.Routes.FlashcardSession
 import com.saishaddai.flashcards.routes.Routes.Instructions
+import com.saishaddai.flashcards.routes.Routes.Stats
 import com.saishaddai.flashcards.screens.DeckListScreen
 import com.saishaddai.flashcards.screens.ErrorScreen
 import com.saishaddai.flashcards.screens.FlashcardScreen
 import com.saishaddai.flashcards.screens.InstructionsScreen
 import com.saishaddai.flashcards.screens.QuickListScreen
+import com.saishaddai.flashcards.screens.StatsScreen
 import com.saishaddai.flashcards.utils.navigateBack
 import com.saishaddai.flashcards.utils.navigateTo
 
@@ -35,12 +37,12 @@ fun NavigationWrapper() {
 
     Scaffold(
         bottomBar = {
-            if (currentKey == DeckList || currentKey == Instructions) {
+            if (currentKey == DeckList || currentKey == Instructions || currentKey == Stats) {
                 MainBottomNavigation(
                     currentRoute = currentKey,
                     onLearnClick = { if (currentKey != DeckList) backStack.navigateTo(DeckList) },
                     onInstructionsClick = { if (currentKey != Instructions) backStack.navigateTo(Instructions) },
-                    onStatsClick = { /* TODO */ },
+                    onStatsClick = { if (currentKey != Stats) backStack.navigateTo(Stats) },
                     onSettingsClick = { /* TODO */ }
                 )
             }
@@ -50,28 +52,31 @@ fun NavigationWrapper() {
             modifier = Modifier.padding(innerPadding),
             backStack = backStack,
             onBack = { backStack.removeLastOrNull() },
-            entryProvider = entryProvider {
+            entryProvider = entryProvider{
                 entry<DeckList> {
                     DeckListScreen(
                         onStartSessionClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) },
                         onInstructionsClick = { backStack.navigateTo(Instructions) }
                     )
                 }
-                entry<FlashcardList> { value ->
-                    QuickListScreen(value.deckId)
+                entry<FlashcardList> { route ->
+                    QuickListScreen(route.deckId)
                 }
-                entry<FlashcardSession> { value ->
+                entry<FlashcardSession> { route ->
                     FlashcardScreen(
                         onCancelSessionClick = { backStack.navigateBack() },
-                        deck = value.deck
+                        deck = route.deck
                     )
                 }
                 entry<Instructions> {
                     InstructionsScreen(
                         onLearnClick = { backStack.navigateTo(DeckList) },
-                        onStatsClick = { /* TODO */ },
+                        onStatsClick = { backStack.navigateTo(Stats) },
                         onSettingsClick = { /* TODO */ }
                     )
+                }
+                entry<Stats> {
+                    StatsScreen()
                 }
                 entry<Error> {
                     ErrorScreen { backStack.navigateBack() }

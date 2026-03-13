@@ -44,7 +44,7 @@ fun MainBottomNavigation(
         BottomNavigationItem(
             text = stringResource(R.string.decks_bottom_nav_stats),
             icon = Icons.Default.BarChart,
-            selected = false, // TODO: Add Stats route
+            selected = currentRoute == Routes.Stats,
             onClick = onStatsClick
         )
         BottomNavigationItem(

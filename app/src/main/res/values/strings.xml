@@ -52,4 +52,5 @@
     <string name="instructions_sessions_desc">Each session presents 20 random flashcards tailored to your learning pace.</string>
     <string name="instructions_sessions_show_response_tip">Use \'Show Response\' to reveal answers</string>
     <string name="instructions_sessions_cancel_tip">Use \'Cancel Session\' to stop anytime</string>
+    <string name="instructions_master_topics">Master topics through daily study sessions and discover all flashcards</string>
 </resources>

@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Approval
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CloudOff
@@ -60,9 +61,9 @@ fun InstructionsScreen(
 
         Text(
             text = stringResource(R.string.instructions_title),
-            color = Color.White,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -74,7 +75,7 @@ fun InstructionsScreen(
             lineHeight = 24.sp
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Instruction Cards
         InstructionCard(
@@ -133,18 +134,27 @@ fun InstructionsScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Nested info items
-                NestedInfoItem(
-                    icon = Icons.Default.Visibility,
-                    text = stringResource(R.string.instructions_sessions_show_response_tip)
-                )
+                // Nested info items indented to the right
+                Column(modifier = Modifier.padding(start = 16.dp)) {
+                    NestedInfoItem(
+                        icon = Icons.Default.Visibility,
+                        text = stringResource(R.string.instructions_sessions_show_response_tip)
+                    )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                NestedInfoItem(
-                    icon = Icons.Default.Close,
-                    text = stringResource(R.string.instructions_sessions_cancel_tip)
-                )
+                    NestedInfoItem(
+                        icon = Icons.Default.Close,
+                        text = stringResource(R.string.instructions_sessions_cancel_tip)
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    NestedInfoItem(
+                        icon = Icons.Default.Approval,
+                        text = stringResource(R.string.instructions_master_topics)
+                    )
+                }
             }
         }
 

@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -29,9 +31,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -69,7 +73,13 @@ fun FlashcardScreen(
     )
     val flashcards by viewModel.flashcards.collectAsState()
     val showAnswer by viewModel.showAnswer.collectAsState()
-    Log.i("FlashcardScreen", "flashcards: $flashcards")
+
+    val pagerState = rememberPagerState(pageCount = { flashcards.size })
+
+    // Hide answer when the user starts swiping to a new page
+    LaunchedEffect(pagerState.currentPage) {
+        viewModel.onPageChanged()
+    }
 
     Scaffold(
         topBar = {
@@ -113,24 +123,41 @@ fun FlashcardScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ProgressIndicator(1, if (flashcards.isEmpty()) 1 else flashcards.size)
+            ProgressIndicator(
+                current = if (flashcards.isEmpty()) 0 else pagerState.currentPage + 1,
+                total = flashcards.size
+            )
+
             Spacer(modifier = Modifier.height(32.dp))
-            
-            flashcards.firstOrNull()?.let { currentCard ->
-                Flashcard(currentCard)
-                if (showAnswer) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    FlashcardAnswer(currentCard)
+
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.Top,
+                pageSpacing = 16.dp
+            ) { page ->
+                val currentCard = flashcards[page]
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Flashcard(currentCard)
+                    if (showAnswer) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        FlashcardAnswer(currentCard)
+                    }
                 }
             }
-            
-            Spacer(modifier = Modifier.weight(1f))
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             ShowResponseButton(
                 onClick = { viewModel.onShowResponseClicked() },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !showAnswer
             )
             CancelSessionButton(
                 onClick = onCancelSessionClick,
@@ -155,7 +182,10 @@ fun ProgressIndicator(current: Int, total: Int) {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = stringResource(R.string.flashcard_progress_complete, (progress * 100).toInt()),
+                text = stringResource(
+                    R.string.flashcard_progress_complete,
+                    (progress * 100).toInt()
+                ),
                 color = Color(0xFF4D8EFF),
                 fontSize = 12.sp
             )
@@ -181,7 +211,9 @@ fun Flashcard(flashcard: Flashcard) {
             containerColor = Color(0xFF2C2C4E)
         ),
     ) {
-        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)) {
             Text(
                 text = stringResource(R.string.flashcard_card_label_question),
                 color = Color(0xFF4D8EFF),
@@ -212,7 +244,9 @@ fun FlashcardAnswer(flashcard: Flashcard) {
             containerColor = Color(0xFF3366FF)
         ),
     ) {
-        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)) {
             Text(
                 text = stringResource(R.string.flashcard_card_label_answer),
                 color = Color.White.copy(alpha = 0.7f),
@@ -233,12 +267,20 @@ fun FlashcardAnswer(flashcard: Flashcard) {
 }
 
 @Composable
-fun ShowResponseButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun ShowResponseButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
+) {
     Button(
         onClick = onClick,
         modifier = modifier,
+        enabled = enabled,
         shape = RoundedCornerShape(50),
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4D8EFF))
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFF4D8EFF),
+            disabledContainerColor = Color(0xFF4D8EFF).copy(alpha = 0.5f)
+        )
     ) {
         Icon(Icons.Default.Visibility, contentDescription = null)
         Spacer(modifier = Modifier.width(8.dp))

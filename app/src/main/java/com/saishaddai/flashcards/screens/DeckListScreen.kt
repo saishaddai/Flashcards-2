@@ -98,25 +98,28 @@ fun DeckListScreen(
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .padding(horizontal = 24.dp)
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = stringResource(id = R.string.decks_welcome),
-            color = Color(0xFF4D8EFF),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+        TopAppBar(
+            title = {
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.decks_welcome),
+                        color = Color(0xFF4D8EFF),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = stringResource(id = R.string.decks_learning_today),
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color(0xFF1A1A2E)
+            )
         )
-
-        Text(
-            text = stringResource(id = R.string.decks_learning_today),
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
         
         DeckGrid(
             decks = decksState,
@@ -136,7 +139,7 @@ fun DeckListScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp)
+                .padding(16.dp)
         )
     }
 }
@@ -166,7 +169,7 @@ fun DeckGrid(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = modifier,
+        modifier = modifier.padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -188,7 +191,7 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
             .height(150.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF1A1A2E)
+            containerColor = Color(0xFF2C2C4E)
         ),
         border = if (deck.isSelected) BorderStroke(2.dp, Color(0xFF4D8EFF)) else null
     ) {

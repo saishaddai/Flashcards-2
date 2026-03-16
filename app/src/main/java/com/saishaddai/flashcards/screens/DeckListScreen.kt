@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Storage
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -29,11 +30,15 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -58,32 +63,60 @@ fun DeckListScreen(
 ) {
     val decksState by viewModel.decks.collectAsState()
     val selectedDeck = decksState.find { it.isSelected }
+    var showEmptyDeckDialog by remember { mutableStateOf(false) }
+
+    if (showEmptyDeckDialog) {
+        AlertDialog(
+            onDismissRequest = { showEmptyDeckDialog = false },
+            title = {
+                Text(
+                    text = stringResource(R.string.empty_deck_title),
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.empty_deck_message),
+                    color = Color(0xFFB0B0B0)
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { showEmptyDeckDialog = false }) {
+                    Text(
+                        text = stringResource(R.string.empty_deck_confirm),
+                        color = Color(0xFF4D8EFF),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            containerColor = Color(0xFF2C2C4E),
+            shape = RoundedCornerShape(28.dp)
+        )
+    }
 
     Column(
         modifier = Modifier
             .fillMaxHeight()
+            .padding(horizontal = 24.dp)
     ) {
-        TopAppBar(
-            title = {
-                Column {
-                    Text(
-                        text = stringResource(id = R.string.decks_welcome),
-                        color = Color(0xFF4D8EFF),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = stringResource(id = R.string.decks_learning_today),
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF1A1A2E)
-            )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = stringResource(id = R.string.decks_welcome),
+            color = Color(0xFF4D8EFF),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
         )
+
+        Text(
+            text = stringResource(id = R.string.decks_learning_today),
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
         
         DeckGrid(
             decks = decksState,
@@ -94,12 +127,16 @@ fun DeckListScreen(
         StartSessionButton(
             onClick = {
                 selectedDeck?.let { deck ->
-                    onStartSessionClick(deck)
+                    if (deck.cardCount > 0) {
+                        onStartSessionClick(deck)
+                    } else {
+                        showEmptyDeckDialog = true
+                    }
                 }
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(vertical = 16.dp)
         )
     }
 }
@@ -129,7 +166,7 @@ fun DeckGrid(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = modifier.padding(16.dp),
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -151,7 +188,7 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
             .height(150.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF2C2C4E)
+            containerColor = Color(0xFF1A1A2E)
         ),
         border = if (deck.isSelected) BorderStroke(2.dp, Color(0xFF4D8EFF)) else null
     ) {

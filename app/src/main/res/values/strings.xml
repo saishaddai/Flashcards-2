@@ -53,4 +53,9 @@
     <string name="instructions_sessions_show_response_tip">Use \'Show Response\' to reveal answers</string>
     <string name="instructions_sessions_cancel_tip">Use \'Cancel Session\' to stop anytime</string>
     <string name="instructions_master_topics">Master topics through daily study sessions and discover all flashcards</string>
+
+    <!-- Empty Deck Dialog -->
+    <string name="empty_deck_title">Empty Deck</string>
+    <string name="empty_deck_message">The selected topic currently has no flashcards. Please choose another topic to start your study session.</string>
+    <string name="empty_deck_confirm">Got it</string>
 </resources>

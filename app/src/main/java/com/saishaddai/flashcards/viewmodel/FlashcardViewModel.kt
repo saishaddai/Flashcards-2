@@ -33,4 +33,8 @@ class FlashcardViewModel(
     fun onShowResponseClicked() {
         _showAnswer.value = true
     }
+
+    fun onPageChanged() {
+        _showAnswer.value = false
+    }
 }

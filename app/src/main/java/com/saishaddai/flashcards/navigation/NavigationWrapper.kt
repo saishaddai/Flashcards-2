@@ -43,7 +43,11 @@ fun NavigationWrapper() {
                 MainBottomNavigation(
                     currentRoute = currentKey,
                     onLearnClick = { if (currentKey != DeckList) backStack.navigateTo(DeckList) },
-                    onInstructionsClick = { if (currentKey != Instructions) backStack.navigateTo(Instructions) },
+                    onInstructionsClick = {
+                        if (currentKey != Instructions) backStack.navigateTo(
+                            Instructions
+                        )
+                    },
                     onStatsClick = { if (currentKey != Stats) backStack.navigateTo(Stats) },
                     onSettingsClick = { if (currentKey != Settings) backStack.navigateTo(Settings) }
                 )
@@ -54,7 +58,7 @@ fun NavigationWrapper() {
             modifier = Modifier.padding(innerPadding),
             backStack = backStack,
             onBack = { backStack.removeLastOrNull() },
-            entryProvider = entryProvider<NavKey> {
+            entryProvider = entryProvider {
                 entry<DeckList> {
                     DeckListScreen(
                         onStartSessionClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) },

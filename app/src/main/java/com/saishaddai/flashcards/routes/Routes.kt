@@ -7,24 +7,21 @@ import kotlinx.serialization.Serializable
 object Routes {
 
     @Serializable
-    data object DeckList: NavKey
+    data object DeckList : NavKey
 
     @Serializable
-    data class FlashcardList(val deckId: Int): NavKey
+    data class FlashcardList(val deckId: Int) : NavKey
 
     @Serializable
-    data object Instructions: NavKey
+    data object Instructions : NavKey
 
     @Serializable
-    data object Stats: NavKey
+    data object Stats : NavKey
 
     @Serializable
-    data object Settings: NavKey
+    data object Settings : NavKey
 
     @Serializable
-    data class FlashcardSession(val deck: Deck): NavKey
+    data class FlashcardSession(val deck: Deck) : NavKey
 
-
-    @Serializable
-    data object Error: NavKey
 }

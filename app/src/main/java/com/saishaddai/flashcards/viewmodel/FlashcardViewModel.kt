@@ -20,6 +20,9 @@ class FlashcardViewModel(
     private val _showAnswer = MutableStateFlow(false)
     val showAnswer: StateFlow<Boolean> = _showAnswer.asStateFlow()
 
+    private val _isFinished = MutableStateFlow(false)
+    val isFinished: StateFlow<Boolean> = _isFinished.asStateFlow()
+
     init {
         loadFlashcards()
     }
@@ -36,5 +39,9 @@ class FlashcardViewModel(
 
     fun onPageChanged() {
         _showAnswer.value = false
+    }
+
+    fun onFinishSession() {
+        _isFinished.value = true
     }
 }

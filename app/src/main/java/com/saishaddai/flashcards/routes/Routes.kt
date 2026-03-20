@@ -24,4 +24,7 @@ object Routes {
     @Serializable
     data class FlashcardSession(val deck: Deck) : NavKey
 
+    @Serializable
+    data object FinishSession : NavKey
+
 }

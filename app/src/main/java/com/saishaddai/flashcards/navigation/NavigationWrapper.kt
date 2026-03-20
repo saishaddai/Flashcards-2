@@ -15,12 +15,14 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.saishaddai.flashcards.routes.Routes.DeckList
+import com.saishaddai.flashcards.routes.Routes.FinishSession
 import com.saishaddai.flashcards.routes.Routes.FlashcardList
 import com.saishaddai.flashcards.routes.Routes.FlashcardSession
 import com.saishaddai.flashcards.routes.Routes.Instructions
 import com.saishaddai.flashcards.routes.Routes.Settings
 import com.saishaddai.flashcards.routes.Routes.Stats
 import com.saishaddai.flashcards.screens.DeckListScreen
+import com.saishaddai.flashcards.screens.FinishSessionScreen
 import com.saishaddai.flashcards.screens.FlashcardScreen
 import com.saishaddai.flashcards.screens.InstructionsScreen
 import com.saishaddai.flashcards.screens.QuickListScreen
@@ -63,12 +65,16 @@ fun NavigationWrapper() {
                         onInstructionsClick = { backStack.navigateTo(Instructions) }
                     )
                 }
+                entry<FinishSession> {
+                    FinishSessionScreen()
+                }
                 entry<FlashcardList> { route ->
                     QuickListScreen(route.deckId)
                 }
                 entry<FlashcardSession> { route ->
                     FlashcardScreen(
                         onCancelSessionClick = { backStack.navigateBack() },
+                        onFinishedSessionClick = { backStack.navigateTo(FinishSession) },
                         deck = route.deck
                     )
                 }

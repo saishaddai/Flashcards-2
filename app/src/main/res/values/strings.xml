@@ -25,6 +25,7 @@
     <string name="flashcard_card_tap_to_reveal">Tap below to reveal the answer</string>
     <string name="flashcard_button_show_response">Show Response</string>
     <string name="flashcard_button_cancel_session">CANCEL SESSION</string>
+    <string name="flashcard_button_finish_session">FINISH SESSION</string>
 
     <!-- FinishSessionScreen -->
     <string name="finish_top_bar_title">SESSION SUMMARY</string>

@@ -1,17 +1,43 @@
 package com.saishaddai.flashcards.repository
 
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
 class HardcodedFlashcardRepositoryTest {
 
+    private lateinit var repository: HardcodedFlashcardRepository
+
     @Before
     fun setUp() {
-        // TODO: Initialize your Repository
+        repository = HardcodedFlashcardRepository()
     }
 
     @Test
-    fun `getData returns correct flashcards for deck id`() {
-        // TODO: Test data retrieval logic
+    fun `getData returns correct flashcards for deck id`() = runTest {
+        val deckId = 1
+        val size = 5
+        val result = repository.getData(deckId, size)
+
+        assertTrue(result.all { it.deckId == deckId })
+        assertTrue(result.size <= size)
+    }
+
+    @Test
+    fun `getData returns empty list for non-existent deck id`() = runTest {
+        val deckId = -1
+        val result = repository.getData(deckId)
+
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `getData returns no more than requested size`() = runTest {
+        val deckId = 1
+        val size = 2
+        val result = repository.getData(deckId, size)
+
+        assertTrue(result.size <= size)
     }
 }

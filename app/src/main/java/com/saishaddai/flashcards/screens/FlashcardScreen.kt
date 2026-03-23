@@ -112,8 +112,10 @@ fun FlashcardScreen(
                 navigationIcon = {
                     IconButton(onClick = if (isLastPage) onFinishedSessionClick else onCancelSessionClick) {
                         Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = stringResource(R.string.flashcard_nav_icon_content_desc),
+                            imageVector = if (isLastPage) Icons.Default.Check else Icons.Default.Close,
+                            contentDescription = stringResource(
+                                id = if (isLastPage) R.string.flashcard_nav_icon_content_desc_finish else R.string.flashcard_nav_icon_content_desc_close
+                            ),
                             tint = Color.White
                         )
                     }

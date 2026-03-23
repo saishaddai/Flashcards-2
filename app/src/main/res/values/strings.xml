@@ -17,7 +17,8 @@
 
     <!-- FlashcardScreen -->
     <string name="flashcard_top_bar_title">FLASHCARD SESSION</string>
-    <string name="flashcard_nav_icon_content_desc">Close</string>
+    <string name="flashcard_nav_icon_content_desc_close">Close</string>
+    <string name="flashcard_nav_icon_content_desc_finish">Close</string>
     <string name="flashcard_action_settings_content_desc">Settings</string>
     <string name="flashcard_progress_complete">%d%% Complete</string>
     <string name="flashcard_card_label_question">QUESTION</string>

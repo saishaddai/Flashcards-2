@@ -1,6 +1,5 @@
 package com.saishaddai.flashcards.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,7 +19,6 @@ import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Style
@@ -32,7 +30,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -50,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
+import com.saishaddai.flashcards.ui.theme.RoyalBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -133,7 +131,6 @@ fun FinishSessionScreen() {
             DailyGoalReached()
             Spacer(modifier = Modifier.weight(1f))
             BackToTopicsButton(modifier = Modifier.fillMaxWidth())
-            ReviewSessionButton(modifier = Modifier.fillMaxWidth())
         }
     }
 }
@@ -145,7 +142,7 @@ fun TrophyIcon() {
         modifier = Modifier
             .size(150.dp)
             .clip(CircleShape)
-            .background(Color(0xFF4D8EFF))
+            .background(RoyalBlue)
     ) {
         Icon(
             imageVector = Icons.Default.EmojiEvents,
@@ -178,8 +175,8 @@ fun InfoCard(title: String, value: String, unit: String, icon: ImageVector) {
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            Icon(imageVector = icon, contentDescription = null, tint = Color(0xFF4D8EFF))
-            Text(text = title, fontSize = 12.sp, color = Color(0xFF4D8EFF))
+            Icon(imageVector = icon, contentDescription = null, tint = RoyalBlue)
+            Text(text = title, fontSize = 12.sp, color = RoyalBlue)
             Spacer(modifier = Modifier.weight(1f))
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(
@@ -210,7 +207,7 @@ fun DailyGoalReached() {
             tint = Color(0xFF00BFA5)
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = stringResource(R.string.finish_goal_reached), color = Color(0xFF00BFA5))
+        Text(text = stringResource(R.string.finish_goal_reached), color = RoyalBlue)
     }
 }
 
@@ -220,25 +217,11 @@ fun BackToTopicsButton(modifier: Modifier = Modifier) {
         onClick = { /*TODO*/ },
         modifier = modifier,
         shape = RoundedCornerShape(50),
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4D8EFF))
+        colors = ButtonDefaults.buttonColors(containerColor = RoyalBlue)
     ) {
         Icon(Icons.Default.GridView, contentDescription = null)
         Spacer(modifier = Modifier.width(8.dp))
         Text(text = stringResource(R.string.finish_button_back_to_topics))
-    }
-}
-
-@Composable
-fun ReviewSessionButton(modifier: Modifier = Modifier) {
-    OutlinedButton(
-        onClick = { /*TODO*/ },
-        modifier = modifier,
-        shape = RoundedCornerShape(50),
-        border = BorderStroke(2.dp, Color(0xFF4D8EFF))
-    ) {
-        Icon(Icons.Default.History, contentDescription = null, tint = Color.White)
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = stringResource(R.string.finish_button_review_session), color = Color.White)
     }
 }
 

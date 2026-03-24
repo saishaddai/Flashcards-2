@@ -35,15 +35,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saishaddai.flashcards.R
+import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
+import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.viewmodel.DecksViewModel
 
 @Composable
 fun InstructionsScreen(
-    onLearnClick: () -> Unit,
-    onStatsClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    viewModel: DecksViewModel = viewModel(),
+    onPromoClick: (Deck) -> Unit = {},
 ) {
+    val promoDeck = viewModel.getRandomDeck()
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,7 +60,7 @@ fun InstructionsScreen(
 
         Text(
             text = stringResource(R.string.instructions_guide_label),
-            color = Color(0xFF4D8EFF),
+            color = RoyalBlue,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
@@ -111,7 +117,7 @@ fun InstructionsScreen(
                             Icon(
                                 imageVector = Icons.Default.Layers,
                                 contentDescription = null,
-                                tint = Color(0xFF4D8EFF)
+                                tint = RoyalBlue
                             )
                         }
                     }
@@ -158,7 +164,16 @@ fun InstructionsScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Promo Widget
+        promoDeck?.let { deck ->
+            PromoWidget(
+                randomDeck = deck,
+                onPromoClick = onPromoClick
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+        }
     }
 }
 
@@ -180,7 +195,7 @@ fun InstructionCard(icon: ImageVector, title: String, description: String) {
                         Icon(
                             imageVector = icon,
                             contentDescription = null,
-                            tint = Color(0xFF4D8EFF)
+                            tint = RoyalBlue
                         )
                     }
                 }
@@ -217,7 +232,7 @@ fun NestedInfoItem(icon: ImageVector, text: String) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = Color(0xFF4D8EFF),
+                tint = RoyalBlue,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
@@ -235,9 +250,7 @@ fun NestedInfoItem(icon: ImageVector, text: String) {
 fun InstructionsScreenPreview() {
     Flashcards2Theme {
         InstructionsScreen(
-            onLearnClick = {},
-            onStatsClick = {},
-            onSettingsClick = {}
+            onPromoClick = {},
         )
     }
 }

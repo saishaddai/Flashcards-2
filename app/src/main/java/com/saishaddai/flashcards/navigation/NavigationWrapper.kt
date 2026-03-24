@@ -80,9 +80,7 @@ fun NavigationWrapper() {
                 }
                 entry<Instructions> {
                     InstructionsScreen(
-                        onLearnClick = { backStack.navigateTo(DeckList) },
-                        onStatsClick = { backStack.navigateTo(Stats) },
-                        onSettingsClick = { backStack.navigateTo(Settings) }
+                        onPromoClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) }
                     )
                 }
                 entry<Stats> {

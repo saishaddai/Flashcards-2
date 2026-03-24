@@ -32,4 +32,8 @@ class DecksViewModel(
             it.copy(isSelected = it.id == selectedDeck.id)
         }
     }
+
+    fun getRandomDeck(): Deck? {
+        return _decks.value.randomOrNull()
+    }
 }

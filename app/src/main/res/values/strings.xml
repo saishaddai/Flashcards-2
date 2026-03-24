@@ -27,6 +27,10 @@
     <string name="flashcard_button_show_response">Show Response</string>
     <string name="flashcard_button_cancel_session">CANCEL SESSION</string>
     <string name="flashcard_button_finish_session">FINISH SESSION</string>
+    <string name="flashcard_cancel_dialog_title">Cancel Session?</string>
+    <string name="flashcard_cancel_dialog_message">Are you sure you want to cancel the session? Your progress will not be saved.</string>
+    <string name="flashcard_cancel_dialog_confirm">Yes, Cancel</string>
+    <string name="flashcard_cancel_dialog_dismiss">No, Continue</string>
 
     <!-- FinishSessionScreen -->
     <string name="finish_top_bar_title">SESSION SUMMARY</string>
@@ -60,4 +64,9 @@
     <string name="empty_deck_title">Empty Deck</string>
     <string name="empty_deck_message">The selected topic currently has no flashcards. Please choose another topic to start your study session.</string>
     <string name="empty_deck_confirm">Got it</string>
+
+    <!-- Promo Widget -->
+    <string name="promo_widget_title">Ready for a\nchallenge?</string>
+    <string name="promo_widget_message">Take a quick 5-min review\nof \'%s\'</string>
+    <string name="promo_widget_confirm">START NOW</string>
 </resources>

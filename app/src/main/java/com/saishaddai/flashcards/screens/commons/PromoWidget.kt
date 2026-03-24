@@ -35,7 +35,7 @@ import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 @Composable
 fun PromoWidget(
     randomDeck: Deck,
-    onPromoClick: (Int) -> Unit = {}
+    onPromoClick: (Deck) -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -85,7 +85,7 @@ fun PromoWidget(
                 }
 
                 Button(
-                    onClick = { onPromoClick(randomDeck.id) },
+                    onClick = { onPromoClick(randomDeck) },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White,
                         contentColor = Color(0xFF2563EB)

@@ -10,9 +10,6 @@ object Routes {
     data object DeckList : NavKey
 
     @Serializable
-    data class FlashcardList(val deckId: Int) : NavKey
-
-    @Serializable
     data object Instructions : NavKey
 
     @Serializable

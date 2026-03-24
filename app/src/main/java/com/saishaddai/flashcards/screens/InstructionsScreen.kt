@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
@@ -56,29 +57,10 @@ fun InstructionsScreen(
             .padding(horizontal = 24.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = stringResource(R.string.instructions_guide_label),
-            color = RoyalBlue,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
-        )
-
-        Text(
-            text = stringResource(R.string.instructions_title),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = stringResource(R.string.instructions_description),
-            color = Color(0xFFB0B0B0),
-            fontSize = 16.sp,
-            lineHeight = 24.sp
+        Header(
+            headText = stringResource(R.string.instructions_guide_label),
+            titleText = stringResource(R.string.instructions_title),
+            subtitleText = stringResource(R.string.instructions_description)
         )
 
         Spacer(modifier = Modifier.height(16.dp))

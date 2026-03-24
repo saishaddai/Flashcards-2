@@ -53,6 +53,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.Flashcard
+import com.saishaddai.flashcards.screens.commons.BlueButton
+import com.saishaddai.flashcards.screens.commons.TransparentButton
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
@@ -219,16 +221,11 @@ fun FlashcardScreen(
             )
 
             if (isLastPage) {
-                Button(
-                    onClick = { viewModel.onFinishSession() },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(containerColor = RoyalBlue)
-                ) {
-                    Icon(Icons.Default.Check, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.flashcard_button_finish_session))
-                }
+                BlueButton(
+                    icon = Icons.Default.Check,
+                    text = stringResource(R.string.flashcard_button_finish_session),
+                    onClick = { viewModel.onFinishSession() }
+                )
             } else {
                 CancelSessionButton(
                     onClick = { showCancelConfirmation = true },
@@ -344,32 +341,31 @@ fun ShowResponseButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        enabled = enabled,
-        shape = RoundedCornerShape(50),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = RoyalBlue,
-            disabledContainerColor = RoyalBlue.copy(alpha = 0.5f)
-        )
-    ) {
-        Icon(Icons.Default.Visibility, contentDescription = null)
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = stringResource(R.string.flashcard_button_show_response))
-    }
+   BlueButton(
+       Icons.Default.Visibility,
+       modifier = modifier,
+       text = stringResource(R.string.flashcard_button_show_response),
+       enabled = enabled,
+       onClick = onClick
+   )
 }
 
 @Composable
 fun CancelSessionButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    TextButton(
+    TransparentButton(
+        icon = Icons.Default.Close,
+        text = stringResource(R.string.flashcard_button_cancel_session),
         onClick = onClick,
         modifier = modifier
-    ) {
-        Icon(Icons.Default.Close, contentDescription = null, tint = Color.Gray)
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = stringResource(R.string.flashcard_button_cancel_session), color = Color.Gray)
-    }
+    )
+//    TextButton(
+//        onClick = onClick,
+//        modifier = modifier
+//    ) {
+//        Icon(Icons.Default.Close, contentDescription = null, tint = Color.Gray)
+//        Spacer(modifier = Modifier.width(8.dp))
+//        Text(text = stringResource(R.string.flashcard_button_cancel_session), color = Color.Gray)
+//    }
 }
 
 

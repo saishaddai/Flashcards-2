@@ -16,7 +16,6 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.saishaddai.flashcards.routes.Routes.DeckList
 import com.saishaddai.flashcards.routes.Routes.FinishSession
-import com.saishaddai.flashcards.routes.Routes.FlashcardList
 import com.saishaddai.flashcards.routes.Routes.FlashcardSession
 import com.saishaddai.flashcards.routes.Routes.Instructions
 import com.saishaddai.flashcards.routes.Routes.Settings
@@ -25,7 +24,6 @@ import com.saishaddai.flashcards.screens.DeckListScreen
 import com.saishaddai.flashcards.screens.FinishSessionScreen
 import com.saishaddai.flashcards.screens.FlashcardScreen
 import com.saishaddai.flashcards.screens.InstructionsScreen
-import com.saishaddai.flashcards.screens.QuickListScreen
 import com.saishaddai.flashcards.screens.SettingsScreen
 import com.saishaddai.flashcards.screens.StatsScreen
 import com.saishaddai.flashcards.utils.navigateBack
@@ -61,15 +59,11 @@ fun NavigationWrapper() {
             entryProvider = entryProvider {
                 entry<DeckList> {
                     DeckListScreen(
-                        onStartSessionClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) },
-                        onInstructionsClick = { backStack.navigateTo(Instructions) }
+                        onStartSessionClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) }
                     )
                 }
                 entry<FinishSession> {
                     FinishSessionScreen()
-                }
-                entry<FlashcardList> { route ->
-                    QuickListScreen(route.deckId)
                 }
                 entry<FlashcardSession> { route ->
                     FlashcardScreen(

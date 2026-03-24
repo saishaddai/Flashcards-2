@@ -170,7 +170,7 @@ fun InstructionsScreen(
         promoDeck?.let { deck ->
             PromoWidget(
                 randomDeck = deck,
-                onPromoClick = { onPromoClick(deck) }
+                onPromoClick = onPromoClick
             )
             Spacer(modifier = Modifier.height(24.dp))
         }

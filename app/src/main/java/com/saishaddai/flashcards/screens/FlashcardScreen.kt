@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -34,7 +35,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -82,10 +85,53 @@ fun FlashcardScreen(
 
     val pagerState = rememberPagerState(pageCount = { flashcards.size })
     val isLastPage = pagerState.currentPage == flashcards.size - 1
+    var showCancelConfirmation by remember { mutableStateOf(false) }
 
     // Hide answer when the user starts swiping to a new page
     LaunchedEffect(pagerState.currentPage) {
         viewModel.onPageChanged()
+    }
+
+    if (showCancelConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showCancelConfirmation = false },
+            title = {
+                Text(
+                    text = stringResource(R.string.flashcard_cancel_dialog_title),
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.flashcard_cancel_dialog_message),
+                    color = Color(0xFFB0B0B0)
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    showCancelConfirmation = false
+                    onCancelSessionClick()
+                }) {
+                    Text(
+                        text = stringResource(R.string.flashcard_cancel_dialog_confirm),
+                        color = Color(0xFF4D8EFF),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showCancelConfirmation = false }) {
+                    Text(
+                        text = stringResource(R.string.flashcard_cancel_dialog_dismiss),
+                        color = Color(0xFF4D8EFF),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            containerColor = Color(0xFF2C2C4E),
+            shape = RoundedCornerShape(28.dp)
+        )
     }
 
     Scaffold(
@@ -110,7 +156,9 @@ fun FlashcardScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = if (isLastPage) onFinishedSessionClick else onCancelSessionClick) {
+                    IconButton(onClick = {
+                        if (isLastPage) onFinishedSessionClick() else showCancelConfirmation = true
+                    }) {
                         Icon(
                             imageVector = if (isLastPage) Icons.Default.Check else Icons.Default.Close,
                             contentDescription = stringResource(
@@ -182,7 +230,7 @@ fun FlashcardScreen(
                 }
             } else {
                 CancelSessionButton(
-                    onClick = onCancelSessionClick,
+                    onClick = { showCancelConfirmation = true },
                     modifier = Modifier.fillMaxWidth()
                 )
             }

@@ -35,15 +35,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saishaddai.flashcards.R
+import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
+import com.saishaddai.flashcards.viewmodel.DecksViewModel
 
 @Composable
 fun InstructionsScreen(
-    onLearnClick: () -> Unit,
-    onStatsClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    viewModel: DecksViewModel = viewModel(),
+    onPromoClick: (Deck) -> Unit = {},
 ) {
+    val promoDeck = viewModel.getRandomDeck()
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -158,7 +163,16 @@ fun InstructionsScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Promo Widget
+        promoDeck?.let { deck ->
+            PromoWidget(
+                randomDeck = deck,
+                onPromoClick = { onPromoClick(deck) }
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+        }
     }
 }
 
@@ -235,9 +249,7 @@ fun NestedInfoItem(icon: ImageVector, text: String) {
 fun InstructionsScreenPreview() {
     Flashcards2Theme {
         InstructionsScreen(
-            onLearnClick = {},
-            onStatsClick = {},
-            onSettingsClick = {}
+            onPromoClick = {},
         )
     }
 }

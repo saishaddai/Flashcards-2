@@ -25,10 +25,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 
@@ -68,7 +70,7 @@ fun PromoWidget(
             ) {
                 Column {
                     Text(
-                        text = "Ready for a\nchallenge?",
+                        text = stringResource(id = R.string.promo_widget_title),
                         color = Color.White,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.ExtraBold,
@@ -76,7 +78,7 @@ fun PromoWidget(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = "Take a quick 5-min review\nof '${randomDeck.name}'",
+                        text = stringResource(id = R.string.promo_widget_message, randomDeck.name),
                         color = Color.White.copy(alpha = 0.9f),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
@@ -94,7 +96,7 @@ fun PromoWidget(
                     contentPadding = PaddingValues(horizontal = 32.dp, vertical = 12.dp)
                 ) {
                     Text(
-                        text = "START NOW",
+                        text = stringResource(R.string.promo_widget_confirm),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         letterSpacing = 1.sp

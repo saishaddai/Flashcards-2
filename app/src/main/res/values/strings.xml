@@ -64,4 +64,9 @@
     <string name="empty_deck_title">Empty Deck</string>
     <string name="empty_deck_message">The selected topic currently has no flashcards. Please choose another topic to start your study session.</string>
     <string name="empty_deck_confirm">Got it</string>
+
+    <!-- Promo Widget -->
+    <string name="promo_widget_title">Ready for a\nchallenge?</string>
+    <string name="promo_widget_message">Take a quick 5-min review\nof \'%s\'</string>
+    <string name="promo_widget_confirm">START NOW</string>
 </resources>

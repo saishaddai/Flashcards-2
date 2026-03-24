@@ -24,14 +24,18 @@ import com.saishaddai.flashcards.ui.theme.RoyalBlue
 fun BlueButton(
     icon: ImageVector,
     text: String,
+    enabled: Boolean = true,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+        modifier = modifier
+            .fillMaxWidth(),
+        enabled = enabled,
         shape = RoundedCornerShape(50),
-        colors = ButtonDefaults.buttonColors(containerColor = RoyalBlue)
+        colors = ButtonDefaults.buttonColors(
+            containerColor = RoyalBlue,
+            disabledContainerColor = RoyalBlue.copy(alpha = 0.5f),)
     ) {
         Icon(
             imageVector = icon,

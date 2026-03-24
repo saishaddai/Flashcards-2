@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -23,8 +22,6 @@ import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.utils.getMasteryLevel
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
@@ -127,8 +125,10 @@ fun DeckListScreen(
             onDeckSelected = viewModel::onDeckSelected,
             modifier = Modifier.weight(1f)
         )
-        
-        StartSessionButton(
+
+        BlueButton(
+            icon = Icons.Default.Navigation,
+            text = stringResource(R.string.decks_start_session_button),
             onClick = {
                 selectedDeck?.let { deck ->
                     if (deck.cardCount > 0) {
@@ -137,28 +137,8 @@ fun DeckListScreen(
                         showEmptyDeckDialog = true
                     }
                 }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            }
         )
-    }
-}
-
-@Composable
-fun StartSessionButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        shape = RoundedCornerShape(50),
-        colors = ButtonDefaults.buttonColors(containerColor = RoyalBlue)
-    ) {
-        Icon(
-            imageVector = Icons.Default.Navigation,
-            contentDescription = stringResource(R.string.decks_start_session_button)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = stringResource(R.string.decks_start_session_button))
     }
 }
 

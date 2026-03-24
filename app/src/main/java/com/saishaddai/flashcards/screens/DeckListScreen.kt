@@ -28,8 +28,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -49,6 +47,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.BlueButton
+import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.utils.getMasteryLevel
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
@@ -58,7 +57,6 @@ import com.saishaddai.flashcards.viewmodel.DecksViewModel
 fun DeckListScreen(
     viewModel: DecksViewModel = viewModel(),
     onStartSessionClick: (Deck) -> Unit,
-    onInstructionsClick: () -> Unit
 ) {
     val decksState by viewModel.decks.collectAsState()
     val selectedDeck = decksState.find { it.isSelected }
@@ -98,26 +96,9 @@ fun DeckListScreen(
         modifier = Modifier
             .fillMaxHeight()
     ) {
-        TopAppBar(
-            title = {
-                Column {
-                    Text(
-                        text = stringResource(id = R.string.decks_welcome),
-                        color = RoyalBlue,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = stringResource(id = R.string.decks_learning_today),
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF1A1A2E)
-            )
+        Header(
+            headText = stringResource(R.string.decks_welcome),
+            titleText = stringResource(R.string.decks_learning_today)
         )
         
         DeckGrid(
@@ -251,7 +232,6 @@ private fun getIconForDeck(name: String): Any {
 @Composable
 fun DeckListScreenPreview() {
     DeckListScreen(
-        onStartSessionClick = {},
-        onInstructionsClick = {}
+        onStartSessionClick = {}
     )
 }

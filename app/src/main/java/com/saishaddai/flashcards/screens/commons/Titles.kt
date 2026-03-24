@@ -21,6 +21,7 @@ fun Header(
     subtitleText: String? = null
 ) {
     Column {
+        Spacer(modifier = Modifier.height(16.dp))
         Head(headText)
         Title(titleText)
         subtitleText?.let { text ->

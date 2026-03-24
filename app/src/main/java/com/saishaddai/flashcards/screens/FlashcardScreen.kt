@@ -54,6 +54,7 @@ import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
+import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
 import java.util.UUID
 
@@ -115,7 +116,7 @@ fun FlashcardScreen(
                 }) {
                     Text(
                         text = stringResource(R.string.flashcard_cancel_dialog_confirm),
-                        color = Color(0xFF4D8EFF),
+                        color = RoyalBlue,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -124,7 +125,7 @@ fun FlashcardScreen(
                 TextButton(onClick = { showCancelConfirmation = false }) {
                     Text(
                         text = stringResource(R.string.flashcard_cancel_dialog_dismiss),
-                        color = Color(0xFF4D8EFF),
+                        color = RoyalBlue,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -151,7 +152,7 @@ fun FlashcardScreen(
                         Text(
                             text = deck.name,
                             fontSize = 14.sp,
-                            color = Color(0xFF4D8EFF)
+                            color = RoyalBlue
                         )
                     }
                 },
@@ -222,7 +223,7 @@ fun FlashcardScreen(
                     onClick = { viewModel.onFinishSession() },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4D8EFF))
+                    colors = ButtonDefaults.buttonColors(containerColor = RoyalBlue)
                 ) {
                     Icon(Icons.Default.Check, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -257,7 +258,7 @@ fun ProgressIndicator(current: Int, total: Int) {
                     R.string.flashcard_progress_complete,
                     (progress * 100).toInt()
                 ),
-                color = Color(0xFF4D8EFF),
+                color = RoyalBlue,
                 fontSize = 12.sp
             )
         }
@@ -265,7 +266,7 @@ fun ProgressIndicator(current: Int, total: Int) {
         LinearProgressIndicator(
             progress = { progress },
             modifier = Modifier.fillMaxWidth(),
-            color = Color(0xFF4D8EFF),
+            color = RoyalBlue,
             trackColor = Color(0xFF2C2C4E)
         )
     }
@@ -287,7 +288,7 @@ fun Flashcard(flashcard: Flashcard) {
             .padding(16.dp)) {
             Text(
                 text = stringResource(R.string.flashcard_card_label_question),
-                color = Color(0xFF4D8EFF),
+                color = RoyalBlue,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.TopCenter)
@@ -349,8 +350,8 @@ fun ShowResponseButton(
         enabled = enabled,
         shape = RoundedCornerShape(50),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF4D8EFF),
-            disabledContainerColor = Color(0xFF4D8EFF).copy(alpha = 0.5f)
+            containerColor = RoyalBlue,
+            disabledContainerColor = RoyalBlue.copy(alpha = 0.5f)
         )
     ) {
         Icon(Icons.Default.Visibility, contentDescription = null)

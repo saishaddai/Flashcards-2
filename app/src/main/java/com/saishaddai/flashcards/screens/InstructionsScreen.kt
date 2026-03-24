@@ -40,6 +40,7 @@ import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
+import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 
 @Composable
@@ -59,7 +60,7 @@ fun InstructionsScreen(
 
         Text(
             text = stringResource(R.string.instructions_guide_label),
-            color = Color(0xFF4D8EFF),
+            color = RoyalBlue,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
@@ -116,7 +117,7 @@ fun InstructionsScreen(
                             Icon(
                                 imageVector = Icons.Default.Layers,
                                 contentDescription = null,
-                                tint = Color(0xFF4D8EFF)
+                                tint = RoyalBlue
                             )
                         }
                     }
@@ -194,7 +195,7 @@ fun InstructionCard(icon: ImageVector, title: String, description: String) {
                         Icon(
                             imageVector = icon,
                             contentDescription = null,
-                            tint = Color(0xFF4D8EFF)
+                            tint = RoyalBlue
                         )
                     }
                 }
@@ -231,7 +232,7 @@ fun NestedInfoItem(icon: ImageVector, text: String) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = Color(0xFF4D8EFF),
+                tint = RoyalBlue,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))

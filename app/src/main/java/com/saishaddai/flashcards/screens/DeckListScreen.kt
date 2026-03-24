@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.utils.getMasteryLevel
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 
@@ -85,7 +86,7 @@ fun DeckListScreen(
                 TextButton(onClick = { showEmptyDeckDialog = false }) {
                     Text(
                         text = stringResource(R.string.empty_deck_confirm),
-                        color = Color(0xFF4D8EFF),
+                        color = RoyalBlue,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -104,7 +105,7 @@ fun DeckListScreen(
                 Column {
                     Text(
                         text = stringResource(id = R.string.decks_welcome),
-                        color = Color(0xFF4D8EFF),
+                        color = RoyalBlue,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -150,7 +151,7 @@ fun StartSessionButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
         onClick = onClick,
         modifier = modifier,
         shape = RoundedCornerShape(50),
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4D8EFF))
+        colors = ButtonDefaults.buttonColors(containerColor = RoyalBlue)
     ) {
         Icon(
             imageVector = Icons.Default.Navigation,
@@ -193,7 +194,7 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF2C2C4E)
         ),
-        border = if (deck.isSelected) BorderStroke(2.dp, Color(0xFF4D8EFF)) else null
+        border = if (deck.isSelected) BorderStroke(2.dp, RoyalBlue) else null
     ) {
         Column(
             modifier = Modifier

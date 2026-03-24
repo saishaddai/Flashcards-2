@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
+import com.saishaddai.flashcards.ui.theme.RoyalBlue
 
 @Composable
 fun PromoWidget(
@@ -45,7 +46,7 @@ fun PromoWidget(
             .height(220.dp),
         shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF2563EB) // Royal Blue
+            containerColor = RoyalBlue
         )
     ) {
         Box(

@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Notes
+import androidx.compose.material.icons.automirrored.filled.StarHalf
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.GridView
@@ -54,7 +57,7 @@ import com.saishaddai.flashcards.ui.theme.RoyalBlue
 fun FinishSessionScreen(
     deck: Deck,
     onFinishSession: () -> Unit,
-    onShareSummary: (Deck) -> Unit
+    onShareSummary: (Deck) -> Unit //TODO Sai: implicit intent to share the summary info in social media
 ) {
     Scaffold(
         topBar = {
@@ -110,7 +113,7 @@ fun FinishSessionScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = stringResource(R.string.finish_great_job),
+                text = stringResource(R.string.finish_great_job, deck.name),
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.height(32.dp))
@@ -120,19 +123,37 @@ fun FinishSessionScreen(
             ) {
                 InfoCard(
                     title = stringResource(R.string.finish_card_label_reviewed),
-                    value = "20",
+                    value = "20", //TODO Sai: get this value from settings OR the original list of flashcards
                     unit = stringResource(R.string.finish_card_unit_cards),
                     icon = Icons.Default.Style
                 )
                 InfoCard(
                     title = stringResource(R.string.finish_card_label_duration),
-                    value = "12",
+                    value = "12", //TODO Sai: get this value from a total time spent in this session (coroutine, maybe)
                     unit = stringResource(R.string.finish_card_unit_mins),
                     icon = Icons.Default.Timer
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
-            DailyGoalReached()
+            AchievementReached(
+                icon = Icons.AutoMirrored.Filled.TrendingUp,
+                text = stringResource(R.string.finish_goal_reached),
+            ) //TODO Sai: current cards reviewed in this session vs the daily goal (settings)
+            Spacer(modifier = Modifier.height(16.dp))
+            AchievementReached(
+                icon = Icons.AutoMirrored.Filled.Notes,
+                text = stringResource(R.string.finish_goal_reached),
+            ) //TODO Sai: "Your current Mastery Level is NOVICE"
+            Spacer(modifier = Modifier.height(16.dp))
+            AchievementReached(
+                icon = Icons.AutoMirrored.Filled.StarHalf,
+                text = stringResource(R.string.finish_goal_reached),
+            ) //TODO Sai: "Your current streak is: 1 day"
+            Spacer(modifier = Modifier.height(16.dp))
+            AchievementReached(
+                icon = Icons.AutoMirrored.Filled.VolumeUp,
+                text = stringResource(R.string.finish_goal_reached),
+            ) //TODO Sai: "This is just a test. Fix the Back to Decks button to be stalled in the bottom"
             Spacer(modifier = Modifier.weight(1f))
             BackToDecksButton(onClick = onFinishSession)
         }
@@ -197,7 +218,11 @@ fun InfoCard(title: String, value: String, unit: String, icon: ImageVector) {
 }
 
 @Composable
-fun DailyGoalReached() {
+fun AchievementReached(
+    icon: ImageVector,
+    contentDescription: String? = null,
+    text: String
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -206,12 +231,14 @@ fun DailyGoalReached() {
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Icon(
-            imageVector = Icons.AutoMirrored.Filled.TrendingUp,
-            contentDescription = null,
+            imageVector = icon, // Icons.AutoMirrored.Filled.TrendingUp,
+            contentDescription = contentDescription,
             tint = Color(0xFF00BFA5)
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = stringResource(R.string.finish_goal_reached), color = RoyalBlue)
+        Text(text = /*stringResource(R.string.finish_goal_reached)*/
+            text,
+            color = RoyalBlue)
     }
 }
 

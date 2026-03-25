@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,8 +17,6 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -280,9 +277,11 @@ fun Flashcard(flashcard: Flashcard) {
             containerColor = Color(0xFF2C2C4E)
         ),
     ) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
             Text(
                 text = stringResource(R.string.flashcard_card_label_question),
                 color = RoyalBlue,
@@ -313,9 +312,11 @@ fun FlashcardAnswer(flashcard: Flashcard) {
             containerColor = Color(0xFF3366FF)
         ),
     ) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
             Text(
                 text = stringResource(R.string.flashcard_card_label_answer),
                 color = Color.White.copy(alpha = 0.7f),
@@ -341,13 +342,13 @@ fun ShowResponseButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
-   BlueButton(
-       Icons.Default.Visibility,
-       modifier = modifier,
-       text = stringResource(R.string.flashcard_button_show_response),
-       enabled = enabled,
-       onClick = onClick
-   )
+    BlueButton(
+        Icons.Default.Visibility,
+        modifier = modifier,
+        text = stringResource(R.string.flashcard_button_show_response),
+        enabled = enabled,
+        onClick = onClick
+    )
 }
 
 @Composable

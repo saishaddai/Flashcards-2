@@ -62,13 +62,17 @@ fun NavigationWrapper() {
                         onStartSessionClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) }
                     )
                 }
-                entry<FinishSession> {
-                    FinishSessionScreen()
+                entry<FinishSession> { route ->
+                    FinishSessionScreen(
+                        deck = route.deck,
+                        onFinishSession = { backStack.navigateTo(DeckList) },
+                        onShareSummary = {}
+                    )
                 }
                 entry<FlashcardSession> { route ->
                     FlashcardScreen(
                         onCancelSessionClick = { backStack.navigateBack() },
-                        onFinishedSessionClick = { backStack.navigateTo(FinishSession) },
+                        onFinishedSessionClick = { backStack.navigateTo(FinishSession(route.deck)) },
                         deck = route.deck
                     )
                 }

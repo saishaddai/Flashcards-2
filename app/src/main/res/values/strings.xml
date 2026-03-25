@@ -37,13 +37,13 @@
     <string name="finish_nav_icon_content_desc">Close</string>
     <string name="finish_action_share_content_desc">Share</string>
     <string name="finish_all_done">All Done!</string>
-    <string name="finish_great_job">Great job on your Android prep today.</string>
+    <string name="finish_great_job">Great job on your \'%s\' prep today.</string>
     <string name="finish_card_label_reviewed">REVIEWED</string>
     <string name="finish_card_unit_cards">cards</string>
     <string name="finish_card_label_duration">DURATION</string>
     <string name="finish_card_unit_mins">mins</string>
     <string name="finish_goal_reached">Daily goal reached! +50 XP</string>
-    <string name="finish_button_back_to_topics">Back to Topics</string>
+    <string name="finish_button_back_to_decks">Back to Decks</string>
     <string name="finish_button_review_session">Review Session</string>
 
     <!-- InstructionsScreen -->

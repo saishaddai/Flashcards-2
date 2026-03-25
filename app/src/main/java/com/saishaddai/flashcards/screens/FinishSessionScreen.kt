@@ -16,15 +16,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Style
 import androidx.compose.material.icons.filled.Timer
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,12 +44,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.saishaddai.flashcards.R
+import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FinishSessionScreen() {
+fun FinishSessionScreen(
+    deck: Deck,
+    onFinishSession: () -> Unit,
+    onShareSummary: (Deck) -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -64,16 +68,16 @@ fun FinishSessionScreen() {
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* TODO: Implement close */ }) {
+                    IconButton(onClick = onFinishSession ) {
                         Icon(
-                            imageVector = Icons.Default.Close,
+                            imageVector = Icons.Default.Check,
                             contentDescription = stringResource(R.string.finish_nav_icon_content_desc),
                             tint = Color.White
                         )
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* TODO: Implement share */ }) {
+                    IconButton(onClick = { onShareSummary(deck) }) {
                         Icon(
                             imageVector = Icons.Default.Share,
                             contentDescription = stringResource(R.string.finish_action_share_content_desc),
@@ -130,7 +134,7 @@ fun FinishSessionScreen() {
             Spacer(modifier = Modifier.height(32.dp))
             DailyGoalReached()
             Spacer(modifier = Modifier.weight(1f))
-            BackToTopicsButton(modifier = Modifier.fillMaxWidth())
+            BackToDecksButton(onClick = onFinishSession)
         }
     }
 }
@@ -212,17 +216,13 @@ fun DailyGoalReached() {
 }
 
 @Composable
-fun BackToTopicsButton(modifier: Modifier = Modifier) {
-    Button(
-        onClick = { /*TODO*/ },
+fun BackToDecksButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    BlueButton(
+        icon = Icons.Default.GridView,
         modifier = modifier,
-        shape = RoundedCornerShape(50),
-        colors = ButtonDefaults.buttonColors(containerColor = RoyalBlue)
-    ) {
-        Icon(Icons.Default.GridView, contentDescription = null)
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = stringResource(R.string.finish_button_back_to_topics))
-    }
+        text = stringResource(R.string.finish_button_back_to_decks),
+        onClick = onClick
+    )
 }
 
 
@@ -230,6 +230,7 @@ fun BackToTopicsButton(modifier: Modifier = Modifier) {
 @Composable
 fun FinishSessionScreenPreview() {
     Flashcards2Theme {
-        FinishSessionScreen()
+        val deck = Deck(1, "Preview Text", "preview name long version", isSelected = false)
+        FinishSessionScreen(deck, {}, {})
     }
 }

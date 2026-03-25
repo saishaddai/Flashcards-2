@@ -43,7 +43,7 @@
     <string name="finish_card_label_duration">DURATION</string>
     <string name="finish_card_unit_mins">mins</string>
     <string name="finish_goal_reached">Daily goal reached! +50 XP</string>
-    <string name="finish_button_back_to_topics">Back to Topics</string>
+    <string name="finish_button_back_to_decks">Back to Decks</string>
     <string name="finish_button_review_session">Review Session</string>
 
     <!-- InstructionsScreen -->

@@ -20,26 +20,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Style
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,30 +60,27 @@ fun StatsScreen(
 ) {
     val promoDeck = viewModel.getRandomDeck()
 
-    Scaffold()
-    { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp)
-        ) {
-            Header("STATISTICS", "Your Progress", "Keep up the momentum!")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF1A1A2E))
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 24.dp)
+    ) {
+        Header("STATISTICS", "Your Progress", "Keep up the momentum!")
+        Spacer(modifier = Modifier.height(24.dp))
+        WeeklyActivityCard()
+        Spacer(modifier = Modifier.height(32.dp))
+        SkillMasterySection()
+        Spacer(modifier = Modifier.height(32.dp))
+        AtAGlanceSection()
+        Spacer(modifier = Modifier.height(32.dp))
+        promoDeck?.let { deck ->
+            PromoWidget(
+                randomDeck = deck,
+                onPromoClick = onPromoClick
+            )
             Spacer(modifier = Modifier.height(24.dp))
-            WeeklyActivityCard()
-            Spacer(modifier = Modifier.height(32.dp))
-            SkillMasterySection()
-            Spacer(modifier = Modifier.height(32.dp))
-            AtAGlanceSection()
-            Spacer(modifier = Modifier.height(32.dp))
-            promoDeck?.let { deck ->
-                PromoWidget(
-                    randomDeck = deck,
-                    onPromoClick = onPromoClick
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-            }
         }
     }
 }

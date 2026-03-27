@@ -82,7 +82,9 @@ fun NavigationWrapper() {
                     )
                 }
                 entry<Stats> {
-                    StatsScreen()
+                    StatsScreen(
+                        onPromoClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) }
+                    )
                 }
                 entry<Settings> {
                     SettingsScreen()

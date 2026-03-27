@@ -36,6 +36,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,19 +49,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.viewmodel.FinishSessionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FinishSessionScreen(
     deck: Deck,
     onFinishSession: () -> Unit,
-    onShareSummary: (Deck) -> Unit //TODO Sai: implicit intent to share the summary info in social media
+    onShareSummary: (Deck) -> Unit,
+    viewModel: FinishSessionViewModel = viewModel()
 ) {
+    val navigateToDeckList by viewModel.navigateToDeckList.collectAsState()
+
+    LaunchedEffect(navigateToDeckList) {
+        if (navigateToDeckList) {
+            onFinishSession()
+            viewModel.onNavigationHandled()
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -71,7 +86,7 @@ fun FinishSessionScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onFinishSession ) {
+                    IconButton(onClick = { viewModel.onBackToDecksClicked() }) {
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = stringResource(R.string.finish_nav_icon_content_desc),
@@ -123,13 +138,13 @@ fun FinishSessionScreen(
             ) {
                 InfoCard(
                     title = stringResource(R.string.finish_card_label_reviewed),
-                    value = "20", //TODO Sai: get this value from settings OR the original list of flashcards
+                    value = "20",
                     unit = stringResource(R.string.finish_card_unit_cards),
                     icon = Icons.Default.Style
                 )
                 InfoCard(
                     title = stringResource(R.string.finish_card_label_duration),
-                    value = "12", //TODO Sai: get this value from a total time spent in this session (coroutine, maybe)
+                    value = "12",
                     unit = stringResource(R.string.finish_card_unit_mins),
                     icon = Icons.Default.Timer
                 )
@@ -138,24 +153,24 @@ fun FinishSessionScreen(
             AchievementReached(
                 icon = Icons.AutoMirrored.Filled.TrendingUp,
                 text = stringResource(R.string.finish_goal_reached),
-            ) //TODO Sai: current cards reviewed in this session vs the daily goal (settings)
+            )
             Spacer(modifier = Modifier.height(16.dp))
             AchievementReached(
                 icon = Icons.AutoMirrored.Filled.Notes,
                 text = stringResource(R.string.finish_goal_reached),
-            ) //TODO Sai: "Your current Mastery Level is NOVICE"
+            )
             Spacer(modifier = Modifier.height(16.dp))
             AchievementReached(
                 icon = Icons.AutoMirrored.Filled.StarHalf,
                 text = stringResource(R.string.finish_goal_reached),
-            ) //TODO Sai: "Your current streak is: 1 day"
+            )
             Spacer(modifier = Modifier.height(16.dp))
             AchievementReached(
                 icon = Icons.AutoMirrored.Filled.VolumeUp,
                 text = stringResource(R.string.finish_goal_reached),
-            ) //TODO Sai: "This is just a test. Fix the Back to Decks button to be stalled in the bottom"
+            )
             Spacer(modifier = Modifier.weight(1f))
-            BackToDecksButton(onClick = onFinishSession)
+            BackToDecksButton(onClick = { viewModel.onBackToDecksClicked() })
         }
     }
 }
@@ -231,14 +246,12 @@ fun AchievementReached(
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Icon(
-            imageVector = icon, // Icons.AutoMirrored.Filled.TrendingUp,
+            imageVector = icon,
             contentDescription = contentDescription,
             tint = Color(0xFF00BFA5)
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = /*stringResource(R.string.finish_goal_reached)*/
-            text,
-            color = RoyalBlue)
+        Text(text = text, color = RoyalBlue)
     }
 }
 

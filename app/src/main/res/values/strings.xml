@@ -69,4 +69,10 @@
     <string name="promo_widget_title">Ready for a\nchallenge?</string>
     <string name="promo_widget_message">Take a quick 5-min review\nof \'%s\'</string>
     <string name="promo_widget_confirm">START NOW</string>
+
+    <!-- Stats Screen -->
+    <string name="stats_head_title">STATISTICS</string>
+    <string name="stats_title">Your Progress…</string>
+    <string name="stats_subtitle">Keep up the momentum!</string>
+
 </resources>

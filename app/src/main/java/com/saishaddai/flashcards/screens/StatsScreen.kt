@@ -28,7 +28,6 @@ import androidx.compose.material.icons.filled.Style
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -53,7 +52,6 @@ import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatsScreen(
     viewModel: DecksViewModel = viewModel(),
@@ -73,6 +71,7 @@ fun StatsScreen(
             titleText = stringResource(R.string.stats_title),
             subtitleText = stringResource(R.string.stats_subtitle)
         )
+
         Spacer(modifier = Modifier.height(24.dp))
         WeeklyActivityCard()
         Spacer(modifier = Modifier.height(32.dp))
@@ -80,7 +79,14 @@ fun StatsScreen(
         Spacer(modifier = Modifier.height(32.dp))
         AtAGlanceSection()
         Spacer(modifier = Modifier.height(32.dp))
-        PromoStats(promoDeck, onPromoClick)
+        
+        promoDeck?.let { deck ->
+            PromoWidget(
+                randomDeck = deck,
+                onPromoClick = onPromoClick
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+        }
     }
 }
 
@@ -134,10 +140,9 @@ fun WeeklyActivityCard() {
                     }
                 }
             }
-
+            
             Spacer(modifier = Modifier.height(40.dp))
-
-            // Simplified Bar Chart representation
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -149,7 +154,7 @@ fun WeeklyActivityCard() {
                         Box(
                             modifier = Modifier
                                 .width(12.dp)
-                                .height(if (index == 4) 16.dp else 4.dp) // Highlighted Friday as in mockup
+                                .height(if (index == 4) 16.dp else 4.dp)
                                 .clip(RoundedCornerShape(4.dp))
                                 .background(if (index == 4) RoyalBlue else Color(0xFF2C2C4E))
                         )
@@ -194,19 +199,17 @@ fun SkillMasterySection() {
                 Text(text = "View all", color = RoyalBlue, fontWeight = FontWeight.Bold)
             }
         }
-
+        
         Spacer(modifier = Modifier.height(16.dp))
-
+        
         LazyRow(
             contentPadding = PaddingValues(end = 24.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(
-                listOf(
-                    MasteryData("Compose", 92, "EXPERT", RoyalBlue),
-                    MasteryData("Android SDK", 85, "ADVANCED", Color(0xFF10B981))
-                )
-            ) { data ->
+            items(listOf(
+                MasteryData("Compose", 92, "EXPERT", RoyalBlue),
+                MasteryData("Android SDK", 85, "ADVANCED", Color(0xFF10B981))
+            )) { data ->
                 SkillCard(data)
             }
         }
@@ -269,9 +272,9 @@ fun AtAGlanceSection() {
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
-
+        
         Spacer(modifier = Modifier.height(16.dp))
-
+        
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 StatCard(
@@ -355,18 +358,6 @@ fun StatCard(
         }
     }
 }
-
-@Composable
-fun PromoStats(deck: Deck?, onPromoClick: (Deck) -> Unit) {
-    deck?.let { deck ->
-        PromoWidget(
-            randomDeck = deck,
-            onPromoClick = onPromoClick
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-    }
-}
-
 
 @Preview(showBackground = true)
 @Composable

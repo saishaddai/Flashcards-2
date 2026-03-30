@@ -81,5 +81,8 @@
     <string name="settings_subtitle">Customize your learning experience</string>
     <string name="settings_study_session">STUDY SESSION</string>
     <string name="settings_flashcards_per_session">Flashcards per Session</string>
+    <string name="settings_flashcards_per_session_min">5</string>
+    <string name="settings_flashcards_per_session_max">50</string>
+    <string name="settings_flashcards_per_session_reset">Reset</string>
 
 </resources>

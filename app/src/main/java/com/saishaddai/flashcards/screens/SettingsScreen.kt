@@ -81,7 +81,7 @@ fun SettingsScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         // STUDY SESSION
-        SectionHeader(title = stringResource(R.string.settings_study_session))
+        SectionHeader(title = stringResource(R.string.settings_section_study_session))
         var flashcardsPerSession by remember { mutableFloatStateOf(FLASHCARDS_PER_SESSION) }
         SliderSetting(
             icon = Icons.Default.School,
@@ -97,13 +97,14 @@ fun SettingsScreen() {
         var dailyStudyGoal by remember { mutableFloatStateOf(DAILY_GOAL) }
         SliderSetting(
             icon = Icons.Default.Flag,
-            title = "Daily Study Goal",
-            value = "${dailyStudyGoal.toInt()} cards",
+            title = stringResource(R.string.settings_daily_goal),
+            value = stringResource(R.string.settings_daily_goal_value, dailyStudyGoal.toInt()),
+                //"${dailyStudyGoal.toInt()} cards",
             currentValue = dailyStudyGoal,
             onValueChange = { dailyStudyGoal = it },
             range = 10f..100f,
-            minLabel = "10",
-            maxLabel = "100"
+            minLabel = stringResource(R.string.settings_daily_goal_min),
+            maxLabel = stringResource(R.string.settings_daily_goal_max)
         )
 
         val resetEnabled by remember {
@@ -125,20 +126,20 @@ fun SettingsScreen() {
         Spacer(modifier = Modifier.height(32.dp))
 
         // PERSONALIZATION
-        SectionHeader(title = "PERSONALIZATION")
+        SectionHeader(title = stringResource(R.string.settings_section_personalization))
         var darkMode by remember { mutableStateOf(true) }
         SwitchSetting(
             icon = Icons.Default.DarkMode,
-            title = "Dark Mode",
-            description = "Always use dark theme",
+            title = stringResource(R.string.settings_dark_mode),
+            description = stringResource(R.string.settings_dark_mode_description),
             checked = darkMode,
             onCheckedChange = { darkMode = it }
         )
         
         ActionSetting(
             icon = Icons.Default.AccessTime,
-            title = "Preferred Study Time",
-            description = "Best time for focused sessions",
+            title = stringResource(R.string.settings_preferred_study_time),
+            description = stringResource(R.string.settings_preferred_study_time_description),
             actionLabel = "09:00 PM",
             onClick = { /* TODO: Time picker */ }
         )
@@ -146,7 +147,7 @@ fun SettingsScreen() {
         Spacer(modifier = Modifier.height(32.dp))
 
         // NOTIFICATIONS
-        SectionHeader(title = "NOTIFICATIONS")
+        SectionHeader(title = stringResource(R.string.settings_section_notifications))
         var studyReminders by remember { mutableStateOf(true) }
         SwitchSetting(
             icon = Icons.Default.Notifications,
@@ -168,7 +169,7 @@ fun SettingsScreen() {
         Spacer(modifier = Modifier.height(32.dp))
 
         // SYSTEM
-        SectionHeader(title = "SYSTEM")
+        SectionHeader(title = stringResource(R.string.settings_section_system))
         RestartMasteryButton()
         Text(
             text = "This action will reset all your learned cards and cannot be undone.",

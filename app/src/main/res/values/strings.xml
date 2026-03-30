@@ -75,4 +75,29 @@
     <string name="stats_title">Your Progress…</string>
     <string name="stats_subtitle">Keep up the momentum!</string>
 
+    <!-- Settings Screen -->
+    <string name="settings_head_title">PREFERENCES</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_subtitle">Customize your learning experience</string>
+
+    <string name="settings_section_study_session">STUDY SESSION</string>
+    <string name="settings_flashcards_per_session">Flashcards per Session</string>
+    <string name="settings_flashcards_per_session_min">5</string>
+    <string name="settings_flashcards_per_session_max">50</string>
+    <string name="settings_daily_goal">Daily Study Goal</string>
+    <string name="settings_daily_goal_value">%d cards</string>
+    <string name="settings_daily_goal_min">10</string>
+    <string name="settings_daily_goal_max">100</string>
+    <string name="settings_flashcards_per_session_reset">Reset</string>
+
+    <string name="settings_section_personalization">PERSONALIZATION</string>
+    <string name="settings_dark_mode">Dark Mode</string>
+    <string name="settings_dark_mode_description">Always use dark theme</string>
+    <string name="settings_preferred_study_time">Preferred Study Time</string>
+    <string name="settings_preferred_study_time_description">Best time for focused sessions</string>
+
+
+    <string name="settings_section_notifications">NOTIFICATIONS</string>
+    <string name="settings_section_system">SYSTEM</string>
+
 </resources>

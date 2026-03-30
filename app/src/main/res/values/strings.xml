@@ -75,4 +75,11 @@
     <string name="stats_title">Your Progress…</string>
     <string name="stats_subtitle">Keep up the momentum!</string>
 
+    <!-- Settings Screen -->
+    <string name="settings_head_title">PREFERENCES</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_subtitle">Customize your learning experience</string>
+    <string name="settings_study_session">STUDY SESSION</string>
+    <string name="settings_flashcards_per_session">Flashcards per Session</string>
+
 </resources>

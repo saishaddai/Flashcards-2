@@ -17,7 +17,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.ChevronLeft
@@ -31,15 +30,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -50,145 +45,125 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.saishaddai.flashcards.R
+import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen() {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Settings",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { /* TODO: Navigate back */ }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
-                            contentDescription = "Back",
-                            tint = RoyalBlue,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1A1A2E)
-                )
-            )
-        },
-        containerColor = Color(0xFF1A1A2E)
-    ) { innerPadding ->
-        Column(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF1A1A2E))
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 24.dp)
+    ) {
+        Header(
+            headText = stringResource(R.string.settings_head_title),
+            titleText = stringResource(R.string.settings_title),
+            subtitleText = stringResource(R.string.settings_subtitle)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // STUDY SESSION
+        SectionHeader(title = stringResource(R.string.settings_study_session))
+        var flashcardsPerSession by remember { mutableFloatStateOf(20f) }
+        SliderSetting(
+            icon = Icons.Default.School,
+            title = stringResource(R.string.settings_flashcards_per_session),
+            value = flashcardsPerSession.toInt().toString(),
+            currentValue = flashcardsPerSession,
+            onValueChange = { flashcardsPerSession = it },
+            range = 5f..50f,
+            minLabel = "5",
+            maxLabel = "50"
+        )
+
+        var dailyStudyGoal by remember { mutableFloatStateOf(50f) }
+        SliderSetting(
+            icon = Icons.Default.Flag,
+            title = "Daily Study Goal",
+            value = "${dailyStudyGoal.toInt()} cards",
+            currentValue = dailyStudyGoal,
+            onValueChange = { dailyStudyGoal = it },
+            range = 10f..100f,
+            minLabel = "10",
+            maxLabel = "100"
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // PERSONALIZATION
+        SectionHeader(title = "PERSONALIZATION")
+        var darkMode by remember { mutableStateOf(true) }
+        SwitchSetting(
+            icon = Icons.Default.DarkMode,
+            title = "Dark Mode",
+            description = "Always use dark theme",
+            checked = darkMode,
+            onCheckedChange = { darkMode = it }
+        )
+        
+        ActionSetting(
+            icon = Icons.Default.AccessTime,
+            title = "Preferred Study Time",
+            description = "Best time for focused sessions",
+            actionLabel = "09:00 PM",
+            onClick = { /* TODO: Time picker */ }
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // NOTIFICATIONS
+        SectionHeader(title = "NOTIFICATIONS")
+        var studyReminders by remember { mutableStateOf(true) }
+        SwitchSetting(
+            icon = Icons.Default.Notifications,
+            title = "Daily Study Reminders",
+            description = "Keep your streak alive",
+            checked = studyReminders,
+            onCheckedChange = { studyReminders = it }
+        )
+
+        var notificationSound by remember { mutableStateOf(false) }
+        SwitchSetting(
+            icon = Icons.AutoMirrored.Filled.VolumeUp,
+            title = "Notification Sound",
+            description = "Play alert sound for reminders",
+            checked = notificationSound,
+            onCheckedChange = { notificationSound = it }
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // SYSTEM
+        SectionHeader(title = "SYSTEM")
+        RestartMasteryButton()
+        Text(
+            text = "This action will reset all your learned cards and cannot be undone.",
+            color = Color(0xFFB0B0B0),
+            fontSize = 12.sp,
+            textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp)
-        ) {
-            Spacer(modifier = Modifier.height(16.dp))
+                .fillMaxWidth()
+                .padding(vertical = 12.dp)
+        )
 
-            // STUDY SESSION
-            SectionHeader(title = "STUDY SESSION")
-            var flashcardsPerSession by remember { mutableFloatStateOf(20f) }
-            SliderSetting(
-                icon = Icons.Default.School,
-                title = "Flashcards per Session",
-                value = flashcardsPerSession.toInt().toString(),
-                currentValue = flashcardsPerSession,
-                onValueChange = { flashcardsPerSession = it },
-                range = 5f..50f,
-                minLabel = "5",
-                maxLabel = "50"
-            )
+        Spacer(modifier = Modifier.height(48.dp))
 
-            var dailyStudyGoal by remember { mutableFloatStateOf(50f) }
-            SliderSetting(
-                icon = Icons.Default.Flag,
-                title = "Daily Study Goal",
-                value = "${dailyStudyGoal.toInt()} cards",
-                currentValue = dailyStudyGoal,
-                onValueChange = { dailyStudyGoal = it },
-                range = 10f..100f,
-                minLabel = "10",
-                maxLabel = "100"
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // PERSONALIZATION
-            SectionHeader(title = "PERSONALIZATION")
-            var darkMode by remember { mutableStateOf(true) }
-            SwitchSetting(
-                icon = Icons.Default.DarkMode,
-                title = "Dark Mode",
-                description = "Always use dark theme",
-                checked = darkMode,
-                onCheckedChange = { darkMode = it }
-            )
-            
-            ActionSetting(
-                icon = Icons.Default.AccessTime,
-                title = "Preferred Study Time",
-                description = "Best time for focused sessions",
-                actionLabel = "09:00 PM",
-                onClick = { /* TODO: Time picker */ }
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // NOTIFICATIONS
-            SectionHeader(title = "NOTIFICATIONS")
-            var studyReminders by remember { mutableStateOf(true) }
-            SwitchSetting(
-                icon = Icons.Default.Notifications,
-                title = "Daily Study Reminders",
-                description = "Keep your streak alive",
-                checked = studyReminders,
-                onCheckedChange = { studyReminders = it }
-            )
-
-            var notificationSound by remember { mutableStateOf(false) }
-            SwitchSetting(
-                icon = Icons.AutoMirrored.Filled.VolumeUp,
-                title = "Notification Sound",
-                description = "Play alert sound for reminders",
-                checked = notificationSound,
-                onCheckedChange = { notificationSound = it }
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // SYSTEM
-            SectionHeader(title = "SYSTEM")
-            RestartMasteryButton()
-            Text(
-                text = "This action will reset all your learned cards and cannot be undone.",
-                color = Color(0xFFB0B0B0),
-                fontSize = 12.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp)
-            )
-
-            Spacer(modifier = Modifier.height(48.dp))
-
-            // Footer
-            SettingsFooter()
-            
-            Spacer(modifier = Modifier.height(32.dp))
-        }
+        // Footer
+        SettingsFooter()
+        
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 

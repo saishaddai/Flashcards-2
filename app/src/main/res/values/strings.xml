@@ -96,8 +96,18 @@
     <string name="settings_preferred_study_time">Preferred Study Time</string>
     <string name="settings_preferred_study_time_description">Best time for focused sessions</string>
 
-
     <string name="settings_section_notifications">NOTIFICATIONS</string>
+    <string name="settings_daily_reminders">Daily Study Reminders</string>
+    <string name="settings_daily_reminders_description">Keep your streak alive</string>
+    <string name="settings_notification_sound">Notification Sound</string>">
+    <string name="settings_notification_sound_description">Play alert sound for reminders</string>
+
     <string name="settings_section_system">SYSTEM</string>
+    <string name="settings_system_restart">Restart Mastery Experience</string>
+    <string name="settings_system_restart_description">This action will reset all your learned cards and cannot be undone.</string>
+
+    <string name="app_version">2.0.0</string>
+    <string name="last_updated">Last Updated: Apr 10, 2026</string>
+    <string name="designed_for">Designed for Android Developers</string>
 
 </resources>

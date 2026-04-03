@@ -151,8 +151,8 @@ fun SettingsScreen() {
         var studyReminders by remember { mutableStateOf(true) }
         SwitchSetting(
             icon = Icons.Default.Notifications,
-            title = "Daily Study Reminders",
-            description = "Keep your streak alive",
+            title = stringResource(R.string.settings_daily_reminders),
+            description = stringResource(R.string.settings_daily_reminders_description),
             checked = studyReminders,
             onCheckedChange = { studyReminders = it }
         )
@@ -160,8 +160,8 @@ fun SettingsScreen() {
         var notificationSound by remember { mutableStateOf(false) }
         SwitchSetting(
             icon = Icons.AutoMirrored.Filled.VolumeUp,
-            title = "Notification Sound",
-            description = "Play alert sound for reminders",
+            title = stringResource(R.string.settings_notification_sound),
+            description = stringResource(R.string.settings_notification_sound_description),
             checked = notificationSound,
             onCheckedChange = { notificationSound = it }
         )
@@ -172,7 +172,7 @@ fun SettingsScreen() {
         SectionHeader(title = stringResource(R.string.settings_section_system))
         RestartMasteryButton()
         Text(
-            text = "This action will reset all your learned cards and cannot be undone.",
+            text = stringResource(R.string.settings_system_restart_description),
             color = Color(0xFFB0B0B0),
             fontSize = 12.sp,
             textAlign = TextAlign.Center,
@@ -334,7 +334,7 @@ fun RestartMasteryButton() {
             Icon(imageVector = Icons.Default.Warning, contentDescription = null, tint = Color(0xFFF06292))
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Restart Mastery Experience",
+                text = stringResource(R.string.settings_system_restart),
                 color = Color(0xFFF06292),
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
@@ -354,10 +354,10 @@ fun SettingsFooter() {
             Icon(imageVector = Icons.Default.ChevronRight, contentDescription = null, tint = Color(0xFF4D4D66), modifier = Modifier.size(20.dp))
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "App Version 1.2.0", color = Color(0xFFB0B0B0), fontSize = 14.sp)
-        Text(text = "Last Updated: Oct 24, 2023", color = Color(0xFFB0B0B0), fontSize = 14.sp)
+        Text(text = stringResource(R.string.app_version), color = Color(0xFFB0B0B0), fontSize = 14.sp)
+        Text(text = stringResource(R.string.last_updated), color = Color(0xFFB0B0B0), fontSize = 14.sp)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Designed for Android Developers", color = Color(0xFF4D4D66), fontSize = 12.sp)
+        Text(text = stringResource(R.string.designed_for), color = Color(0xFF4D4D66), fontSize = 12.sp)
     }
 }
 

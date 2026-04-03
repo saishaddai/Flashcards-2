@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,6 +37,7 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -65,6 +67,50 @@ const val DAILY_GOAL = 50f
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen() {
+    var showRestartDialog by remember { mutableStateOf(false) }
+
+    if (showRestartDialog) {
+        AlertDialog(
+            onDismissRequest = { showRestartDialog = false },
+            title = {
+                Text(
+                    text = stringResource(R.string.settings_system_restart),
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.settings_system_restart_description),
+                    color = Color(0xFFB0B0B0)
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    // TODO: Implement actual restart logic
+                    showRestartDialog = false
+                }) {
+                    Text(
+                        text = "Yes, Restart",
+                        color = Color(0xFFF06292),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showRestartDialog = false }) {
+                    Text(
+                        text = "Cancel",
+                        color = RoyalBlue,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            containerColor = Color(0xFF2C2C4E),
+            shape = RoundedCornerShape(28.dp)
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -99,7 +145,6 @@ fun SettingsScreen() {
             icon = Icons.Default.Flag,
             title = stringResource(R.string.settings_daily_goal),
             value = stringResource(R.string.settings_daily_goal_value, dailyStudyGoal.toInt()),
-                //"${dailyStudyGoal.toInt()} cards",
             currentValue = dailyStudyGoal,
             onValueChange = { dailyStudyGoal = it },
             range = 10f..100f,
@@ -170,7 +215,7 @@ fun SettingsScreen() {
 
         // SYSTEM
         SectionHeader(title = stringResource(R.string.settings_section_system))
-        RestartMasteryButton()
+        RestartMasteryButton(onClick = { showRestartDialog = true })
         Text(
             text = stringResource(R.string.settings_system_restart_description),
             color = Color(0xFFB0B0B0),
@@ -316,11 +361,11 @@ fun ActionSetting(
 }
 
 @Composable
-fun RestartMasteryButton() {
+fun RestartMasteryButton(onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { /* TODO */ },
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF251A24)) // Dark Reddish
     ) {

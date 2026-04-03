@@ -39,6 +39,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,6 +57,11 @@ import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.viewmodel.FinishSessionViewModel
+import nl.dionsegijn.konfetti.compose.KonfettiView
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.emitter.Emitter
+import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,6 +78,20 @@ fun FinishSessionScreen(
             onFinishSession()
             viewModel.onNavigationHandled()
         }
+    }
+
+    val parties = remember {
+        listOf(
+            Party(
+                speed = 0f,
+                maxSpeed = 30f,
+                damping = 0.9f,
+                spread = 360,
+                colors = listOf(0xfce18a, 0xff726d, 0xb48def, 0xf4306d),
+                emitter = Emitter(duration = 100, TimeUnit.MILLISECONDS).max(100),
+                position = Position.Relative(0.5, 0.3)
+            )
+        )
     }
 
     Scaffold(
@@ -110,67 +130,74 @@ fun FinishSessionScreen(
         },
         containerColor = Color(0xFF1A1A2E)
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(32.dp))
-            TrophyIcon()
-            Spacer(modifier = Modifier.height(32.dp))
-            Text(
-                text = stringResource(R.string.finish_all_done),
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(R.string.finish_great_job, deck.name),
-                color = Color.Gray
-            )
-            Spacer(modifier = Modifier.height(32.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                InfoCard(
-                    title = stringResource(R.string.finish_card_label_reviewed),
-                    value = "20",
-                    unit = stringResource(R.string.finish_card_unit_cards),
-                    icon = Icons.Default.Style
+                Spacer(modifier = Modifier.height(32.dp))
+                TrophyIcon()
+                Spacer(modifier = Modifier.height(32.dp))
+                Text(
+                    text = stringResource(R.string.finish_all_done),
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
                 )
-                InfoCard(
-                    title = stringResource(R.string.finish_card_label_duration),
-                    value = "12",
-                    unit = stringResource(R.string.finish_card_unit_mins),
-                    icon = Icons.Default.Timer
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.finish_great_job, deck.name),
+                    color = Color.Gray
                 )
+                Spacer(modifier = Modifier.height(32.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    InfoCard(
+                        title = stringResource(R.string.finish_card_label_reviewed),
+                        value = "20",
+                        unit = stringResource(R.string.finish_card_unit_cards),
+                        icon = Icons.Default.Style
+                    )
+                    InfoCard(
+                        title = stringResource(R.string.finish_card_label_duration),
+                        value = "12",
+                        unit = stringResource(R.string.finish_card_unit_mins),
+                        icon = Icons.Default.Timer
+                    )
+                }
+                Spacer(modifier = Modifier.height(32.dp))
+                AchievementReached(
+                    icon = Icons.AutoMirrored.Filled.TrendingUp,
+                    text = stringResource(R.string.finish_goal_reached),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                AchievementReached(
+                    icon = Icons.AutoMirrored.Filled.Notes,
+                    text = stringResource(R.string.finish_goal_reached),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                AchievementReached(
+                    icon = Icons.AutoMirrored.Filled.StarHalf,
+                    text = stringResource(R.string.finish_goal_reached),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                AchievementReached(
+                    icon = Icons.AutoMirrored.Filled.VolumeUp,
+                    text = stringResource(R.string.finish_goal_reached),
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                BackToDecksButton(onClick = { viewModel.onBackToDecksClicked() })
             }
-            Spacer(modifier = Modifier.height(32.dp))
-            AchievementReached(
-                icon = Icons.AutoMirrored.Filled.TrendingUp,
-                text = stringResource(R.string.finish_goal_reached),
+
+            KonfettiView(
+                modifier = Modifier.fillMaxSize(),
+                parties = parties,
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            AchievementReached(
-                icon = Icons.AutoMirrored.Filled.Notes,
-                text = stringResource(R.string.finish_goal_reached),
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            AchievementReached(
-                icon = Icons.AutoMirrored.Filled.StarHalf,
-                text = stringResource(R.string.finish_goal_reached),
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            AchievementReached(
-                icon = Icons.AutoMirrored.Filled.VolumeUp,
-                text = stringResource(R.string.finish_goal_reached),
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            BackToDecksButton(onClick = { viewModel.onBackToDecksClicked() })
         }
     }
 }

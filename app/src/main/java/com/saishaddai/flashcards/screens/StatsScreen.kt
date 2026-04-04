@@ -19,19 +19,25 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Style
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,13 +57,21 @@ import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
+import com.saishaddai.flashcards.viewmodel.StatsViewModel
 
 @Composable
 fun StatsScreen(
-    viewModel: DecksViewModel = viewModel(),
+    decksViewModel: DecksViewModel = viewModel(),
+    statsViewModel: StatsViewModel = viewModel(),
     onPromoClick: (Deck) -> Unit = {},
 ) {
-    val promoDeck = viewModel.getRandomDeck()
+    val promoDeck = decksViewModel.getRandomDeck()
+    val weeklyActivity by statsViewModel.weeklyActivity.collectAsState()
+    val skillMastery by statsViewModel.skillMastery.collectAsState()
+    val cardsReviewed by statsViewModel.cardsReviewed.collectAsState()
+    val currentStreak by statsViewModel.currentStreak.collectAsState()
+    val studyTime by statsViewModel.studyTime.collectAsState()
+    val accuracyRate by statsViewModel.accuracyRate.collectAsState()
 
     Column(
         modifier = Modifier
@@ -66,6 +80,39 @@ fun StatsScreen(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp)
     ) {
+        // Top Actions Row from Mockup
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { statsViewModel.onBackClicked() }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color.White
+                )
+            }
+            Row {
+                IconButton(onClick = { statsViewModel.onShareClicked() }) {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = "Share",
+                        tint = Color.White
+                    )
+                }
+                IconButton(onClick = { statsViewModel.onMoreOptionsClicked() }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "More",
+                        tint = Color.White
+                    )
+                }
+            }
+        }
+
         Header(
             headText = stringResource(R.string.stats_head_title),
             titleText = stringResource(R.string.stats_title),
@@ -73,11 +120,11 @@ fun StatsScreen(
         )
 
         Spacer(modifier = Modifier.height(24.dp))
-        WeeklyActivityCard()
+        WeeklyActivityCard(weeklyActivity)
         Spacer(modifier = Modifier.height(32.dp))
-        SkillMasterySection()
+        SkillMasterySection(skillMastery, statsViewModel::onViewAllSkillsClicked)
         Spacer(modifier = Modifier.height(32.dp))
-        AtAGlanceSection()
+        AtAGlanceSection(cardsReviewed, currentStreak, studyTime, accuracyRate)
         Spacer(modifier = Modifier.height(32.dp))
         
         promoDeck?.let { deck ->
@@ -91,7 +138,7 @@ fun StatsScreen(
 }
 
 @Composable
-fun WeeklyActivityCard() {
+fun WeeklyActivityCard(activityCount: Int) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(28.dp),
@@ -118,7 +165,7 @@ fun WeeklyActivityCard() {
                 }
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "248",
+                        text = activityCount.toString(),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
                         color = RoyalBlue
@@ -173,7 +220,7 @@ fun WeeklyActivityCard() {
 }
 
 @Composable
-fun SkillMasterySection() {
+fun SkillMasterySection(masteryList: List<MasteryData>, onViewAllClick: () -> Unit) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -195,7 +242,7 @@ fun SkillMasterySection() {
                     modifier = Modifier.size(18.dp)
                 )
             }
-            TextButton(onClick = { /* TODO */ }) {
+            TextButton(onClick = onViewAllClick) {
                 Text(text = "View all", color = RoyalBlue, fontWeight = FontWeight.Bold)
             }
         }
@@ -206,10 +253,7 @@ fun SkillMasterySection() {
             contentPadding = PaddingValues(end = 24.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(listOf(
-                MasteryData("Compose", 92, "EXPERT", RoyalBlue),
-                MasteryData("Android SDK", 85, "ADVANCED", Color(0xFF10B981))
-            )) { data ->
+            items(masteryList) { data ->
                 SkillCard(data)
             }
         }
@@ -264,7 +308,12 @@ fun SkillCard(data: MasteryData) {
 }
 
 @Composable
-fun AtAGlanceSection() {
+fun AtAGlanceSection(
+    cardsReviewed: String,
+    currentStreak: String,
+    studyTime: String,
+    accuracyRate: String
+) {
     Column {
         Text(
             text = "At a Glance",
@@ -280,7 +329,7 @@ fun AtAGlanceSection() {
                 StatCard(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Default.Style,
-                    value = "1,240",
+                    value = cardsReviewed,
                     label = "Cards Reviewed",
                     containerColor = Color(0xFF1E293B),
                     iconColor = RoyalBlue
@@ -288,7 +337,7 @@ fun AtAGlanceSection() {
                 StatCard(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Default.LocalFireDepartment,
-                    value = "12 Days",
+                    value = currentStreak,
                     label = "Current Streak",
                     containerColor = Color(0xFF3E2723),
                     iconColor = Color(0xFFF59E0B)
@@ -298,7 +347,7 @@ fun AtAGlanceSection() {
                 StatCard(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Default.AccessTime,
-                    value = "14.5h",
+                    value = studyTime,
                     label = "Study Time",
                     containerColor = Color(0xFF2E1065),
                     iconColor = Color(0xFF8B5CF6)
@@ -306,7 +355,7 @@ fun AtAGlanceSection() {
                 StatCard(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Default.CheckCircle,
-                    value = "88%",
+                    value = accuracyRate,
                     label = "Accuracy Rate",
                     containerColor = Color(0xFF064E3B),
                     iconColor = Color(0xFF10B981)

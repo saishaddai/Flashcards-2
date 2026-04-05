@@ -41,14 +41,13 @@ class FinishSessionScreenTest {
         composeTestRule.onNodeWithText("All Done!").assertIsDisplayed()
 
         // Verify the success message with deck name
-        // stringResource(R.string.finish_great_job, deck.name) -> "Great job on your 'OOP' prep today."
         composeTestRule.onNodeWithText("Great job on your 'OOP' prep today.").assertIsDisplayed()
 
         // Verify Info Cards labels
         composeTestRule.onNodeWithText("REVIEWED").assertIsDisplayed()
         composeTestRule.onNodeWithText("DURATION").assertIsDisplayed()
 
-        // Verify the "Back to Decks" button is visible (scroll to it as it's at the bottom)
+        // Verify the "Back to Decks" button is present (might need scrolling)
         composeTestRule.onNodeWithText("Back to Decks", ignoreCase = true).performScrollTo().assertIsDisplayed()
     }
 
@@ -65,12 +64,12 @@ class FinishSessionScreenTest {
             }
         }
 
-        // Click "Back to Decks" after scrolling
+        // Click "Back to Decks" after scrolling to it
         composeTestRule.onNodeWithText("Back to Decks", ignoreCase = true)
             .performScrollTo()
             .performClick()
 
-        // Wait for the LaunchedEffect to trigger the callback via ViewModel state change
+        // Wait for the callback to be triggered (it happens through ViewModel + LaunchedEffect)
         composeTestRule.waitUntil(5000) {
             finishSessionCalled
         }
@@ -92,7 +91,7 @@ class FinishSessionScreenTest {
         // Click the check icon in the navigation bar (Close content description)
         composeTestRule.onNodeWithContentDescription("Close").performClick()
 
-        // Wait for the LaunchedEffect to trigger the callback
+        // Wait for the callback
         composeTestRule.waitUntil(5000) {
             finishSessionCalled
         }

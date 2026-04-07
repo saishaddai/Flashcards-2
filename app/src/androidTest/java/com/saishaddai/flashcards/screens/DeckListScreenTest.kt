@@ -52,7 +52,7 @@ class DeckListScreenTest {
     }
 
     @Test
-    fun testDeckListScreen_emptyMockDeck_opensDialog() {
+    fun testDeckListScreen_emptyMockDeck_opensDialogThatCanBeDismissed() {
         val mockDecks = listOf(
             Deck(id = 1, name = "Empty Deck", longName = "Empty Deck Long", cardCount = 0)
         )
@@ -72,6 +72,7 @@ class DeckListScreenTest {
 
         //check if ot opened a Dialog saying there's no flashcards to show
         composeTestRule.onNodeWithText("Got it").assertIsDisplayed()
+            .performClick().assertDoesNotExist()
 
     }
 

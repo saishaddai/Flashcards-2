@@ -4,6 +4,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.test.platform.app.InstrumentationRegistry
+import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.repository.DeckRepository
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
@@ -15,6 +17,7 @@ class DeckListScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    private val context = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Test
     fun testDeckListScreen_initialState_showDeckListInfo() {
@@ -22,9 +25,9 @@ class DeckListScreenTest {
             DeckListScreen(onStartSessionClick = {})
         }
 
-        composeTestRule.onNodeWithText("WELCOME BACK").assertIsDisplayed()
-        composeTestRule.onNodeWithText("What are you learning today?").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Start Session").assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.decks_welcome)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.decks_learning_today)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.decks_start_session_button)).assertIsDisplayed()
     }
 
     @Test
@@ -68,17 +71,16 @@ class DeckListScreenTest {
         }
 
         composeTestRule.onNodeWithText("Empty Deck").performClick()
-        composeTestRule.onNodeWithText("Start Session").assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithText(context.getString(R.string.decks_start_session_button)).assertIsDisplayed().performClick()
 
-        //check if ot opened a Dialog saying there's no flashcards to show
-        composeTestRule.onNodeWithText("Got it").assertIsDisplayed()
+        // Check dialog
+        composeTestRule.onNodeWithText(context.getString(R.string.empty_deck_confirm)).assertIsDisplayed()
             .performClick().assertDoesNotExist()
-
     }
 
     @Test
     fun testDeckListScreen_clickMockDeck_triggersCallBack() {
-        var onStartSessionClick = false
+        var onStartSessionClickCalled = false
         val mockDecks = listOf(
             Deck(id = 1, name = "Mock Deck", longName = "Mock Deck Long", cardCount = 1)
         )
@@ -90,16 +92,12 @@ class DeckListScreenTest {
         val viewModel = DecksViewModel(fakeRepository)
 
         composeTestRule.setContent {
-            DeckListScreen(viewModel = viewModel, onStartSessionClick = { onStartSessionClick = true })
+            DeckListScreen(viewModel = viewModel, onStartSessionClick = { onStartSessionClickCalled = true })
         }
 
         composeTestRule.onNodeWithText("Mock Deck").performClick()
-        composeTestRule.onNodeWithText("Start Session").assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithText(context.getString(R.string.decks_start_session_button)).assertIsDisplayed().performClick()
 
-        //check if onStartSessionCLick was called
-        composeTestRule.waitUntil(5000) { onStartSessionClick }
-
+        composeTestRule.waitUntil(5000) { onStartSessionClickCalled }
     }
-
-
 }

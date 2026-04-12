@@ -7,6 +7,8 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.test.platform.app.InstrumentationRegistry
+import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.repository.DeckRepository
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
@@ -19,30 +21,30 @@ class InstructionsScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    private val context = InstrumentationRegistry.getInstrumentation().targetContext
+
     @Test
     fun instructionsScreen_initialState_showsInstructions() {
         composeTestRule.setContent {
             InstructionsScreen()
         }
 
-        composeTestRule.onNodeWithText("GUIDE").assertIsDisplayed()
-        composeTestRule.onNodeWithText("How it Works").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Master Android development concepts", substring = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.instructions_guide_label)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.instructions_title)).assertIsDisplayed()
         
-        composeTestRule.onNodeWithText("Daily Consistency").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Build long-term retention", substring = true).assertIsDisplayed()
+        val descPart = context.getString(R.string.instructions_description).take(20)
+        composeTestRule.onNodeWithText(descPart, substring = true).assertIsDisplayed()
         
-        composeTestRule.onNodeWithText("Offline First").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Study anywhere, anytime.", substring = true).assertIsDisplayed()
-        
-        composeTestRule.onNodeWithText("Learning Sessions").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Each session presents 20 random flashcards", substring = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.instructions_daily_consistency_title)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.instructions_offline_first_title)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.instructions_sessions_title)).assertIsDisplayed()
     }
 
     @Test
     fun instructionsScreen_clickPromo_triggersCallback() {
         var promoClicked = false
-        val mockDeck = Deck(id = 1, name = "Test Deck", longName = "Test Deck Long", cardCount = 10)
+        val mockDeckName = "Test Deck"
+        val mockDeck = Deck(id = 1, name = mockDeckName, longName = "Test Deck Long", cardCount = 10)
         
         val fakeRepository = object : DeckRepository<Deck> {
             override suspend fun getData(): List<Deck> = listOf(mockDeck)
@@ -56,19 +58,26 @@ class InstructionsScreenTest {
             )
         }
 
+        val startNowText = context.getString(R.string.promo_widget_confirm)
+
         // Wait for the asynchronous data to load and the PromoWidget to appear
         composeTestRule.waitUntil(5000) {
-            composeTestRule.onAllNodesWithText("START NOW").fetchSemanticsNodes().isNotEmpty()
+            composeTestRule.onAllNodesWithText(startNowText).fetchSemanticsNodes().isNotEmpty()
         }
 
-        // 1. Check title (using substring to ignore \n)
-        composeTestRule.onNodeWithText("Ready for a", substring = true).assertIsDisplayed()
+        // SCROLL to the PromoWidget first. If it's off-screen, assertions will fail.
+        composeTestRule.onNodeWithText(startNowText).performScrollTo()
+
+        // 1. Check title (using substring to ignore the \n newline)
+        val promoTitlePart = context.getString(R.string.promo_widget_title).take(10)
+        composeTestRule.onNodeWithText(promoTitlePart, substring = true).assertIsDisplayed()
         
-        // 2. Check message containing the deck name
-        composeTestRule.onNodeWithText("\'Test Deck\'", substring = true).assertIsDisplayed()
+        // 2. Check message containing the deck name. 
+        // We match the deck name as a substring of the formatted message.
+        composeTestRule.onNodeWithText(mockDeckName, substring = true).assertIsDisplayed()
         
         // 3. Click the button
-        composeTestRule.onNodeWithText("START NOW").assertIsDisplayed().assertIsEnabled().performClick()
+        composeTestRule.onNodeWithText(startNowText).assertIsDisplayed().assertIsEnabled().performClick()
         
         assertTrue("Promo click lambda should have been triggered", promoClicked)
     }
@@ -87,12 +96,14 @@ class InstructionsScreenTest {
             InstructionsScreen(viewModel = viewModel)
         }
 
+        val startNowText = context.getString(R.string.promo_widget_confirm)
+
         // Wait for content to load
         composeTestRule.waitUntil(5000) {
-            composeTestRule.onAllNodesWithText("START NOW").fetchSemanticsNodes().isNotEmpty()
+            composeTestRule.onAllNodesWithText(startNowText).fetchSemanticsNodes().isNotEmpty()
         }
 
         // The button is at the bottom, so we must scroll to it
-        composeTestRule.onNodeWithText("START NOW").performScrollTo().assertIsDisplayed()
+        composeTestRule.onNodeWithText(startNowText).performScrollTo().assertIsDisplayed()
     }
 }

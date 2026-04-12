@@ -375,14 +375,6 @@ fun CancelSessionButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
         onClick = onClick,
         modifier = modifier
     )
-//    TextButton(
-//        onClick = onClick,
-//        modifier = modifier
-//    ) {
-//        Icon(Icons.Default.Close, contentDescription = null, tint = Color.Gray)
-//        Spacer(modifier = Modifier.width(8.dp))
-//        Text(text = stringResource(R.string.flashcard_button_cancel_session), color = Color.Gray)
-//    }
 }
 
 

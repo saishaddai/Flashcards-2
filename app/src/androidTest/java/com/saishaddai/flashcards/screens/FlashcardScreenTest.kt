@@ -85,7 +85,7 @@ class FlashcardScreenTest {
         // Based on strings.xml: <string name="flashcard_cancel_dialog_title">Cancel Session?</string>
         composeTestRule.onNodeWithText("Cancel Session?").assertIsDisplayed()
         
-        // Check if confirm and dismiss buttons are present
+        // Check if 'confirm' and 'dismiss' buttons are present
         // Based on strings.xml: 
         // <string name="flashcard_cancel_dialog_confirm">Yes, Cancel</string>
         // <string name="flashcard_cancel_dialog_dismiss">No, Continue</string>

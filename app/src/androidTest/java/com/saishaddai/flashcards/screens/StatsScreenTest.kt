@@ -31,6 +31,13 @@ class StatsScreenTest {
     }
 
     @Test
+    fun testStatsScreen_onSeeAllClick_showsAllDecksInfoCards() {
+        // 1. Setup with multiple decks
+        // 2. Set content// 3. Click "See All" (or the equivalent UI element)
+        // 4. Verify that elements that were hidden are now visible
+    }
+
+    @Test
     fun testStatsScreen_onScrollableContent_checkElementsDisplayed() {
     }
 
@@ -40,10 +47,6 @@ class StatsScreenTest {
 
     @Test
     fun testStatsScreen_onPromoClick_checkNavigationCalled() {
-    }
-
-    @Test
-    fun testStatsScreen_onSeeAllClick_showsAllDecksInfoCards() {
     }
 
     @Test
@@ -93,5 +96,17 @@ class StatsScreenTest {
         assertTrue("Promo click lambda should have been triggered", promoClicked)
 
     }
+
+    /**
+     * Tests provided by Gemini I should tackle.
+     * 1.
+     * Zero-State / Empty Decks: In your onPromoClick test, you mock a deck. What if the repository returns an empty list? Does the StatsScreen crash, or does it show a placeholder?
+     * 2.
+     * Formatting Check: You are checking for the "Start Now" text. You should also check if the Deck Name is correctly formatted inside the string (e.g., if the string resource is Start learning %s, verify the final string contains the mock name).
+     * 3.
+     * Multiple Decks in Stats: If the StatsScreen shows a list of all decks (via the "See All" button you have a placeholder for), test that clicking "See All" expands the list or navigates correctly.
+     * 4.
+     * Scrolling to elements: You correctly noted the need to scroll to the PromoWidget. Ensure you also test that the Top Bar (with the Back/Share buttons) remains accessible or behaves correctly when the content is scrolled.
+     */
 
 }

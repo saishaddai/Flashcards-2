@@ -49,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -141,7 +142,8 @@ fun SettingsScreen(
             onValueChange = { flashcardsPerSession = it },
             range = 5f..50f,
             minLabel = stringResource(R.string.settings_flashcards_per_session_min),
-            maxLabel = stringResource(R.string.settings_flashcards_per_session_max)
+            maxLabel = stringResource(R.string.settings_flashcards_per_session_max),
+            modifier = Modifier.testTag("slider_session")
         )
 
         var dailyStudyGoal by remember { mutableFloatStateOf(DAILY_GOAL) }
@@ -259,9 +261,10 @@ fun SliderSetting(
     onValueChange: (Float) -> Unit,
     range: ClosedFloatingPointRange<Float>,
     minLabel: String,
-    maxLabel: String
+    maxLabel: String,
+    modifier: Modifier = Modifier
 ) {
-    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+    Column(modifier = modifier.padding(vertical = 8.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,

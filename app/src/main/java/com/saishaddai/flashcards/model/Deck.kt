@@ -24,12 +24,14 @@ val decks = listOf(
     Deck(9, "Material 3", "Android Material Design"),
     Deck(10, "Navigation", "Android Navigation Component"),
     Deck(11, "Jetpack", "Android Jetpack"),
-    Deck(12, "Unit Test", "Android Unit Testing"),
+    Deck(12, "Testing", "Android Testing"),
     Deck(13, "Gradle", "Android Gradle"),
     Deck(14, "Android OPS", "Continuous Integration/Deployment"),
     Deck(15, "Libraries", "Android Libraries"),
     Deck(16, "Design Patterns", "Android Design Patterns"),
-    Deck(17, "Coroutines", "Android Coroutines")
+    Deck(17, "Coroutines", "Android Coroutines"),
+    Deck(18, "Firebase", "Firebase Integration"),
+    Deck(19, "GraphQL", "GraphQL Integration")
 ).map {
     it.apply {
         cardCount = flashcards.count { flashcard -> flashcard.deckId == it.id }

@@ -2,6 +2,7 @@ package com.saishaddai.flashcards.model
 
 import com.saishaddai.flashcards.model.fcdata.androidCards
 import com.saishaddai.flashcards.model.fcdata.composeCards
+import com.saishaddai.flashcards.model.fcdata.databaseCards
 import com.saishaddai.flashcards.model.fcdata.diCards
 import com.saishaddai.flashcards.model.fcdata.kmpCards
 import com.saishaddai.flashcards.model.fcdata.kotlinCards
@@ -16,4 +17,11 @@ data class Flashcard(
     val discovered: Boolean = false
 )
 
-val flashcards = oopCards + androidCards + kotlinCards + kmpCards + diCards + composeCards + patternsCards
+val flashcards = oopCards +
+        androidCards +
+        kotlinCards +
+        kmpCards +
+        diCards +
+        composeCards +
+        patternsCards +
+        databaseCards

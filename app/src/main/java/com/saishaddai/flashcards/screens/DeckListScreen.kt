@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -15,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BubbleChart
+import androidx.compose.material.icons.filled.ForkRight
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Navigation
 import androidx.compose.material.icons.filled.Palette
@@ -49,6 +51,7 @@ import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.utils.DeckAssets
 import com.saishaddai.flashcards.utils.getMasteryLevel
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 
@@ -162,7 +165,7 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
                 .padding(16.dp)
                 .fillMaxHeight(),
         ) {
-            val icon = getIconForDeck(deck.name)
+            val icon = DeckAssets.getIconForDeck(deck.id)
             if (icon is ImageVector) {
                 Icon(
                     imageVector = icon,
@@ -175,7 +178,9 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
                     painter = painterResource(id = icon),
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                        .size(24.dp)
                 )
             }
             
@@ -201,30 +206,6 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun getIconForDeck(name: String): Any {
-    return when (name) {
-        "OOP" -> R.drawable.oop_icon
-        "Android Core" -> R.drawable.android_icon
-        "Kotlin" -> R.drawable.kotlin_icon
-        "Kotlin MP" -> Icons.Default.PhoneAndroid
-        "Security" -> Icons.Default.Security
-        "Compose" -> Icons.Default.BubbleChart
-        "Databases" -> Icons.Default.Storage
-        "Dagger/Hilt" -> Icons.Default.Link
-        "Material 3" -> Icons.Default.Palette
-        "Navigation" -> R.drawable.navigation_icon
-        "Jetpack" -> R.drawable.jetpack_icon
-        "Unit Test" -> R.drawable.test_icon
-        "Gradle" -> R.drawable.gradle_icon
-        "Android OPS" -> R.drawable.ops_icon
-        "Libraries" -> R.drawable.libraries_icon
-        "Design Patterns" -> R.drawable.patterns_icon
-        "Coroutines" -> R.drawable.coroutines_icon
-        else -> Icons.Default.Add
     }
 }
 

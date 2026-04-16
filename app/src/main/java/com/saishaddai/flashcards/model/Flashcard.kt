@@ -2,10 +2,12 @@ package com.saishaddai.flashcards.model
 
 import com.saishaddai.flashcards.model.fcdata.androidCards
 import com.saishaddai.flashcards.model.fcdata.composeCards
+import com.saishaddai.flashcards.model.fcdata.coroutinesCards
 import com.saishaddai.flashcards.model.fcdata.databaseCards
 import com.saishaddai.flashcards.model.fcdata.diCards
 import com.saishaddai.flashcards.model.fcdata.kmpCards
 import com.saishaddai.flashcards.model.fcdata.kotlinCards
+import com.saishaddai.flashcards.model.fcdata.navigationCards
 import com.saishaddai.flashcards.model.fcdata.oopCards
 import com.saishaddai.flashcards.model.fcdata.patternsCards
 
@@ -24,4 +26,6 @@ val flashcards = oopCards +
         diCards +
         composeCards +
         patternsCards +
-        databaseCards
+        databaseCards +
+        navigationCards +
+        coroutinesCards

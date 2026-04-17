@@ -72,7 +72,8 @@ fun FlashcardScreen(
         key = viewModelKey,
         factory = viewModelFactory {
             initializer {
-                FlashcardViewModel(deck.id)
+                val application = checkNotNull(this[androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
+                FlashcardViewModel(application, deck.id)
             }
         }
     )

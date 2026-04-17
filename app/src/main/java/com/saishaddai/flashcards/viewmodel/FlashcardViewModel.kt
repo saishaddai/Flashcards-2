@@ -1,6 +1,7 @@
 package com.saishaddai.flashcards.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.FlashcardRepository
@@ -11,9 +12,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class FlashcardViewModel(
+    application: Application,
     private val deckId: Int,
-    private val repository: FlashcardRepository<Flashcard> = HardcodedFlashcardRepository()
-) : ViewModel() {
+    private val repository: FlashcardRepository<Flashcard> = HardcodedFlashcardRepository(context = application)
+) : AndroidViewModel(application) {
     private val _flashcards = MutableStateFlow<List<Flashcard>>(emptyList())
     val flashcards: StateFlow<List<Flashcard>> = _flashcards.asStateFlow()
 

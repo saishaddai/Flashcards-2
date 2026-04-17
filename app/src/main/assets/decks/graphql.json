@@ -1,0 +1,14 @@
+[
+  {
+    "deckId": 19,
+    "id": 1901,
+    "question": "What is GraphQL?",
+    "answer": "A query language for APIs and a runtime for fulfilling those queries with your existing data."
+  },
+  {
+    "deckId": 19,
+    "id": 1902,
+    "question": "What is a 'Query' in GraphQL?",
+    "answer": "A request for specific data from the server, where the client defines exactly which fields they need."
+  }
+]

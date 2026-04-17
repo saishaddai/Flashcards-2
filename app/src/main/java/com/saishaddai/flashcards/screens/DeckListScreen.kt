@@ -46,6 +46,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.BlueButton
@@ -58,9 +60,16 @@ import com.saishaddai.flashcards.viewmodel.DecksViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeckListScreen(
-    viewModel: DecksViewModel = viewModel(),
     onStartSessionClick: (Deck) -> Unit,
 ) {
+    val viewModel: DecksViewModel = viewModel(
+        factory = viewModelFactory {
+            initializer {
+                val application = checkNotNull(this[androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
+                DecksViewModel(application)
+            }
+        }
+    )
     val decksState by viewModel.decks.collectAsState()
     val selectedDeck = decksState.find { it.isSelected }
     var showEmptyDeckDialog by remember { mutableStateOf(false) }

@@ -12,6 +12,7 @@ import com.saishaddai.flashcards.model.fcdata.librariesCards
 import com.saishaddai.flashcards.model.fcdata.navigationCards
 import com.saishaddai.flashcards.model.fcdata.oopCards
 import com.saishaddai.flashcards.model.fcdata.patternsCards
+import com.saishaddai.flashcards.model.DeckType.*
 
 data class Flashcard(
     val deckId: Int,
@@ -20,15 +21,27 @@ data class Flashcard(
     val answer: String
 )
 
-val flashcards = oopCards +
-        androidCards +
-        kotlinCards +
-        kmpCards +
-        diCards +
-        composeCards +
-        patternsCards +
-        databaseCards +
-        navigationCards +
-        coroutinesCards +
-        jetpackCards +
-        librariesCards
+fun getFlashcardsForDeck(deckId: Int): List<Flashcard> {
+    return when (deckId) {
+        OOP.id -> oopCards
+        ANDROID_CORE.id -> androidCards
+        KOTLIN.id -> kotlinCards
+        KOTLIN_MP.id -> kmpCards
+        COMPOSE.id -> composeCards
+        DATABASES.id -> databaseCards
+        DAGGER_HILT.id -> diCards
+        MATERIAL_3.id -> emptyList()
+        NAVIGATION.id -> navigationCards
+        JETPACK.id -> jetpackCards
+        TESTING.id -> emptyList()
+        GRADLE.id -> emptyList()
+        ANDROID_OPS.id -> emptyList()
+        LIBRARIES.id -> librariesCards
+        DESIGN_PATTERNS.id -> patternsCards
+        COROUTINES.id -> coroutinesCards
+        FIREBASE.id -> emptyList()
+        GRAPHQL.id -> emptyList()
+        else -> emptyList()
+    }
+}
+

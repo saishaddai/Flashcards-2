@@ -21,26 +21,26 @@ import com.saishaddai.flashcards.model.DeckType.COROUTINES
 import com.saishaddai.flashcards.model.DeckType.FIREBASE
 import com.saishaddai.flashcards.model.DeckType.GRAPHQL
 
-enum class DeckType(val id: Int) {
-    OOP(1),
-    ANDROID_CORE(2),
-    KOTLIN(3),
-    KOTLIN_MP(4),
-    SECURITY(5),
-    COMPOSE(6),
-    DATABASES(7),
-    DAGGER_HILT(8),
-    MATERIAL_3(9),
-    NAVIGATION(10),
-    JETPACK(11),
-    TESTING(12),
-    GRADLE(13),
-    ANDROID_OPS(14),
-    LIBRARIES(15),
-    DESIGN_PATTERNS(16),
-    COROUTINES(17),
-    FIREBASE(18),
-    GRAPHQL(19)
+enum class DeckType(val id: Int, val jsonFile: String = "") {
+    OOP(1, "oop.json"),
+    ANDROID_CORE(2, "android.json"),
+    KOTLIN(3, "kotlin.json"),
+    KOTLIN_MP(4, "kmp.json"),
+    SECURITY(5, "security.json"),
+    COMPOSE(6, "compose.json"),
+    DATABASES(7, "databases.json"),
+    DAGGER_HILT(8, "dagger.json"),
+    MATERIAL_3(9, "material.json"),
+    NAVIGATION(10, "navigation.json"),
+    JETPACK(11, "jetpack.json"),
+    TESTING(12, "testing.json"),
+    GRADLE(13, "gradle.json"),
+    ANDROID_OPS(14, "androidOps.json"),
+    LIBRARIES(15, "libraries.json"),
+    DESIGN_PATTERNS(16, "patterns"),
+    COROUTINES(17, "coroutines.json"),
+    FIREBASE(18, "firebase.json"),
+    GRAPHQL(19, "graphql.json")
 }
 
 @Serializable

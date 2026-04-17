@@ -44,15 +44,15 @@ fun getFlashcardsForDeck(deckId: Int, context: Context? = null): List<Flashcard>
         DESIGN_PATTERNS.id -> patternsCards
         COROUTINES.id -> coroutinesCards
         FIREBASE.id -> emptyList()
-        GRAPHQL.id -> {
-            if (context != null) {
-                loadFlashcardsFromJson(context, "graphql.json")
-            } else {
-                emptyList()
-            }
-        }
+        GRAPHQL.id -> getListFromJson(context, GRAPHQL.jsonFile)
         else -> emptyList()
     }
+}
+
+private fun getListFromJson(context: Context?, fileName: String) : List<Flashcard> {
+    return context?.let{
+        loadFlashcardsFromJson(it, fileName)
+    }?: emptyList()
 }
 
 fun loadFlashcardsFromJson(context: Context, fileName: String): List<Flashcard> {

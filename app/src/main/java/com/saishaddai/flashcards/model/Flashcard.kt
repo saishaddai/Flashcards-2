@@ -17,8 +17,7 @@ data class Flashcard(
     val deckId: Int,
     val id: Int,
     val question: String,
-    val answer: String,
-    val discovered: Boolean = false
+    val answer: String
 )
 
 val flashcards = oopCards +

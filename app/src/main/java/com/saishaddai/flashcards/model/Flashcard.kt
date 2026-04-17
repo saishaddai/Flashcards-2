@@ -8,6 +8,7 @@ import com.saishaddai.flashcards.model.fcdata.diCards
 import com.saishaddai.flashcards.model.fcdata.jetpackCards
 import com.saishaddai.flashcards.model.fcdata.kmpCards
 import com.saishaddai.flashcards.model.fcdata.kotlinCards
+import com.saishaddai.flashcards.model.fcdata.librariesCards
 import com.saishaddai.flashcards.model.fcdata.navigationCards
 import com.saishaddai.flashcards.model.fcdata.oopCards
 import com.saishaddai.flashcards.model.fcdata.patternsCards
@@ -30,4 +31,5 @@ val flashcards = oopCards +
         databaseCards +
         navigationCards +
         coroutinesCards +
-        jetpackCards
+        jetpackCards +
+        librariesCards

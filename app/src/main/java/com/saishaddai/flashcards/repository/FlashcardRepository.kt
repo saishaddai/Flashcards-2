@@ -4,4 +4,6 @@ interface FlashcardRepository<A> {
 
     suspend fun getData(id: Int, size: Int = 20): List<A>
 
+    suspend fun getDataCount(id: Int): Int
+
 }

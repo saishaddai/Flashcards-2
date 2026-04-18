@@ -1,0 +1,182 @@
+[
+  {
+    "deckId": 4,
+    "id": 401,
+    "question": "What is Kotlin Multiplatform (KMP)?",
+    "answer": "A technology that allows sharing code across multiple platforms while keeping the flexibility of writing platform-specific code where needed."
+  },
+  {
+    "deckId": 4,
+    "id": 402,
+    "question": "What is the difference between KMP and KMM?",
+    "answer": "KMP is the general technology for all platforms (JVM, JS, Native, etc.), while KMM was a subset specifically focused on sharing code between Android and iOS. KMM is now deprecated in favor of the unified KMP name."
+  },
+  {
+    "deckId": 4,
+    "id": 403,
+    "question": "What is the 'expect/actual' mechanism?",
+    "answer": "A mechanism where 'expect' defines a declaration in common code, and 'actual' provides the platform-specific implementation in each target source set."
+  },
+  {
+    "deckId": 4,
+    "id": 404,
+    "question": "What is a 'Source Set' in KMP?",
+    "answer": "A collection of Kotlin source files along with their resources, dependencies, and language settings, organized by platform or commonality (e.g., commonMain, androidMain)."
+  },
+  {
+    "deckId": 4,
+    "id": 405,
+    "question": "What is the purpose of 'commonMain'?",
+    "answer": "It contains code that is shared across all targets and can only use multiplatform libraries and other common code."
+  },
+  {
+    "deckId": 4,
+    "id": 406,
+    "question": "How does KMP share code with iOS?",
+    "answer": "Kotlin code is compiled to LLVM bytecode and then into a native framework that can be called from Swift or Objective-C."
+  },
+  {
+    "deckId": 4,
+    "id": 407,
+    "question": "What is Kotlin/Native?",
+    "answer": "A technology for compiling Kotlin code to native binaries, which can run without a virtual machine, used for targets like iOS, macOS, and Linux."
+  },
+  {
+    "deckId": 4,
+    "id": 408,
+    "question": "What is a 'Target' in KMP?",
+    "answer": "A specific platform that the code is compiled for, such as androidTarget, iosArm64, or js."
+  },
+  {
+    "deckId": 4,
+    "id": 409,
+    "question": "Can you use platform-specific libraries in 'commonMain'?",
+    "answer": "No, commonMain can only access multiplatform libraries. Platform-specific libraries must be used in their respective platform source sets."
+  },
+  {
+    "deckId": 4,
+    "id": 410,
+    "question": "What is the recommended way to handle Dependency Injection in KMP?",
+    "answer": "Using multiplatform DI libraries like Koin or manual constructor injection to remain platform-independent."
+  },
+  {
+    "deckId": 4,
+    "id": 411,
+    "question": "What is Compose Multiplatform?",
+    "answer": "A declarative UI framework based on Jetpack Compose that allows sharing UI code across Android, iOS, Desktop, and Web."
+  },
+  {
+    "deckId": 4,
+    "id": 412,
+    "question": "How do you handle network requests in KMP?",
+    "answer": "Using Ktor, an asynchronous HTTP client that supports multiple platforms through specific engines."
+  },
+  {
+    "deckId": 4,
+    "id": 413,
+    "question": "How do you handle serialization in KMP?",
+    "answer": "Using the 'kotlinx.serialization' library, which provides a multiplatform way to serialize objects to JSON, Protobuf, and other formats."
+  },
+  {
+    "deckId": 4,
+    "id": 414,
+    "question": "What is an 'Intermediate Source Set'?",
+    "answer": "A source set that is shared between a subset of targets (e.g., appleMain shared between iosMain and macosMain) using the hierarchical structure."
+  },
+  {
+    "deckId": 4,
+    "id": 415,
+    "question": "What is the 'Hierarchical Project Structure'?",
+    "answer": "A KMP feature that allows source sets to form a hierarchy, enabling code sharing between similar platforms without repeating it for each one."
+  },
+  {
+    "deckId": 4,
+    "id": 416,
+    "question": "How do you handle concurrency in KMP?",
+    "answer": "Using Kotlin Coroutines, which provide a multiplatform API for asynchronous programming."
+  },
+  {
+    "deckId": 4,
+    "id": 417,
+    "question": "Why use interfaces over 'expect/actual' for large components?",
+    "answer": "Interfaces are easier to test, mock, and maintain, and they avoid the strict 'actual' name and package matching requirements."
+  },
+  {
+    "deckId": 4,
+    "id": 418,
+    "question": "Where should business logic reside in a KMP project?",
+    "answer": "In 'commonMain', to ensure that the core logic is consistent and tested once for all platforms."
+  },
+  {
+    "deckId": 4,
+    "id": 419,
+    "question": "How to handle date and time in KMP?",
+    "answer": "Using the 'kotlinx-datetime' library, which provides multiplatform-compatible date and time classes."
+  },
+  {
+    "deckId": 4,
+    "id": 420,
+    "question": "What is the 'kotlin-multiplatform' Gradle plugin?",
+    "answer": "The core plugin used to configure KMP projects, defining targets, source sets, and shared dependencies."
+  },
+  {
+    "deckId": 4,
+    "id": 421,
+    "question": "How to handle logging in KMP?",
+    "answer": "Using multiplatform logging libraries like Napier or Kermit that delegate to platform-specific loggers like Logcat or NSLog."
+  },
+  {
+    "deckId": 4,
+    "id": 422,
+    "question": "What is the role of SKIE in KMP?",
+    "answer": "A tool that improves the Swift API produced by Kotlin/Native, adding support for sealed classes, enums, and coroutines (Suspend functions/Flows)."
+  },
+  {
+    "deckId": 4,
+    "id": 423,
+    "question": "How to share resources like strings and images in KMP?",
+    "answer": "Using Compose Multiplatform's built-in resource support or libraries like MOKO Resources."
+  },
+  {
+    "deckId": 4,
+    "id": 424,
+    "question": "What are 'iosArm64' and 'iosX64' targets?",
+    "answer": "'iosArm64' is for physical iOS devices, while 'iosX64' is for the iOS Simulator running on Intel-based Macs."
+  },
+  {
+    "deckId": 4,
+    "id": 425,
+    "question": "What is 'iosSimulatorArm64'?",
+    "answer": "A target for the iOS Simulator running on Apple Silicon (M1/M2/M3) Macs."
+  },
+  {
+    "deckId": 4,
+    "id": 426,
+    "question": "Good Practice: How should you organize platform-specific implementations?",
+    "answer": "Prefer using dependency injection and interfaces in 'commonMain' over 'expect/actual' whenever possible to improve testability."
+  },
+  {
+    "deckId": 4,
+    "id": 427,
+    "question": "Convention: Where should KMP libraries be declared in a Version Catalog?",
+    "answer": "In the '[libraries]' section, often grouped under a common prefix like 'androidx-navigation3' or 'kotlinx-coroutines'."
+  },
+  {
+    "deckId": 4,
+    "id": 428,
+    "question": "Recommendation: How to handle platform-specific UI state?",
+    "answer": "Keep the UI state in 'commonMain' (e.g., using ViewModels) and only let the platform-specific layer render that state."
+  },
+  {
+    "deckId": 4,
+    "id": 429,
+    "question": "What is the 'lib' folder in KMP frameworks on iOS?",
+    "answer": "It is not a standard convention; usually, KMP generates a '.framework' or '.xcframework' which contains the compiled binary and headers."
+  },
+  {
+    "deckId": 4,
+    "id": 430,
+    "question": "Convention: How to name source sets for sharing code between Apple platforms?",
+    "answer": "The conventional name is 'appleMain', which usually includes ios, macos, watchos, and tvos targets."
+  }
+]

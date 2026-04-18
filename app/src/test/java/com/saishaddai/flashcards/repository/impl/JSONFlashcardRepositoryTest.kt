@@ -1,17 +1,17 @@
-package com.saishaddai.flashcards.repository
+package com.saishaddai.flashcards.repository.impl
 
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
-class HardcodedFlashcardRepositoryTest {
+class JSONFlashcardRepositoryTest {
 
-    private lateinit var repository: HardcodedFlashcardRepository
+    private lateinit var repository: JSONFlashcardRepository
 
     @Before
     fun setUp() {
-        repository = HardcodedFlashcardRepository()
+        repository = JSONFlashcardRepository()
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.saishaddai.flashcards.viewmodel
 
+import android.app.Application
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +16,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.mock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class FlashcardViewModelTest {
@@ -23,13 +25,14 @@ class FlashcardViewModelTest {
 
     private lateinit var viewModel: FlashcardViewModel
     private lateinit var repository: FakeFlashcardRepository
+    private val application: Application = mock()
     private val deckId = 1
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         repository = FakeFlashcardRepository()
-        viewModel = FlashcardViewModel(deckId, repository)
+        viewModel = FlashcardViewModel(application, deckId, repository)
     }
 
     @After
@@ -77,6 +80,10 @@ class FlashcardViewModelTest {
                 Flashcard(1, 1, "Q1", "A1"),
                 Flashcard(1, 2, "Q2", "A2")
             )
+        }
+
+        override suspend fun getDataCount(id: Int): Int {
+            return 2
         }
     }
 }

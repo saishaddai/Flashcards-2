@@ -1,18 +1,19 @@
 package com.saishaddai.flashcards.repository
 
 import com.saishaddai.flashcards.model.decks
+import com.saishaddai.flashcards.repository.impl.JSONDeckRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
-class HardcodedDeckRepositoryTest {
+class JSONDeckRepositoryTest {
 
-    private lateinit var repository: HardcodedDeckRepository
+    private lateinit var repository: JSONDeckRepository
 
     @Before
     fun setUp() {
-        repository = HardcodedDeckRepository()
+        repository = JSONDeckRepository()
     }
 
     @Test

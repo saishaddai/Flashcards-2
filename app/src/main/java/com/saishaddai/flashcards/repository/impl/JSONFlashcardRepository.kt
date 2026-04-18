@@ -42,6 +42,7 @@ class JSONFlashcardRepository(private val context: Context? = null) :
             DeckType.ANDROID_CORE.id -> androidCards.storeCount(DeckType.ANDROID_CORE.id)
             DeckType.KOTLIN.id -> kotlinCards.storeCount(DeckType.KOTLIN.id)
             DeckType.KOTLIN_MP.id -> getListFromJson(context, DeckType.KOTLIN_MP.jsonFile).storeCount(DeckType.KOTLIN_MP.id)
+            DeckType.SECURITY.id -> emptyList<Flashcard>().storeCount(DeckType.SECURITY.id)
             DeckType.COMPOSE.id -> composeCards.storeCount(DeckType.COMPOSE.id)
             DeckType.DATABASES.id -> databaseCards.storeCount(DeckType.DATABASES.id)
             DeckType.DAGGER_HILT.id -> diCards.storeCount(DeckType.DAGGER_HILT.id)
@@ -71,7 +72,7 @@ class JSONFlashcardRepository(private val context: Context? = null) :
             val jsonString = context.assets.open("decks/$fileName")
                 .bufferedReader()
                 .use { it.readText() }
-            Json.Default.decodeFromString<List<Flashcard>>(jsonString)
+            Json.decodeFromString<List<Flashcard>>(jsonString)
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()

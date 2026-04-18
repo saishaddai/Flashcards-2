@@ -1,6 +1,5 @@
-package com.saishaddai.flashcards.repository
+package com.saishaddai.flashcards.repository.impl
 
-import com.saishaddai.flashcards.repository.impl.JSONFlashcardRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertTrue
 import org.junit.Before

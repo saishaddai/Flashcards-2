@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.repository.DeckRepository
 import com.saishaddai.flashcards.repository.HardcodedDeckRepository
+import com.saishaddai.flashcards.repository.HardcodedFlashcardRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +15,9 @@ import kotlinx.coroutines.launch
 
 class DecksViewModel(
     application: Application,
-    private val repository: DeckRepository<Deck> = HardcodedDeckRepository(application)
+    private val repository: DeckRepository<Deck> = HardcodedDeckRepository(
+        HardcodedFlashcardRepository(application)
+    )
 ) : AndroidViewModel(application) {
     private val _decks = MutableStateFlow<List<Deck>>(emptyList())
     val decks: StateFlow<List<Deck>> = _decks.asStateFlow()

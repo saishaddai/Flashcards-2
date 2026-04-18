@@ -1,47 +1,6 @@
 package com.saishaddai.flashcards.model
 
 import kotlinx.serialization.Serializable
-import com.saishaddai.flashcards.model.DeckType.OOP
-import com.saishaddai.flashcards.model.DeckType.ANDROID_CORE
-import com.saishaddai.flashcards.model.DeckType.KOTLIN
-import com.saishaddai.flashcards.model.DeckType.KOTLIN_MP
-import com.saishaddai.flashcards.model.DeckType.SECURITY
-import com.saishaddai.flashcards.model.DeckType.COMPOSE
-import com.saishaddai.flashcards.model.DeckType.DATABASES
-import com.saishaddai.flashcards.model.DeckType.DAGGER_HILT
-import com.saishaddai.flashcards.model.DeckType.MATERIAL_3
-import com.saishaddai.flashcards.model.DeckType.NAVIGATION
-import com.saishaddai.flashcards.model.DeckType.JETPACK
-import com.saishaddai.flashcards.model.DeckType.TESTING
-import com.saishaddai.flashcards.model.DeckType.GRADLE
-import com.saishaddai.flashcards.model.DeckType.ANDROID_OPS
-import com.saishaddai.flashcards.model.DeckType.LIBRARIES
-import com.saishaddai.flashcards.model.DeckType.DESIGN_PATTERNS
-import com.saishaddai.flashcards.model.DeckType.COROUTINES
-import com.saishaddai.flashcards.model.DeckType.FIREBASE
-import com.saishaddai.flashcards.model.DeckType.GRAPHQL
-
-enum class DeckType(val id: Int, val jsonFile: String = "") {
-    OOP(1, "oop.json"),
-    ANDROID_CORE(2, "android.json"),
-    KOTLIN(3, "kotlin.json"),
-    KOTLIN_MP(4, "kmp.json"),
-    SECURITY(5, "security.json"),
-    COMPOSE(6, "compose.json"),
-    DATABASES(7, "databases.json"),
-    DAGGER_HILT(8, "dagger.json"),
-    MATERIAL_3(9, "material.json"),
-    NAVIGATION(10, "navigation.json"),
-    JETPACK(11, "jetpack.json"),
-    TESTING(12, "testing.json"),
-    GRADLE(13, "gradle.json"),
-    ANDROID_OPS(14, "androidOps.json"),
-    LIBRARIES(15, "libraries.json"),
-    DESIGN_PATTERNS(16, "patterns"),
-    COROUTINES(17, "coroutines.json"),
-    FIREBASE(18, "firebase.json"),
-    GRAPHQL(19, "graphql.json")
-}
 
 @Serializable
 data class Deck(
@@ -53,31 +12,5 @@ data class Deck(
     val isSelected: Boolean = false
 )
 
-val decks = listOf(
-    Deck(OOP.id, "OOP", "Object-Oriented Programming", isSelected = true),
-    Deck(ANDROID_CORE.id, "Android Core", "Android Core Technologies"),
-    Deck(KOTLIN.id, "Kotlin", "Kotlin Programming Language"),
-    Deck(KOTLIN_MP.id, "Kotlin MP", "Kotlin Multiplatform"),
-    Deck(SECURITY.id, "Security", "Android Security"),
-    Deck(COMPOSE.id, "Compose", "Jetpack Compose UI"),
-    Deck(DATABASES.id, "Databases", "Android Databases"),
-    Deck(DAGGER_HILT.id, "Dagger/Hilt", "Android Dependency Injection"),
-    Deck(MATERIAL_3.id, "Material 3", "Android Material Design"),
-    Deck(NAVIGATION.id, "Navigation", "Android Navigation Component"),
-    Deck(JETPACK.id, "Jetpack", "Android Jetpack"),
-    Deck(TESTING.id, "Testing", "Android Testing"),
-    Deck(GRADLE.id, "Gradle", "Android Gradle"),
-    Deck(ANDROID_OPS.id, "Android OPS", "Continuous Integration/Deployment"),
-    Deck(LIBRARIES.id, "Libraries", "Android Libraries"),
-    Deck(DESIGN_PATTERNS.id, "Design Patterns", "Android Design Patterns"),
-    Deck(COROUTINES.id, "Coroutines", "Android Coroutines"),
-    Deck(FIREBASE.id, "Firebase", "Firebase Integration"),
-    Deck(GRAPHQL.id, "GraphQL", "GraphQL Integration")
-).map {
-    it.apply {
-        cardCount = getFlashcardsForDeck(it.id).size
-        mastery = sessions.find { session -> session.deckId == it.id }?.currentXP ?: 0
-    }
-}
 
 

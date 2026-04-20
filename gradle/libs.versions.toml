@@ -13,6 +13,7 @@ kotlinxSerializationCore = "1.11.0"
 kotlinxCoroutines = "1.10.2"
 konfettiCompose = "2.0.5"
 mockitoKotlin = "5.4.0"
+mockitoAndroid = "5.15.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +45,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 #konfetti
 konfetti-compose = { module = "nl.dionsegijn:konfetti-compose", version.ref = "konfettiCompose" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
+mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
 
 
 [plugins]

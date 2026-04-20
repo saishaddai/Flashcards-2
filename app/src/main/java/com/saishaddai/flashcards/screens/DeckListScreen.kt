@@ -14,15 +14,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.BubbleChart
-import androidx.compose.material.icons.filled.ForkRight
-import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Navigation
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.PhoneAndroid
-import androidx.compose.material.icons.filled.Security
-import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -51,6 +43,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.BlueButton
+import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.utils.DeckAssets
@@ -61,8 +54,7 @@ import com.saishaddai.flashcards.viewmodel.DecksViewModel
 @Composable
 fun DeckListScreen(
     onStartSessionClick: (Deck) -> Unit,
-) {
-    val viewModel: DecksViewModel = viewModel(
+    viewModel: DecksViewModel = viewModel(
         factory = viewModelFactory {
             initializer {
                 val application = checkNotNull(this[androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
@@ -70,68 +62,74 @@ fun DeckListScreen(
             }
         }
     )
+) {
     val decksState by viewModel.decks.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
     val selectedDeck = decksState.find { it.isSelected }
     var showEmptyDeckDialog by remember { mutableStateOf(false) }
 
-    if (showEmptyDeckDialog) {
-        AlertDialog(
-            onDismissRequest = { showEmptyDeckDialog = false },
-            title = {
-                Text(
-                    text = stringResource(R.string.empty_deck_title),
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            },
-            text = {
-                Text(
-                    text = stringResource(R.string.empty_deck_message),
-                    color = Color(0xFFB0B0B0)
-                )
-            },
-            confirmButton = {
-                TextButton(onClick = { showEmptyDeckDialog = false }) {
+    if (isLoading) {
+        FullLoader()
+    } else {
+        if (showEmptyDeckDialog) {
+            AlertDialog(
+                onDismissRequest = { showEmptyDeckDialog = false },
+                title = {
                     Text(
-                        text = stringResource(R.string.empty_deck_confirm),
-                        color = RoyalBlue,
-                        fontWeight = FontWeight.Bold
+                        text = stringResource(R.string.empty_deck_title),
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
-                }
-            },
-            containerColor = Color(0xFF2C2C4E),
-            shape = RoundedCornerShape(28.dp)
-        )
-    }
+                },
+                text = {
+                    Text(
+                        text = stringResource(R.string.empty_deck_message),
+                        color = Color(0xFFB0B0B0)
+                    )
+                },
+                confirmButton = {
+                    TextButton(onClick = { showEmptyDeckDialog = false }) {
+                        Text(
+                            text = stringResource(R.string.empty_deck_confirm),
+                            color = RoyalBlue,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                },
+                containerColor = Color(0xFF2C2C4E),
+                shape = RoundedCornerShape(28.dp)
+            )
+        }
 
-    Column(
-        modifier = Modifier
-            .fillMaxHeight()
-    ) {
-        Header(
-            headText = stringResource(R.string.decks_welcome),
-            titleText = stringResource(R.string.decks_learning_today)
-        )
-        
-        DeckGrid(
-            decks = decksState,
-            onDeckSelected = viewModel::onDeckSelected,
-            modifier = Modifier.weight(1f)
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+        ) {
+            Header(
+                headText = stringResource(R.string.decks_welcome),
+                titleText = stringResource(R.string.decks_learning_today)
+            )
 
-        BlueButton(
-            icon = Icons.Default.Navigation,
-            text = stringResource(R.string.decks_start_session_button),
-            onClick = {
-                selectedDeck?.let { deck ->
-                    if (deck.cardCount > 0) {
-                        onStartSessionClick(deck)
-                    } else {
-                        showEmptyDeckDialog = true
+            DeckGrid(
+                decks = decksState,
+                onDeckSelected = viewModel::onDeckSelected,
+                modifier = Modifier.weight(1f)
+            )
+
+            BlueButton(
+                icon = Icons.Default.Navigation,
+                text = stringResource(R.string.decks_start_session_button),
+                onClick = {
+                    selectedDeck?.let { deck ->
+                        if (deck.cardCount > 0) {
+                            onStartSessionClick(deck)
+                        } else {
+                            showEmptyDeckDialog = true
+                        }
                     }
                 }
-            }
-        )
+            )
+        }
     }
 }
 
@@ -192,7 +190,7 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
                         .size(24.dp)
                 )
             }
-            
+
             Text(
                 text = deck.name,
                 fontWeight = FontWeight.Bold,

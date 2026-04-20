@@ -1,0 +1,304 @@
+[
+  {
+    "deckId": 3,
+    "id": 1,
+    "question": "What is a 'val' in Kotlin?",
+    "answer": "A read-only variable whose value cannot be changed once assigned."
+  },
+  {
+    "deckId": 3,
+    "id": 2,
+    "question": "What is a 'var' in Kotlin?",
+    "answer": "A mutable variable whose value can be reassigned."
+  },
+  {
+    "deckId": 3,
+    "id": 3,
+    "question": "What are extension functions?",
+    "answer": "Functions that add new functionality to an existing class without modifying it."
+  },
+  {
+    "deckId": 3,
+    "id": 4,
+    "question": "What is null safety in Kotlin?",
+    "answer": "A system designed to eliminate NullPointerExceptions by distinguishing between nullable and non-nullable types."
+  },
+  {
+    "deckId": 3,
+    "id": 5,
+    "question": "What is a class in Kotlin?",
+    "answer": "A blueprint for creating objects, encapsulating data and behavior."
+  },
+  {
+    "deckId": 3,
+    "id": 6,
+    "question": "What is the difference between primary and secondary constructors in Kotlin?",
+    "answer": "Primary is declared in the class header; secondary is defined inside the class body using the 'constructor' keyword."
+  },
+  {
+    "deckId": 3,
+    "id": 7,
+    "question": "What is a data class in Kotlin? How it is different from Java's model class?",
+    "answer": "A class that automatically generates methods like equals(), hashCode(), and toString() for data-holding objects."
+  },
+  {
+    "deckId": 3,
+    "id": 8,
+    "question": "What is a sealed class and sealed interface in Kotlin?",
+    "answer": "Restricted hierarchies where all subclasses are known at compile time, providing type safety in 'when' expressions."
+  },
+  {
+    "deckId": 3,
+    "id": 9,
+    "question": "What is an abstract class in Kotlin?",
+    "answer": "A class that cannot be instantiated and can contain abstract members to be implemented by subclasses."
+  },
+  {
+    "deckId": 3,
+    "id": 10,
+    "question": "What is an interface in Kotlin?",
+    "answer": "A contract that defines functions and properties that classes can implement, possibly providing default implementations."
+  },
+  {
+    "deckId": 3,
+    "id": 11,
+    "question": "Do we need open keyword for interface and abstract class as well?",
+    "answer": "No, they are open by default since they are intended to be implemented or extended."
+  },
+  {
+    "deckId": 3,
+    "id": 12,
+    "question": "What is the difference between an abstract class and an interface in Kotlin?",
+    "answer": "Abstract classes can store state (properties with backing fields), whereas interfaces cannot."
+  },
+  {
+    "deckId": 3,
+    "id": 13,
+    "question": "What is inheritance in Kotlin?",
+    "answer": "A mechanism where a class (subclass) derives from another class (superclass) using the ':' operator."
+  },
+  {
+    "deckId": 3,
+    "id": 14,
+    "question": "What is the purpose of the open keyword in Kotlin?",
+    "answer": "In Kotlin, classes and members are final by default; 'open' allows them to be inherited or overridden."
+  },
+  {
+    "deckId": 3,
+    "id": 15,
+    "question": "What is delegation in Kotlin?",
+    "answer": "A design pattern where an object handles a request by delegating it to a second object, often used with the 'by' keyword."
+  },
+  {
+    "deckId": 3,
+    "id": 16,
+    "question": "What is object declaration in Kotlin? Is it thread safe?",
+    "answer": "A way to define a singleton object. It is thread-safe and lazily initialized."
+  },
+  {
+    "deckId": 3,
+    "id": 17,
+    "question": "What is a companion object in Kotlin?",
+    "answer": "An object declared within a class that can be called like a static method in Java, sharing the class's scope."
+  },
+  {
+    "deckId": 3,
+    "id": 18,
+    "question": "What is the purpose of the @JvmStatic annotation?",
+    "answer": "It tells the Kotlin compiler to generate an additional static method for a member of a companion object or named object for easier access from Java."
+  },
+  {
+    "deckId": 3,
+    "id": 19,
+    "question": "What does the @JvmOverloads annotation do?",
+    "answer": "It instructs the Kotlin compiler to generate multiple Java overloads for a function with default parameter values."
+  },
+  {
+    "deckId": 3,
+    "id": 20,
+    "question": "What is the difference between 'lateinit var' and 'by lazy'?",
+    "answer": "'lateinit' is for mutable properties initialized later; 'lazy' is for read-only properties initialized on first access."
+  },
+  {
+    "deckId": 3,
+    "id": 21,
+    "question": "What is a 'const val' and how does it differ from a regular 'val'?",
+    "answer": "'const val' is a compile-time constant, whereas 'val' is a read-only variable assigned at runtime."
+  },
+  {
+    "deckId": 3,
+    "id": 22,
+    "question": "What is the 'let' scoped function used for?",
+    "answer": "It is used for executing a block of code on a non-null object and returns the result of the lambda expression."
+  },
+  {
+    "deckId": 3,
+    "id": 23,
+    "question": "What is the 'apply' scoped function used for?",
+    "answer": "It is used for object configuration; it operates on 'this' and returns the object itself."
+  },
+  {
+    "deckId": 3,
+    "id": 24,
+    "question": "What is the 'also' scoped function used for?",
+    "answer": "It is used for additional actions like logging; it operates on 'it' and returns the object itself."
+  },
+  {
+    "deckId": 3,
+    "id": 25,
+    "question": "What is the 'run' scoped function?",
+    "answer": "It combines 'with' and 'let'; it operates on 'this' and returns the result of the lambda."
+  },
+  {
+    "deckId": 3,
+    "id": 26,
+    "question": "What is the 'with' scoped function?",
+    "answer": "A non-extension function used to call multiple methods on the same object without repeating the object name."
+  },
+  {
+    "deckId": 3,
+    "id": 27,
+    "question": "What are inline functions in Kotlin?",
+    "answer": "Functions whose body is substituted at the call site at compile time to reduce the runtime overhead of higher-order functions."
+  },
+  {
+    "deckId": 3,
+    "id": 28,
+    "question": "What is the purpose of the 'noinline' keyword?",
+    "answer": "Used in inline functions to prevent a specific lambda parameter from being inlined."
+  },
+  {
+    "deckId": 3,
+    "id": 29,
+    "question": "What is the purpose of the 'crossinline' keyword?",
+    "answer": "Used in inline functions to forbid a lambda parameter from using non-local returns."
+  },
+  {
+    "deckId": 3,
+    "id": 30,
+    "question": "What are reified type parameters?",
+    "answer": "Used with inline functions to keep type information at runtime, allowing operations like 'T is String'."
+  },
+  {
+    "deckId": 3,
+    "id": 31,
+    "question": "What is the difference between a List and a Sequence?",
+    "answer": "Lists are eager (evaluated immediately); Sequences are lazy (evaluated item by item only when needed)."
+  },
+  {
+    "deckId": 3,
+    "id": 32,
+    "question": "What are higher-order functions?",
+    "answer": "Functions that take other functions as parameters or return a function as a result."
+  },
+  {
+    "deckId": 3,
+    "id": 33,
+    "question": "What are lambdas with receivers?",
+    "answer": "Lambdas where you can call methods of a specific object (the receiver) directly without any qualifiers."
+  },
+  {
+    "deckId": 3,
+    "id": 34,
+    "question": "What is a type alias in Kotlin?",
+    "answer": "A way to provide an alternative name for an existing type to make complex types more readable."
+  },
+  {
+    "deckId": 3,
+    "id": 35,
+    "question": "What is a value class (formerly inline class)?",
+    "answer": "A class that wraps a single value to provide type safety without the memory overhead of a full object at runtime."
+  },
+  {
+    "deckId": 3,
+    "id": 36,
+    "question": "What are 'expect' and 'actual' keywords in Kotlin Multiplatform (KMP)?",
+    "answer": "'expect' declares a platform-specific API in common code; 'actual' provides its implementation in platform-specific modules."
+  },
+  {
+    "deckId": 3,
+    "id": 37,
+    "question": "What are platform types in Kotlin?",
+    "answer": "Types coming from Java where nullability is not specified; Kotlin doesn't enforce null checks on them."
+  },
+  {
+    "deckId": 3,
+    "id": 38,
+    "question": "What is a SAM conversion?",
+    "answer": "Allows using a lambda as an implementation for a functional interface (Single Abstract Method) defined in Java."
+  },
+  {
+    "deckId": 3,
+    "id": 39,
+    "question": "What is property delegation in Kotlin?",
+    "answer": "The mechanism of handing over the getter/setter logic of a property to a separate object using the 'by' keyword."
+  },
+  {
+    "deckId": 3,
+    "id": 40,
+    "question": "What is the 'it' keyword in a lambda?",
+    "answer": "The default name for the single parameter of a lambda expression if it is not explicitly named."
+  },
+  {
+    "deckId": 3,
+    "id": 41,
+    "question": "What is a trailing lambda in Kotlin?",
+    "answer": "A syntax convention where the last lambda argument of a function can be placed outside the parentheses."
+  },
+  {
+    "deckId": 3,
+    "id": 42,
+    "question": "What are destructuring declarations?",
+    "answer": "A feature that allows unpacking an object into multiple variables, typically used with data classes and Pairs."
+  },
+  {
+    "deckId": 3,
+    "id": 43,
+    "question": "What is the Elvis operator '?:' used for?",
+    "answer": "It returns the left-hand expression if it's not null; otherwise, it returns the right-hand expression."
+  },
+  {
+    "deckId": 3,
+    "id": 44,
+    "question": "What is a smart cast in Kotlin?",
+    "answer": "The compiler's ability to automatically cast a variable to a specific type after a successful type check."
+  },
+  {
+    "deckId": 3,
+    "id": 45,
+    "question": "List the visibility modifiers available in Kotlin.",
+    "answer": "public (default), private, protected, and internal (visible within the same module)."
+  },
+  {
+    "deckId": 3,
+    "id": 46,
+    "question": "Does Kotlin support checked exceptions?",
+    "answer": "No, all exceptions in Kotlin are unchecked, so you aren't required to catch or declare them."
+  },
+  {
+    "deckId": 3,
+    "id": 47,
+    "question": "What is the difference between 'Unit' and 'Nothing' types?",
+    "answer": "'Unit' represents no return value; 'Nothing' represents a type that never has a value (e.g., a function that throws)."
+  },
+  {
+    "deckId": 3,
+    "id": 48,
+    "question": "What are string templates in Kotlin?",
+    "answer": "A feature that allows embedding variables or expressions directly into strings using the '$' sign."
+  },
+  {
+    "deckId": 3,
+    "id": 49,
+    "question": "What is the difference between '==' and '==='?",
+    "answer": "'==' checks for structural equality (equals()); '===' checks for referential equality (same object instance)."
+  },
+  {
+    "deckId": 3,
+    "id": 50,
+    "question": "What is the difference between 'filter' and 'map' collection operations?",
+    "answer": "'filter' selects elements that match a predicate; 'map' transforms each element into a new value."
+  }
+]
+
+

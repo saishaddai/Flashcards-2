@@ -54,8 +54,7 @@ import com.saishaddai.flashcards.viewmodel.DecksViewModel
 @Composable
 fun DeckListScreen(
     onStartSessionClick: (Deck) -> Unit,
-) {
-    val viewModel: DecksViewModel = viewModel(
+    viewModel: DecksViewModel = viewModel(
         factory = viewModelFactory {
             initializer {
                 val application = checkNotNull(this[androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
@@ -63,6 +62,7 @@ fun DeckListScreen(
             }
         }
     )
+) {
     val decksState by viewModel.decks.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val selectedDeck = decksState.find { it.isSelected }

@@ -61,9 +61,9 @@ class StatsScreenTest {
         val mockDeck = Deck(id = 1, name = mockDeckName, longName = "Test Deck Long", cardCount = 10)
         val fakeRepository = object : DeckRepository<Deck> {
             override suspend fun getData(): List<Deck> = listOf(mockDeck)
-
         }
-        val viewModel = DecksViewModel(fakeRepository)
+        val application = context.applicationContext as android.app.Application
+        val viewModel = DecksViewModel(application, fakeRepository)
 
 
         composeTestRule.setContent {

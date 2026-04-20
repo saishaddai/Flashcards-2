@@ -49,7 +49,8 @@ class InstructionsScreenTest {
         val fakeRepository = object : DeckRepository<Deck> {
             override suspend fun getData(): List<Deck> = listOf(mockDeck)
         }
-        val viewModel = DecksViewModel(fakeRepository)
+        val application = context.applicationContext as android.app.Application
+        val viewModel = DecksViewModel(application, fakeRepository)
 
         composeTestRule.setContent {
             InstructionsScreen(
@@ -90,7 +91,8 @@ class InstructionsScreenTest {
         val fakeRepository = object : DeckRepository<Deck> {
             override suspend fun getData(): List<Deck> = mockDecks
         }
-        val viewModel = DecksViewModel(fakeRepository)
+        val application = context.applicationContext as android.app.Application
+        val viewModel = DecksViewModel(application, fakeRepository)
 
         composeTestRule.setContent {
             InstructionsScreen(viewModel = viewModel)

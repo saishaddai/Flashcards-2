@@ -55,7 +55,7 @@ class JSONFlashcardRepository(private val context: Context? = null) :
             DeckType.LIBRARIES.id -> librariesCards.storeCount(DeckType.LIBRARIES.id)
             DeckType.DESIGN_PATTERNS.id -> patternsCards.storeCount(DeckType.DESIGN_PATTERNS.id)
             DeckType.COROUTINES.id -> coroutinesCards.storeCount(DeckType.COROUTINES.id)
-            DeckType.FIREBASE.id -> emptyList<Flashcard>().storeCount(DeckType.FIREBASE.id)
+            DeckType.FIREBASE.id -> getListFromJson(context, DeckType.FIREBASE.jsonFile).storeCount(DeckType.FIREBASE.id)
             DeckType.GRAPHQL.id -> getListFromJson(context, DeckType.GRAPHQL.jsonFile).storeCount(DeckType.GRAPHQL.id)
             else -> emptyList()
         }

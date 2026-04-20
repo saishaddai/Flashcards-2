@@ -6,6 +6,7 @@ import com.saishaddai.flashcards.model.DeckType.OOP
 import com.saishaddai.flashcards.model.DeckType.KOTLIN
 import com.saishaddai.flashcards.model.DeckType.KOTLIN_MP
 import com.saishaddai.flashcards.model.DeckType.FIREBASE
+import com.saishaddai.flashcards.model.DeckType.SECURITY
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.model.fcdata.androidCards
 import com.saishaddai.flashcards.model.fcdata.composeCards
@@ -40,11 +41,11 @@ class JSONFlashcardRepository(private val context: Context? = null) :
 
     fun getFlashcardsForDeck(deckId: Int): List<Flashcard> {
         return when (deckId) {
-            OOP.id -> getListFromJson(context, OOP.jsonFile).storeCount(OOP.id)
+            OOP.id -> getListFromJson(context, OOP)
             DeckType.ANDROID_CORE.id -> androidCards.storeCount(DeckType.ANDROID_CORE.id)
-            KOTLIN.id -> getListFromJson(context, KOTLIN.jsonFile).storeCount(KOTLIN.id)
-            KOTLIN_MP.id -> getListFromJson(context, KOTLIN_MP.jsonFile).storeCount(KOTLIN_MP.id)
-            DeckType.SECURITY.id -> emptyList<Flashcard>().storeCount(DeckType.SECURITY.id)
+            KOTLIN.id -> getListFromJson(context, KOTLIN)
+            KOTLIN_MP.id -> getListFromJson(context, KOTLIN_MP)
+            SECURITY.id -> getListFromJson(context, SECURITY)
             DeckType.COMPOSE.id -> composeCards.storeCount(DeckType.COMPOSE.id)
             DeckType.DATABASES.id -> databaseCards.storeCount(DeckType.DATABASES.id)
             DeckType.DAGGER_HILT.id -> diCards.storeCount(DeckType.DAGGER_HILT.id)
@@ -57,15 +58,16 @@ class JSONFlashcardRepository(private val context: Context? = null) :
             DeckType.LIBRARIES.id -> librariesCards.storeCount(DeckType.LIBRARIES.id)
             DeckType.DESIGN_PATTERNS.id -> patternsCards.storeCount(DeckType.DESIGN_PATTERNS.id)
             DeckType.COROUTINES.id -> coroutinesCards.storeCount(DeckType.COROUTINES.id)
-            FIREBASE.id -> getListFromJson(context, FIREBASE.jsonFile).storeCount(FIREBASE.id)
-            DeckType.GRAPHQL.id -> getListFromJson(context, DeckType.GRAPHQL.jsonFile).storeCount(DeckType.GRAPHQL.id)
+            FIREBASE.id -> getListFromJson(context, FIREBASE)
+            DeckType.GRAPHQL.id -> getListFromJson(context, DeckType.GRAPHQL)
             else -> emptyList()
         }
     }
 
-    private fun getListFromJson(context: Context?, fileName: String): List<Flashcard> {
+
+    private fun getListFromJson(context: Context?, deckType : DeckType) : List<Flashcard> {
         return context?.let {
-            loadFlashcardsFromJson(it, fileName)
+            loadFlashcardsFromJson(it, deckType.jsonFile).storeCount(deckType.id)
         } ?: emptyList()
     }
 

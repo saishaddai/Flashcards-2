@@ -22,13 +22,18 @@ class DecksViewModel(
     private val _decks = MutableStateFlow<List<Deck>>(emptyList())
     val decks: StateFlow<List<Deck>> = _decks.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     init {
         loadDecks()
     }
 
     private fun loadDecks() {
         viewModelScope.launch {
+            _isLoading.value = true
             _decks.value = repository.getData()
+            _isLoading.value = false
         }
     }
 

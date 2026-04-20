@@ -9,7 +9,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.utils.TestTags
 
 @Composable
 fun FullLoader() {
@@ -17,11 +19,17 @@ fun FullLoader() {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF1A1A2E))
-            .testTag("full_loader"),
+            .testTag(TestTags.FULL_LOADER),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
             color = RoyalBlue
         )
     }
+}
+
+@Preview
+@Composable
+fun PreviewFullLoader() {
+    FullLoader()
 }

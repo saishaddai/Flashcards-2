@@ -11,6 +11,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.repository.DeckRepository
+import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import org.junit.Rule
 import org.junit.Test
@@ -47,11 +48,11 @@ class DeckListScreenTest {
         }
 
         // Check if loader is shown initially
-        composeTestRule.onNodeWithTag("full_loader").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.FULL_LOADER).assertIsDisplayed()
 
         // Wait for loader to disappear
         composeTestRule.waitUntil(5000) {
-            composeTestRule.onAllNodes(hasTestTag("full_loader")).fetchSemanticsNodes().isEmpty()
+            composeTestRule.onAllNodes(hasTestTag(TestTags.FULL_LOADER)).fetchSemanticsNodes().isEmpty()
         }
 
         composeTestRule.onNodeWithText(context.getString(R.string.decks_welcome)).assertIsDisplayed()

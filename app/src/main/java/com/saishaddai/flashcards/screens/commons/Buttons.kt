@@ -16,9 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.utils.TestTags
 
 @Composable
 fun BlueButton(
@@ -30,7 +32,8 @@ fun BlueButton(
     Button(
         onClick = onClick,
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .testTag(TestTags.BLUE_BUTTON),
         enabled = enabled,
         shape = RoundedCornerShape(50),
         colors = ButtonDefaults.buttonColors(
@@ -56,6 +59,8 @@ fun TransparentButton(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
+            .testTag(TestTags.TRANSPARENT_BUTTON),
+        shape = RoundedCornerShape(50)
     ) {
         Icon(
             imageVector = icon,

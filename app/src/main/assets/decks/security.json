@@ -1,0 +1,182 @@
+[
+  {
+    "deckId": 5,
+    "id": 501,
+    "question": "What is the Android Sandbox?",
+    "answer": "A security mechanism that assigns a unique User ID (UID) to each app, running it in a separate process to prevent apps from accessing each other's data."
+  },
+  {
+    "deckId": 5,
+    "id": 502,
+    "question": "What is the Principle of Least Privilege?",
+    "answer": "The practice of requiring only the minimum set of permissions an app needs to function, reducing the potential impact of a security breach."
+  },
+  {
+    "deckId": 5,
+    "id": 503,
+    "question": "What is the Android Keystore System?",
+    "answer": "A system that lets you store cryptographic keys in a container to make them more difficult to extract from the device."
+  },
+  {
+    "deckId": 5,
+    "id": 504,
+    "question": "What is the difference between Install-time and Runtime permissions?",
+    "answer": "Install-time permissions are granted automatically upon installation (normal); Runtime permissions must be requested and approved by the user while the app is running (dangerous)."
+  },
+  {
+    "deckId": 5,
+    "id": 505,
+    "question": "What is 'Cleartext Traffic' and why is it dangerous?",
+    "answer": "Unencrypted network communication (HTTP). It is dangerous because it can be intercepted via 'Man-in-the-Middle' attacks. Use HTTPS instead."
+  },
+  {
+    "deckId": 5,
+    "id": 506,
+    "question": "What is Network Security Configuration?",
+    "answer": "An XML file that allows apps to customize their network security settings, such as opting out of cleartext traffic or pinning certificates."
+  },
+  {
+    "deckId": 5,
+    "id": 507,
+    "question": "What is Certificate Pinning?",
+    "answer": "A security technique that associates a host with their expected X.509 certificate or public key to prevent interception by rogue Certificate Authorities."
+  },
+  {
+    "deckId": 5,
+    "id": 508,
+    "question": "What is the 'Jetpack Security' library?",
+    "answer": "A library that provides an implementation of security best practices, specifically for encrypting SharedPrefs and Files easily."
+  },
+  {
+    "deckId": 5,
+    "id": 509,
+    "question": "What is EncryptedSharedPreferences?",
+    "answer": "A wrapper around SharedPreferences that automatically encrypts keys and values using the Android Keystore."
+  },
+  {
+    "deckId": 5,
+    "id": 510,
+    "question": "What is ProGuard/R8 in the context of security?",
+    "answer": "Tools that obfuscate code by renaming classes and methods, making it harder for attackers to reverse-engineer the application logic."
+  },
+  {
+    "deckId": 5,
+    "id": 511,
+    "question": "What is the vulnerability 'SQL Injection' in Android?",
+    "answer": "A vulnerability where an attacker inserts malicious SQL code into a query. Use parameterized queries with Room or SQLite to prevent it."
+  },
+  {
+    "deckId": 5,
+    "id": 512,
+    "question": "What is 'Signature-based' permission?",
+    "answer": "A permission that is granted only if the requesting app is signed with the same certificate as the app that declared the permission."
+  },
+  {
+    "deckId": 5,
+    "id": 513,
+    "question": "What is BiometricPrompt?",
+    "answer": "The standard Android API for requesting biometric authentication (fingerprint, face, iris) in a secure and consistent way."
+  },
+  {
+    "deckId": 5,
+    "id": 514,
+    "question": "What is Root Detection?",
+    "answer": "The process of checking if a device has been 'rooted', which compromises the Android security model. Apps can use Play Integrity API for this."
+  },
+  {
+    "deckId": 5,
+    "id": 515,
+    "question": "What is the Play Integrity API?",
+    "answer": "A service that helps protect apps and games from potentially risky and fraudulent interactions by checking the integrity of the device and binary."
+  },
+  {
+    "deckId": 5,
+    "id": 516,
+    "question": "What is Deep Link Hijacking?",
+    "answer": "When a malicious app intercepts a URL intended for another app. Use App Links (verified links) to ensure only your app handles specific URLs."
+  },
+  {
+    "deckId": 5,
+    "id": 517,
+    "question": "What is the 'Exported' attribute in Android Manifest?",
+    "answer": "A flag for components (Activities, Services). If true, other apps can start the component. Set to false unless the component is intended for public use."
+  },
+  {
+    "deckId": 5,
+    "id": 518,
+    "question": "What is AES (Advanced Encryption Standard)?",
+    "answer": "A symmetric block cipher used globally to encrypt sensitive data. It is the recommended algorithm for local data encryption on Android."
+  },
+  {
+    "deckId": 5,
+    "id": 519,
+    "question": "What is the difference between Symmetric and Asymmetric encryption?",
+    "answer": "Symmetric uses the same key for encryption and decryption; Asymmetric uses a public key to encrypt and a private key to decrypt."
+  },
+  {
+    "deckId": 5,
+    "id": 520,
+    "question": "What is a 'Salt' in hashing?",
+    "answer": "Random data added to an input (like a password) before hashing to ensure that the same password produces a unique hash every time."
+  },
+  {
+    "deckId": 5,
+    "id": 521,
+    "question": "What is Scoped Storage?",
+    "answer": "A security feature that restricts apps to their own folders and specific media collections, preventing broad access to the device's entire storage."
+  },
+  {
+    "deckId": 5,
+    "id": 522,
+    "question": "What is 'Tapjacking'?",
+    "answer": "An attack where a malicious app overlays a transparent screen to trick a user into clicking a button they didn't intend to. Prevented by 'setFilterTouchesWhenObscured'."
+  },
+  {
+    "deckId": 5,
+    "id": 523,
+    "question": "What is WebView 'JavascriptInterface' risk?",
+    "answer": "A risk where JavaScript in a WebView can execute native Java/Kotlin code. Always use @JavascriptInterface and ensure the content is trusted."
+  },
+  {
+    "deckId": 5,
+    "id": 524,
+    "question": "What is the TEE (Trusted Execution Environment)?",
+    "answer": "A secure area of the main processor that runs code and stores data in isolation from the main OS (Android), used for secure key processing."
+  },
+  {
+    "deckId": 5,
+    "id": 525,
+    "question": "Why should you avoid 'Hardcoded Secrets'?",
+    "answer": "Secrets (API keys, passwords) hardcoded in strings can be easily extracted by decompiling the APK. Use backend-proxying or safe storage instead."
+  },
+  {
+    "deckId": 5,
+    "id": 526,
+    "question": "What is an 'Intent Filter' vulnerability?",
+    "answer": "If an Intent Filter is too broad, it can receive unintended data from other apps. Always validate the data received in the Extras."
+  },
+  {
+    "deckId": 5,
+    "id": 527,
+    "question": "What is the risk of 'PendingIntents'?",
+    "answer": "If not created with the 'IMMUTABLE' flag (where possible), a receiving app might be able to modify the Intent's parameters."
+  },
+  {
+    "deckId": 5,
+    "id": 528,
+    "question": "What is 'Man-in-the-Middle' (MITM)?",
+    "answer": "An attack where the attacker secretly relays and possibly alters the communication between two parties who believe they are directly communicating."
+  },
+  {
+    "deckId": 5,
+    "id": 529,
+    "question": "What is 'Dynamic Code Loading' risk?",
+    "answer": "The risk of loading code (DEX, JAR) at runtime from an external source, which could be replaced by a malicious version. Avoid whenever possible."
+  },
+  {
+    "deckId": 5,
+    "id": 530,
+    "question": "What is the 'android:allowBackup' flag?",
+    "answer": "A manifest flag that determines if app data can be backed up and restored. Set to false if the app contains highly sensitive data to prevent ADB extraction."
+  }
+]

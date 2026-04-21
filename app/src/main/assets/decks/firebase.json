@@ -1,0 +1,182 @@
+[
+  {
+    "deckId": 18,
+    "id": 1801,
+    "question": "What is Firebase?",
+    "answer": "A Backend-as-a-Service (BaaS) platform by Google that provides tools for tracking analytics, reporting and fixing app crashes, creating marketing and product experimentations."
+  },
+  {
+    "deckId": 18,
+    "id": 1802,
+    "question": "What is Cloud Firestore?",
+    "answer": "A flexible, scalable NoSQL cloud database to store and sync data for client- and server-side development, featuring real-time listeners and offline support."
+  },
+  {
+    "deckId": 18,
+    "id": 1803,
+    "question": "What is the difference between Firestore and Realtime Database?",
+    "answer": "Firestore is document-based with better querying and scaling; Realtime Database is a large JSON tree with lower latency for simple synchronization."
+  },
+  {
+    "deckId": 18,
+    "id": 1804,
+    "question": "How do you integrate Firebase in an Android project?",
+    "answer": "By adding the google-services.json file to the app module and applying the Google Services Gradle plugin."
+  },
+  {
+    "deckId": 18,
+    "id": 1805,
+    "question": "What is the Firebase BoM (Bill of Materials)?",
+    "answer": "A library that lets you manage all Firebase library versions by specifying only one version (the BoM version), ensuring compatibility across all Firebase SDKs."
+  },
+  {
+    "deckId": 18,
+    "id": 1806,
+    "question": "Does Firebase support Kotlin Multiplatform (KMP)?",
+    "answer": "Official SDKs are primarily for Android/iOS/Web, but KMP support is available through the 'Firebase Kotlin SDK' (a community-driven multiplatform wrapper)."
+  },
+  {
+    "deckId": 18,
+    "id": 1807,
+    "question": "What is Firebase Authentication?",
+    "answer": "A service that provides backend services, easy-to-use SDKs, and ready-made UI libraries to authenticate users via passwords, phone numbers, or social providers like Google."
+  },
+  {
+    "deckId": 18,
+    "id": 1808,
+    "question": "What are Firestore Security Rules?",
+    "answer": "Configurations that allow you to control access to documents and collections based on authentication state, data validation, and request details."
+  },
+  {
+    "deckId": 18,
+    "id": 1809,
+    "question": "How does Firestore handle offline data?",
+    "answer": "It caches data that the app is actively using, allowing the app to write, read, and query data even when the device is offline, syncing changes when connectivity returns."
+  },
+  {
+    "deckId": 18,
+    "id": 1810,
+    "question": "What is a 'Document' in Firestore?",
+    "answer": "A lightweight record that contains fields which map to values. It is the unit of storage in Firestore."
+  },
+  {
+    "deckId": 18,
+    "id": 1811,
+    "question": "What is a 'Collection' in Firestore?",
+    "answer": "A container for documents. Collections are used to organize data and build queries."
+  },
+  {
+    "deckId": 18,
+    "id": 1812,
+    "question": "What is Firebase Cloud Messaging (FCM)?",
+    "answer": "A cross-platform messaging solution that lets you reliably send messages and notifications at no cost."
+  },
+  {
+    "deckId": 18,
+    "id": 1813,
+    "question": "What is Firebase Crashlytics?",
+    "answer": "A lightweight, realtime crash reporter that helps you track, prioritize, and fix the stability issues that erode your app quality."
+  },
+  {
+    "deckId": 18,
+    "id": 1814,
+    "question": "What is Firebase Remote Config?",
+    "answer": "A cloud service that lets you change the behavior and appearance of your app without requiring users to download an app update."
+  },
+  {
+    "deckId": 18,
+    "id": 1815,
+    "question": "What is the best practice for Firestore document IDs?",
+    "answer": "Allow Firestore to generate auto-generated IDs unless you have a natural unique key (like a User ID from Auth) to avoid hotspots."
+  },
+  {
+    "deckId": 18,
+    "id": 1816,
+    "question": "How do you listen to real-time updates in Firestore?",
+    "answer": "Using the 'addSnapshotListener' method, which provides a callback whenever the data in a document or query results changes."
+  },
+  {
+    "deckId": 18,
+    "id": 1817,
+    "question": "What is Cloud Functions for Firebase?",
+    "answer": "A serverless framework that lets you automatically run backend code in response to events triggered by Firebase features and HTTPS requests."
+  },
+  {
+    "deckId": 18,
+    "id": 1818,
+    "question": "Best Practice: Should you use Firebase directly in ViewModels?",
+    "answer": "No, it is better to wrap Firebase logic in a Repository or Data Source to make the code testable and platform-independent (especially for KMP)."
+  },
+  {
+    "deckId": 18,
+    "id": 1819,
+    "question": "What is Firebase Storage?",
+    "answer": "A service built for app developers who need to store and serve user-generated content, such as photos or videos."
+  },
+  {
+    "deckId": 18,
+    "id": 1820,
+    "question": "What is an Index in Firestore?",
+    "answer": "A data structure that allows Firestore to perform complex queries efficiently. Some are automatic; others (composite) must be created manually."
+  },
+  {
+    "deckId": 18,
+    "id": 1821,
+    "question": "What is the 'Shallow Query' feature in Firestore?",
+    "answer": "Queries are shallow, meaning they only return documents in the specific collection queried, not data in subcollections."
+  },
+  {
+    "deckId": 18,
+    "id": 1822,
+    "question": "How to handle Firebase in 'commonMain' for KMP?",
+    "answer": "Define an interface in 'commonMain' and provide 'actual' implementations using the native Android and iOS Firebase SDKs, or use a library like GitLive's Firebase Kotlin SDK."
+  },
+  {
+    "deckId": 18,
+    "id": 1823,
+    "question": "What is Firebase App Check?",
+    "answer": "A security layer that helps protect your backend resources from abuse, such as billing fraud and phishing, by ensuring requests come from your authentic app."
+  },
+  {
+    "deckId": 18,
+    "id": 1824,
+    "question": "How to optimize Firestore costs?",
+    "answer": "Limit the number of reads by using listeners effectively, avoid unnecessary document updates, and use bundled queries or data denormalization."
+  },
+  {
+    "deckId": 18,
+    "id": 1825,
+    "question": "What is the Firebase Local Emulator Suite?",
+    "answer": "A set of tools that allow you to run and interact with Firebase services locally on your machine for development and automated testing."
+  },
+  {
+    "deckId": 18,
+    "id": 1826,
+    "question": "What is 'Denormalization' in Firestore?",
+    "answer": "The practice of duplicating data across multiple documents to reduce the number of queries and reads needed to display a screen."
+  },
+  {
+    "deckId": 18,
+    "id": 1827,
+    "question": "What is a Write Batch in Firestore?",
+    "answer": "A set of write operations that are executed atomically; either all operations succeed or none are applied."
+  },
+  {
+    "deckId": 18,
+    "id": 1828,
+    "question": "What is the purpose of 'kotlinx-serialization' with Firestore?",
+    "answer": "In KMP, it allows you to easily map Firestore maps/documents to Kotlin Data Classes in a type-safe way."
+  },
+  {
+    "deckId": 18,
+    "id": 1829,
+    "question": "Best Practice: How to handle Firebase API Keys?",
+    "answer": "Firebase API keys are not secrets; they identify your project. Protection should be handled via App Check and Security Rules, not by hiding the key."
+  },
+  {
+    "deckId": 18,
+    "id": 1830,
+    "question": "What is the 'Expect/Actual' role in KMP Firebase integration?",
+    "answer": "It allows you to call the Firebase Android SDK in 'androidMain' and the Firebase iOS SDK in 'iosMain' while exposing a single API to 'commonMain'."
+  }
+]

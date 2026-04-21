@@ -67,7 +67,8 @@ class JSONFlashcardRepository(private val context: Context? = null) :
 
     private fun getListFromJson(context: Context?, deckType : DeckType) : List<Flashcard> {
         return context?.let {
-            loadFlashcardsFromJson(it, deckType.jsonFile).storeCount(deckType.id)
+            loadFlashcardsFromJson(it, deckType.jsonFile)
+                .storeCount(deckType.id)
         } ?: emptyList()
     }
 

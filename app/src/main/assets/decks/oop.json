@@ -1,0 +1,134 @@
+[
+  {
+    "deckId": 1,
+    "id": 1,
+    "question": "What is a class?",
+    "answer": "A blueprint for creating objects"
+  },
+  {
+    "deckId": 1,
+    "id": 2,
+    "question": "What is an object?",
+    "answer": "An instance of a class"
+  },
+  {
+    "deckId": 1,
+    "id": 3,
+    "question": "What is an interface?",
+    "answer": "A contract with methods without implementations"
+  },
+  {
+    "deckId": 1,
+    "id": 4,
+    "question": "What is an abstract class?",
+    "answer": "A base class with partial implementations"
+  },
+  {
+    "deckId": 1,
+    "id": 5,
+    "question": "Tell me the four pillars of OOP",
+    "answer": "Encapsulation, Inheritance, Polymorphism, Abstraction"
+  },
+  {
+    "deckId": 1,
+    "id": 6,
+    "question": "What is Encapsulation?",
+    "answer": "Hide internal state of a class, control access to it"
+  },
+  {
+    "deckId": 1,
+    "id": 7,
+    "question": "Whats is Abstraction?",
+    "answer": "Simplify use of a class exposing only the information that matters"
+  },
+  {
+    "deckId": 1,
+    "id": 8,
+    "question": "What is Polymorphism?",
+    "answer": "Same method, different behavior"
+  },
+  {
+    "deckId": 1,
+    "id": 9,
+    "question": "What is Inheritance?",
+    "answer": "Reuse code via Parent-Child relationship"
+  },
+  {
+    "deckId": 1,
+    "id": 10,
+    "question": "In classes relationships, what is Association?",
+    "answer": "General link between classes"
+  },
+  {
+    "deckId": 1,
+    "id": 11,
+    "question": "In classes relationships, what is Aggregation?",
+    "answer": "Whole part relationship, parts can exist independently. Example: Library - Book (books can exists outside the library)"
+  },
+  {
+    "deckId": 1,
+    "id": 12,
+    "question": "In classes relationships, what is Composition?",
+    "answer": "String whole part relationship. Parts die with the whole. Example House - Room (rooms aare parte of a house and nowhere else)"
+  },
+  {
+    "deckId": 1,
+    "id": 13,
+    "question": "In classes relationships, what is Dependency?",
+    "answer": "One class uses another temporarily. Example: Car - Mechanic (car depends on mechanic for service"
+  },
+  {
+    "deckId": 1,
+    "id": 14,
+    "question": "In classes relationships, what is Realization?",
+    "answer": "Class implements interface. Example: Bird implements Flyable"
+  },
+  {
+    "deckId": 1,
+    "id": 15,
+    "question": "What are Unidirectional relationships?",
+    "answer": "One-way relationship. Example Order - Customer (order knows customer but no vice versa"
+  },
+  {
+    "deckId": 1,
+    "id": 16,
+    "question": "What are Bidirectional relationships?",
+    "answer": "Two-way relationship. Example Husband - Wife (both knows each other"
+  },
+  {
+    "deckId": 1,
+    "id": 17,
+    "question": "What are the OOP Pitfalls?",
+    "answer": "Overuse of inheritance, tight coupling, poor encapsulation, violate SOLID principles"
+  },
+  {
+    "deckId": 1,
+    "id": 18,
+    "question": "What the S means in SOLID principles?",
+    "answer": "Every class has only one single responsibility and no more"
+  },
+  {
+    "deckId": 1,
+    "id": 19,
+    "question": "What the O means in SOLID principles?",
+    "answer": "Open to extension, close to modification"
+  },
+  {
+    "deckId": 1,
+    "id": 20,
+    "question": "What the L means in SOLID principles?",
+    "answer": "Liskov Substitution. subclass can be substituted for its base class without affecting the application"
+  },
+  {
+    "deckId": 1,
+    "id": 21,
+    "question": "What the I means in SOLID principles?",
+    "answer": "Interface Segregation. An interface can't make you implement all the methods in it"
+  },
+  {
+    "deckId": 1,
+    "id": 22,
+    "question": "What the D means in SOLID principles?",
+    "answer": "Dependency Inversion. A class must depend on abstractions not implementations"
+  }
+]

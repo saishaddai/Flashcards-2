@@ -3,6 +3,7 @@ package com.saishaddai.flashcards.repository.impl
 import android.content.Context
 import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.DeckType.DESIGN_PATTERNS
+import com.saishaddai.flashcards.model.DeckType.GRADLE
 import com.saishaddai.flashcards.model.DeckType.OOP
 import com.saishaddai.flashcards.model.DeckType.KOTLIN
 import com.saishaddai.flashcards.model.DeckType.KOTLIN_MP
@@ -53,7 +54,7 @@ class JSONFlashcardRepository(private val context: Context? = null) :
             DeckType.NAVIGATION.id -> navigationCards.storeCount(DeckType.NAVIGATION.id)
             DeckType.JETPACK.id -> jetpackCards.storeCount(DeckType.JETPACK.id)
             DeckType.TESTING.id -> emptyList<Flashcard>().storeCount(DeckType.TESTING.id)
-            DeckType.GRADLE.id -> emptyList<Flashcard>().storeCount(DeckType.GRADLE.id)
+            GRADLE.id -> getListFromJson(context, GRADLE)
             DeckType.ANDROID_OPS.id -> emptyList<Flashcard>().storeCount(DeckType.ANDROID_OPS.id)
             DeckType.LIBRARIES.id -> librariesCards.storeCount(DeckType.LIBRARIES.id)
             DESIGN_PATTERNS.id -> getListFromJson(context, DESIGN_PATTERNS)

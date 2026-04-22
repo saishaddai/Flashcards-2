@@ -1,0 +1,182 @@
+[
+  {
+    "deckId": 3,
+    "id": 1,
+    "question": "What is Gradle?",
+    "answer": "An open-source build automation tool that is the official build system for Android."
+  },
+  {
+    "deckId": 3,
+    "id": 2,
+    "question": "What are the two main DSLs used in Gradle scripts?",
+    "answer": "Groovy DSL (.gradle) and Kotlin DSL (.gradle.kts)."
+  },
+  {
+    "deckId": 3,
+    "id": 3,
+    "question": "What is the purpose of the 'settings.gradle.kts' file?",
+    "answer": "To define the project name and which modules should be included in the build."
+  },
+  {
+    "deckId": 3,
+    "id": 4,
+    "question": "What is the Gradle Wrapper?",
+    "answer": "A script that downloads and uses a specific Gradle version to ensure build consistency across environments."
+  },
+  {
+    "deckId": 3,
+    "id": 5,
+    "question": "What is a Version Catalog (libs.versions.toml)?",
+    "answer": "A centralized file to manage dependency versions and plugins across multiple modules."
+  },
+  {
+    "deckId": 3,
+    "id": 6,
+    "question": "How do you define a version in 'libs.versions.toml'?",
+    "answer": "Under the [versions] block, e.g., 'kotlin = \"2.0.0\"'."
+  },
+  {
+    "deckId": 3,
+    "id": 7,
+    "question": "In 'libs.versions.toml', what is the purpose of the [libraries] block?",
+    "answer": "To define dependency aliases using versions from the [versions] block."
+  },
+  {
+    "deckId": 3,
+    "id": 8,
+    "question": "What is the difference between 'implementation' and 'api' configurations?",
+    "answer": "'implementation' hides dependencies from consumers (better compilation speed), while 'api' exposes them."
+  },
+  {
+    "deckId": 3,
+    "id": 9,
+    "question": "What does 'compileOnly' do?",
+    "answer": "Dependencies used only during compilation but not included in the final runtime/APK."
+  },
+  {
+    "deckId": 3,
+    "id": 10,
+    "question": "What is the 'runtimeOnly' configuration?",
+    "answer": "Dependencies not available at compile time but required at runtime."
+  },
+  {
+    "deckId": 3,
+    "id": 11,
+    "question": "How do Build Types differ from Product Flavors?",
+    "answer": "Build Types (debug/release) define build properties; Product Flavors define different versions (free/paid) of the app."
+  },
+  {
+    "deckId": 3,
+    "id": 12,
+    "question": "What is a Build Variant?",
+    "answer": "The combination of a Product Flavor and a Build Type (e.g., 'freeDebug')."
+  },
+  {
+    "deckId": 3,
+    "id": 13,
+    "question": "What is the purpose of 'gradle.properties'?",
+    "answer": "To configure build environment settings like JVM heap size, project-wide properties, or enabling AndroidX."
+  },
+  {
+    "deckId": 3,
+    "id": 14,
+    "question": "What does 'org.gradle.parallel=true' do in 'gradle.properties'?",
+    "answer": "Enables Gradle to execute tasks in parallel across different modules for faster builds."
+  },
+  {
+    "deckId": 3,
+    "id": 15,
+    "question": "What is Configuration Caching in Gradle?",
+    "answer": "A feature that caches the output of the configuration phase to speed up subsequent builds."
+  },
+  {
+    "deckId": 3,
+    "id": 16,
+    "question": "How do you apply a plugin in Kotlin DSL?",
+    "answer": "Using the 'plugins { id(\"com.android.application\") }' block."
+  },
+  {
+    "deckId": 3,
+    "id": 17,
+    "question": "In KMP, what is the 'commonMain' source set?",
+    "answer": "The source set where platform-independent code shared across all targets resides."
+  },
+  {
+    "deckId": 3,
+    "id": 18,
+    "question": "What is the purpose of 'expect' and 'actual' keywords in KMP?",
+    "answer": "'expect' defines a declaration in common code; 'actual' provides platform-specific implementations."
+  },
+  {
+    "deckId": 3,
+    "id": 19,
+    "question": "How do you add a dependency to common code in a KMP module?",
+    "answer": "Inside 'kotlin { sourceSets { commonMain.dependencies { ... } } }'."
+  },
+  {
+    "deckId": 3,
+    "id": 20,
+    "question": "What is 'buildConfigField' used for?",
+    "answer": "To generate custom constants in the 'BuildConfig' class accessible from your code."
+  },
+  {
+    "deckId": 3,
+    "id": 21,
+    "question": "What is ProGuard/R8 used for in Android Gradle builds?",
+    "answer": "To shrink, optimize, and obfuscate code and resources for release builds."
+  },
+  {
+    "deckId": 3,
+    "id": 22,
+    "question": "What is the 'manifestPlaceholders' property?",
+    "answer": "Allows passing variables from Gradle to the 'AndroidManifest.xml' file."
+  },
+  {
+    "deckId": 3,
+    "id": 23,
+    "question": "What does 'includeBuild' do in 'settings.gradle.kts'?",
+    "answer": "Used for 'Composite Builds' to include another separate project as a dependency."
+  },
+  {
+    "deckId": 3,
+    "id": 24,
+    "question": "What is the Gradle 'Daemon'?",
+    "answer": "A long-lived background process that keeps Gradle in memory to avoid startup overhead."
+  },
+  {
+    "deckId": 3,
+    "id": 25,
+    "question": "How can you see a detailed report of dependency conflicts?",
+    "answer": "By running the './gradlew dependencies' task."
+  },
+  {
+    "deckId": 3,
+    "id": 26,
+    "question": "What is 'kapt' vs 'ksp'?",
+    "answer": "'kapt' is the Kotlin Annotation Processing Tool (slower); 'ksp' is Kotlin Symbol Processing (faster, Kotlin-first)."
+  },
+  {
+    "deckId": 3,
+    "id": 27,
+    "question": "How do you disable a specific task from running in Gradle?",
+    "answer": "By setting 'enabled = false' on the task object."
+  },
+  {
+    "deckId": 3,
+    "id": 28,
+    "question": "What is 'local.properties' usually used for?",
+    "answer": "To store local machine-specific paths like the Android SDK location (should not be checked into version control)."
+  },
+  {
+    "deckId": 3,
+    "id": 29,
+    "question": "How do you define a custom task in Kotlin DSL?",
+    "answer": "tasks.register(\"taskName\") { ... }"
+  },
+  {
+    "deckId": 3,
+    "id": 30,
+    "question": "What is the 'allprojects' or 'subprojects' block in root build.gradle?",
+    "answer": "Used to apply configurations or dependencies to all or some modules in a multi-module project."
+  }
+]

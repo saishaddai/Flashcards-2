@@ -1,0 +1,182 @@
+[
+  {
+    "deckId": 16,
+    "id": 1601,
+    "question": "What is the MVC pattern?",
+    "answer": "Model-View-Controller: The Model manages data, the View displays the UI, and the Controller (often Activity/Fragment) handles user input and updates the Model."
+  },
+  {
+    "deckId": 16,
+    "id": 1602,
+    "question": "What is the MVP pattern?",
+    "answer": "Model-View-Presenter: The Presenter acts as an intermediary, retrieving data from the Model and updating the View through an interface, making it more testable than MVC."
+  },
+  {
+    "deckId": 16,
+    "id": 1603,
+    "question": "What is the MVVM pattern?",
+    "answer": "Model-View-ViewModel: The ViewModel exposes data through observables (LiveData/Flow). The View binds to these, allowing for a decoupled, lifecycle-aware architecture."
+  },
+  {
+    "deckId": 16,
+    "id": 1604,
+    "question": "What is the MVI pattern?",
+    "answer": "Model-View-Intent: A reactive pattern where the UI sends Intents (actions), the State is processed immutably, and a single State object is rendered by the View."
+  },
+  {
+    "deckId": 16,
+    "id": 1605,
+    "question": "What is the main advantage of MVVM over MVP?",
+    "answer": "MVVM uses data binding or observables, reducing boilerplate code in the View and better handling Activity recreation via ViewModels."
+  },
+  {
+    "deckId": 16,
+    "id": 1606,
+    "question": "What is the Singleton pattern?",
+    "answer": "Ensures a class has only one instance and provides a global point of access to it (e.g., a database instance or a network client)."
+  },
+  {
+    "deckId": 16,
+    "id": 1607,
+    "question": "What is the Factory pattern?",
+    "answer": "Defines an interface for creating an object, but lets subclasses decide which class to instantiate."
+  },
+  {
+    "deckId": 16,
+    "id": 1608,
+    "question": "What is the Abstract Factory pattern?",
+    "answer": "Provides an interface for creating families of related or dependent objects without specifying their concrete classes."
+  },
+  {
+    "deckId": 16,
+    "id": 1609,
+    "question": "What is the Builder pattern?",
+    "answer": "Separates the construction of a complex object from its representation, allowing the same construction process to create different representations."
+  },
+  {
+    "deckId": 16,
+    "id": 1610,
+    "question": "What is the Adapter pattern in Android?",
+    "answer": "Acts as a bridge between an underlying data source and a UI component like RecyclerView or ListView."
+  },
+  {
+    "deckId": 16,
+    "id": 1611,
+    "question": "What is the Observer pattern?",
+    "answer": "A one-to-many dependency where when one object changes state, all its dependents are notified automatically (e.g., LiveData or RxJava)."
+  },
+  {
+    "deckId": 16,
+    "id": 1612,
+    "question": "What is the Strategy pattern?",
+    "answer": "Defines a family of algorithms, encapsulates each one, and makes them interchangeable at runtime."
+  },
+  {
+    "deckId": 16,
+    "id": 1613,
+    "question": "What is the Command pattern?",
+    "answer": "Encapsulates a request as an object, thereby letting you parameterize clients with different requests (e.g., Runnable or Action)."
+  },
+  {
+    "deckId": 16,
+    "id": 1614,
+    "question": "What is the Decorator pattern?",
+    "answer": "Attaches additional responsibilities to an object dynamically, providing a flexible alternative to sub-classing for extending functionality."
+  },
+  {
+    "deckId": 16,
+    "id": 1615,
+    "question": "What is the Facade pattern?",
+    "answer": "Provides a unified interface to a set of interfaces in a subsystem, making the subsystem easier to use (e.g., a high-level API for a complex library)."
+  },
+  {
+    "deckId": 16,
+    "id": 1616,
+    "question": "What is the Repository pattern?",
+    "answer": "Mediates between the domain and data mapping layers, acting like an in-memory collection of domain objects."
+  },
+  {
+    "deckId": 16,
+    "id": 1617,
+    "question": "What is the Proxy pattern?",
+    "answer": "Provides a surrogate or placeholder for another object to control access to it (e.g., Retrofit's dynamic proxy for network calls)."
+  },
+  {
+    "deckId": 16,
+    "id": 1618,
+    "question": "What is the Template Method pattern?",
+    "answer": "Defines the skeleton of an algorithm in an operation, deferring some steps to subclasses (e.g., Activity lifecycle methods)."
+  },
+  {
+    "deckId": 16,
+    "id": 1619,
+    "question": "What is the Composite pattern?",
+    "answer": "Composes objects into tree structures to represent part-whole hierarchies, allowing clients to treat individual objects and compositions uniformly."
+  },
+  {
+    "deckId": 16,
+    "id": 1620,
+    "question": "What is the Bridge pattern?",
+    "answer": "Decouples an abstraction from its implementation so that the two can vary independently."
+  },
+  {
+    "deckId": 16,
+    "id": 1621,
+    "question": "What is Unidirectional Data Flow (UDF)?",
+    "answer": "A pattern where data flows in one direction (State down, Events up), common in MVI and modern Compose architectures."
+  },
+  {
+    "deckId": 16,
+    "id": 1622,
+    "question": "What is the Service Locator pattern?",
+    "answer": "An anti-pattern where a central registry provides dependencies, often hiding class dependencies and making testing harder."
+  },
+  {
+    "deckId": 16,
+    "id": 1623,
+    "question": "What is the Dependency Inversion Principle?",
+    "answer": "High-level modules should not depend on low-level modules; both should depend on abstractions."
+  },
+  {
+    "deckId": 16,
+    "id": 1624,
+    "question": "What is the Single Responsibility Principle (SRP)?",
+    "answer": "A class should have only one reason to change, meaning it should perform only one job or function."
+  },
+  {
+    "deckId": 16,
+    "id": 1625,
+    "question": "What is the Open/Closed Principle?",
+    "answer": "Software entities (classes, modules, etc.) should be open for extension but closed for modification."
+  },
+  {
+    "deckId": 16,
+    "id": 1626,
+    "question": "What is the Liskov Substitution Principle?",
+    "answer": "Objects of a superclass should be replaceable with objects of its subclasses without breaking the application."
+  },
+  {
+    "deckId": 16,
+    "id": 1627,
+    "question": "What is the Interface Segregation Principle?",
+    "answer": "Clients should not be forced to depend on interfaces they do not use (split large interfaces into smaller ones)."
+  },
+  {
+    "deckId": 16,
+    "id": 1628,
+    "question": "What is the State pattern?",
+    "answer": "Allows an object to alter its behavior when its internal state changes, appearing to change its class."
+  },
+  {
+    "deckId": 16,
+    "id": 1629,
+    "question": "What is the Flyweight pattern?",
+    "answer": "Uses sharing to support large numbers of fine-grained objects efficiently (e.g., String pool or Integer caching)."
+  },
+  {
+    "deckId": 16,
+    "id": 1630,
+    "question": "What is the Chain of Responsibility pattern?",
+    "answer": "Avoids coupling the sender of a request to its receiver by giving more than one object a chance to handle the request."
+  }
+]

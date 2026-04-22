@@ -2,6 +2,7 @@ package com.saishaddai.flashcards.repository.impl
 
 import android.content.Context
 import com.saishaddai.flashcards.model.DeckType
+import com.saishaddai.flashcards.model.DeckType.DESIGN_PATTERNS
 import com.saishaddai.flashcards.model.DeckType.OOP
 import com.saishaddai.flashcards.model.DeckType.KOTLIN
 import com.saishaddai.flashcards.model.DeckType.KOTLIN_MP
@@ -16,7 +17,6 @@ import com.saishaddai.flashcards.model.fcdata.diCards
 import com.saishaddai.flashcards.model.fcdata.jetpackCards
 import com.saishaddai.flashcards.model.fcdata.librariesCards
 import com.saishaddai.flashcards.model.fcdata.navigationCards
-import com.saishaddai.flashcards.model.fcdata.patternsCards
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.utils.random
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +56,7 @@ class JSONFlashcardRepository(private val context: Context? = null) :
             DeckType.GRADLE.id -> emptyList<Flashcard>().storeCount(DeckType.GRADLE.id)
             DeckType.ANDROID_OPS.id -> emptyList<Flashcard>().storeCount(DeckType.ANDROID_OPS.id)
             DeckType.LIBRARIES.id -> librariesCards.storeCount(DeckType.LIBRARIES.id)
-            DeckType.DESIGN_PATTERNS.id -> patternsCards.storeCount(DeckType.DESIGN_PATTERNS.id)
+            DESIGN_PATTERNS.id -> getListFromJson(context, DESIGN_PATTERNS)
             DeckType.COROUTINES.id -> coroutinesCards.storeCount(DeckType.COROUTINES.id)
             FIREBASE.id -> getListFromJson(context, FIREBASE)
             DeckType.GRAPHQL.id -> getListFromJson(context, DeckType.GRAPHQL)

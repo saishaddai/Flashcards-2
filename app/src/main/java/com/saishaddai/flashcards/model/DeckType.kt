@@ -16,7 +16,7 @@ enum class DeckType(val id: Int, val jsonFile: String = "") {
     GRADLE(13, "gradle.json"),
     ANDROID_OPS(14, "androidOps.json"),
     LIBRARIES(15, "libraries.json"),
-    DESIGN_PATTERNS(16, "patterns"),
+    DESIGN_PATTERNS(16, "patterns.json"),
     COROUTINES(17, "coroutines.json"),
     FIREBASE(18, "firebase.json"),
     GRAPHQL(19, "graphql.json")

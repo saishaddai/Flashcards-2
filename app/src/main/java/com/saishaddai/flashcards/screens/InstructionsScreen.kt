@@ -38,7 +38,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.Header
@@ -46,15 +45,32 @@ import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun InstructionsScreen(
-    viewModel: DecksViewModel = viewModel(),
+    viewModel: DecksViewModel = koinViewModel(),
     onPromoClick: (Deck) -> Unit = {},
 ) {
     val decksState by viewModel.decks.collectAsState()
     val promoDeck = remember(decksState) { decksState.randomOrNull() }
-    
+
+    // Use a content-only Composable to avoid Koin dependency in Previews
+    InstructionsScreenContent(
+        promoDeck = promoDeck,
+        onPromoClick = onPromoClick
+    )
+}
+
+/**
+ * Content-only version of the Instructions Screen.
+ * This refactoring allows for easier Previews and testing by separating UI from ViewModel.
+ */
+@Composable
+fun InstructionsScreenContent(
+    promoDeck: Deck?,
+    onPromoClick: (Deck) -> Unit = {},
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -235,7 +251,8 @@ fun NestedInfoItem(icon: ImageVector, text: String) {
 @Composable
 fun InstructionsScreenPreview() {
     Flashcards2Theme {
-        InstructionsScreen(
+        InstructionsScreenContent(
+            promoDeck = Deck(1, "Mock Deck", "This is a mock deck for preview"),
             onPromoClick = {},
         )
     }

@@ -11,6 +11,7 @@ composeBom = "2026.03.01"
 nav3Core = "1.1.0"
 kotlinxSerializationCore = "1.11.0"
 kotlinxCoroutines = "1.10.2"
+koin = "4.0.2"
 konfettiCompose = "2.0.5"
 mockitoKotlin = "5.4.0"
 mockitoAndroid = "5.15.2"
@@ -44,6 +45,8 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 #konfetti
 konfetti-compose = { module = "nl.dionsegijn:konfetti-compose", version.ref = "konfettiCompose" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
 

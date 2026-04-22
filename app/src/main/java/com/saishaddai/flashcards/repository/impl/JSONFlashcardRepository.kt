@@ -9,6 +9,7 @@ import com.saishaddai.flashcards.model.DeckType.OOP
 import com.saishaddai.flashcards.model.DeckType.KOTLIN
 import com.saishaddai.flashcards.model.DeckType.KOTLIN_MP
 import com.saishaddai.flashcards.model.DeckType.FIREBASE
+import com.saishaddai.flashcards.model.DeckType.LIBRARIES
 import com.saishaddai.flashcards.model.DeckType.SECURITY
 import com.saishaddai.flashcards.model.DeckType.TESTING
 import com.saishaddai.flashcards.model.Flashcard
@@ -17,7 +18,6 @@ import com.saishaddai.flashcards.model.fcdata.composeCards
 import com.saishaddai.flashcards.model.fcdata.databaseCards
 import com.saishaddai.flashcards.model.fcdata.diCards
 import com.saishaddai.flashcards.model.fcdata.jetpackCards
-import com.saishaddai.flashcards.model.fcdata.librariesCards
 import com.saishaddai.flashcards.model.fcdata.navigationCards
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.utils.random
@@ -57,7 +57,7 @@ class JSONFlashcardRepository(private val context: Context? = null) :
             TESTING.id -> getListFromJson(context, TESTING)
             GRADLE.id -> getListFromJson(context, GRADLE)
             DeckType.ANDROID_OPS.id -> emptyList<Flashcard>().storeCount(DeckType.ANDROID_OPS.id)
-            DeckType.LIBRARIES.id -> librariesCards.storeCount(DeckType.LIBRARIES.id)
+            LIBRARIES.id -> getListFromJson(context, LIBRARIES)
             DESIGN_PATTERNS.id -> getListFromJson(context, DESIGN_PATTERNS)
             COROUTINES.id -> getListFromJson(context, COROUTINES)
             FIREBASE.id -> getListFromJson(context, FIREBASE)

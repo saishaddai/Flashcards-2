@@ -1,0 +1,184 @@
+[
+  {
+    "deckId": 17,
+    "id": 1701,
+    "question": "What is a Coroutine?",
+    "answer": "A light-weight thread that can be suspended and resumed later without blocking the thread it is running on."
+  },
+  {
+    "deckId": 17,
+    "id": 1702,
+    "question": "What does 'suspend' keyword do?",
+    "answer": "It marks a function that can pause the execution of a coroutine without blocking the current thread."
+  },
+  {
+    "deckId": 17,
+    "id": 1703,
+    "question": "What is a CoroutineScope?",
+    "answer": "It defines a lifecycle for coroutines, ensuring that all coroutines launched within it are cancelled when the scope is destroyed."
+  },
+  {
+    "deckId": 17,
+    "id": 1704,
+    "question": "What is Dispatchers.Main used for?",
+    "answer": "It is used for executing coroutines on the main thread, primarily for UI updates."
+  },
+  {
+    "deckId": 17,
+    "id": 1705,
+    "question": "What is Dispatchers.IO used for?",
+    "answer": "It is optimized for offloading blocking I/O tasks, such as networking or disk operations, to a shared pool of threads."
+  },
+  {
+    "deckId": 17,
+    "id": 1706,
+    "question": "What is Dispatchers.Default used for?",
+    "answer": "It is optimized for CPU-intensive work, such as sorting large lists or parsing complex JSON."
+  },
+  {
+    "deckId": 17,
+    "id": 1707,
+    "question": "What is the purpose of 'launch'?",
+    "answer": "It starts a new coroutine that does not return a result to the caller (fire-and-forget)."
+  },
+  {
+    "deckId": 17,
+    "id": 1708,
+    "question": "What is the purpose of 'async'?",
+    "answer": "It starts a new coroutine that returns a 'Deferred' result, which can be awaited using .await()."
+  },
+  {
+    "deckId": 17,
+    "id": 1709,
+    "question": "What is a Job in Coroutines?",
+    "answer": "A handle to a coroutine that can be used to control its lifecycle, such as cancelling it or checking its status."
+  },
+  {
+    "deckId": 17,
+    "id": 1710,
+    "question": "What is Structured Concurrency?",
+    "answer": "A paradigm where child coroutines are tied to the lifecycle of their parent scope, preventing leaks and ensuring error propagation."
+  },
+  {
+    "deckId": 17,
+    "id": 1711,
+    "question": "What does withContext() do?",
+    "answer": "It switches the execution context (Dispatcher) of a coroutine and returns the result, suspending until the block completes."
+  },
+  {
+    "deckId": 17,
+    "id": 1712,
+    "question": "What is a CoroutineContext?",
+    "answer": "A set of elements that define the behavior of a coroutine, including its Job, Dispatcher, and name."
+  },
+  {
+    "deckId": 17,
+    "id": 1713,
+    "question": "How do you handle exceptions in 'launch'?",
+    "answer": "By using a Try-Catch block inside the coroutine or providing a CoroutineExceptionHandler in the context."
+  },
+  {
+    "deckId": 17,
+    "id": 1714,
+    "question": "How do you handle exceptions in 'async'?",
+    "answer": "Exceptions are encapsulated in the Deferred result and thrown when .await() is called."
+  },
+  {
+    "deckId": 17,
+    "id": 1715,
+    "question": "What is SupervisorJob?",
+    "answer": "A type of Job where the failure of one child does not result in the cancellation of its parent or other children."
+  },
+  {
+    "deckId": 17,
+    "id": 1716,
+    "question": "What is the difference between CoroutineScope and supervisorScope?",
+    "answer": "supervisorScope creates a new scope with a SupervisorJob, preventing failure propagation to siblings."
+  },
+  {
+    "deckId": 17,
+    "id": 1717,
+    "question": "What is a Flow in Kotlin?",
+    "answer": "A cold asynchronous data stream that emits multiple values sequentially over time."
+  },
+  {
+    "deckId": 17,
+    "id": 1718,
+    "question": "What is a Cold Stream vs Hot Stream?",
+    "answer": "A Cold stream (Flow) only starts emitting when collected; a Hot stream (SharedFlow/StateFlow) emits regardless of collectors."
+  },
+  {
+    "deckId": 17,
+    "id": 1719,
+    "question": "What is StateFlow?",
+    "answer": "A hot observable flow that represents a state, holding a single value and emitting updates to collectors."
+  },
+  {
+    "deckId": 17,
+    "id": 1720,
+    "question": "What is SharedFlow?",
+    "answer": "A hot observable flow that can have multiple collectors and emit multiple values (events) over time."
+  },
+  {
+    "deckId": 17,
+    "id": 1721,
+    "question": "What does 'yield()' do in a coroutine?",
+    "answer": "It yields the thread to other coroutines, allowing them to run, often used to check for cancellation in long-running loops."
+  },
+  {
+    "deckId": 17,
+    "id": 1722,
+    "question": "What is 'delay()'?",
+    "answer": "A suspending function that pauses the coroutine for a specific time without blocking the thread."
+  },
+  {
+    "deckId": 17,
+    "id": 1723,
+    "question": "What is 'runBlocking'?",
+    "answer": "A bridge that starts a new coroutine and blocks the current thread until it completes; should be used sparingly, mostly in tests or main functions."
+  },
+  {
+    "deckId": 17,
+    "id": 1724,
+    "question": "What is 'cancelAndJoin()'?",
+    "answer": "A function that cancels a Job and suspends until the job's cancellation process is fully completed."
+  },
+  {
+    "deckId": 17,
+    "id": 1725,
+    "question": "Best Practice: Injecting Dispatchers?",
+    "answer": "Always inject Dispatchers into classes to make code more testable by allowing you to swap them for TestDispatchers."
+  },
+  {
+    "deckId": 17,
+    "id": 1726,
+    "question": "Best Practice: GlobalScope?",
+    "answer": "Avoid using GlobalScope as it creates coroutines that live as long as the app process, leading to potential leaks."
+  },
+  {
+    "deckId": 17,
+    "id": 1727,
+    "question": "What is a Channel?",
+    "answer": "A synchronization primitive that allows communication between coroutines via a stream of values."
+  },
+  {
+    "deckId": 17,
+    "id": 1728,
+    "question": "What is 'viewModelScope'?",
+    "answer": "A built-in CoroutineScope provided by Android that is automatically cancelled when the ViewModel is cleared."
+  },
+  {
+    "deckId": 17,
+    "id": 1729,
+    "question": "What is 'lifecycleScope'?",
+    "answer": "A built-in CoroutineScope tied to an Activity or Fragment's lifecycle, automatically cancelled when the lifecycle is destroyed."
+  },
+  {
+    "deckId": 17,
+    "id": 1730,
+    "question": "What is 'flowOn()'?",
+    "answer": "An operator used to change the context (Dispatcher) in which the preceding Flow operators are executed."
+  }
+]
+
+

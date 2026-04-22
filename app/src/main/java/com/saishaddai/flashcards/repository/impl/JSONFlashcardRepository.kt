@@ -2,6 +2,7 @@ package com.saishaddai.flashcards.repository.impl
 
 import android.content.Context
 import com.saishaddai.flashcards.model.DeckType
+import com.saishaddai.flashcards.model.DeckType.COROUTINES
 import com.saishaddai.flashcards.model.DeckType.DESIGN_PATTERNS
 import com.saishaddai.flashcards.model.DeckType.GRADLE
 import com.saishaddai.flashcards.model.DeckType.OOP
@@ -12,7 +13,6 @@ import com.saishaddai.flashcards.model.DeckType.SECURITY
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.model.fcdata.androidCards
 import com.saishaddai.flashcards.model.fcdata.composeCards
-import com.saishaddai.flashcards.model.fcdata.coroutinesCards
 import com.saishaddai.flashcards.model.fcdata.databaseCards
 import com.saishaddai.flashcards.model.fcdata.diCards
 import com.saishaddai.flashcards.model.fcdata.jetpackCards
@@ -58,7 +58,7 @@ class JSONFlashcardRepository(private val context: Context? = null) :
             DeckType.ANDROID_OPS.id -> emptyList<Flashcard>().storeCount(DeckType.ANDROID_OPS.id)
             DeckType.LIBRARIES.id -> librariesCards.storeCount(DeckType.LIBRARIES.id)
             DESIGN_PATTERNS.id -> getListFromJson(context, DESIGN_PATTERNS)
-            DeckType.COROUTINES.id -> coroutinesCards.storeCount(DeckType.COROUTINES.id)
+            COROUTINES.id -> getListFromJson(context, COROUTINES)
             FIREBASE.id -> getListFromJson(context, FIREBASE)
             DeckType.GRAPHQL.id -> getListFromJson(context, DeckType.GRAPHQL)
             else -> emptyList()

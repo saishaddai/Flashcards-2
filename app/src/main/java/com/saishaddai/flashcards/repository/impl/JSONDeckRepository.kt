@@ -1,22 +1,22 @@
 package com.saishaddai.flashcards.repository.impl
 
 import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.DeckType.*
-import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.model.sessions
 import com.saishaddai.flashcards.repository.DeckRepository
-import com.saishaddai.flashcards.repository.FlashcardRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class JSONDeckRepository(
-    private val flashcardRepository: FlashcardRepository<Flashcard>
+    private val context: android.content.Context
 ) : DeckRepository<Deck> {
 
     override suspend fun getData(): List<Deck> = withContext(Dispatchers.IO) {
+        val flashcardRepository = JSONFlashcardRepository(context)
         decks.onEach {
             if (it.cardCount == 0) {
-                it.cardCount = flashcardRepository.getDataCount(it.id)
+                it.cardCount = flashcardRepository.getDataCount(DeckType.fromId(it.id))
             }
         }
     }
@@ -29,7 +29,7 @@ class JSONDeckRepository(
         Deck(SECURITY.id, "Security", "Android Security"),
         Deck(COMPOSE.id, "Compose", "Jetpack Compose UI"),
         Deck(DATABASES.id, "Databases", "Android Databases"),
-        Deck(DAGGER_HILT.id, "Dagger/Hilt", "Android Dependency Injection"),
+        Deck(DI.id, "DI", "Android Dependency Injection"),
         Deck(MATERIAL_3.id, "Material 3", "Android Material Design"),
         Deck(NAVIGATION.id, "Navigation", "Android Navigation Component"),
         Deck(JETPACK.id, "Jetpack", "Android Jetpack"),

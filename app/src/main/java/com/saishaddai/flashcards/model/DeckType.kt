@@ -8,7 +8,7 @@ enum class DeckType(val id: Int, val jsonFile: String = "") {
     SECURITY(5, "security.json"),
     COMPOSE(6, "compose.json"),
     DATABASES(7, "databases.json"),
-    DAGGER_HILT(8, "dagger.json"),
+    DI(8, "di.json"),
     MATERIAL_3(9, "material.json"),
     NAVIGATION(10, "navigation.json"),
     JETPACK(11, "jetpack.json"),
@@ -19,6 +19,10 @@ enum class DeckType(val id: Int, val jsonFile: String = "") {
     DESIGN_PATTERNS(16, "patterns.json"),
     COROUTINES(17, "coroutines.json"),
     FIREBASE(18, "firebase.json"),
-    GRAPHQL(19, "graphql.json")
-    //TODO Maybe a deck dedicated to camera, work manager, sensors, video
+    GRAPHQL(19, "graphql.json"),
+    SENSORS(20, "sensors.json");
+
+    companion object {
+        fun fromId(id: Int): DeckType = entries.find { it.id == id } ?: OOP
+    }
 }

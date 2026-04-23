@@ -1,0 +1,302 @@
+[
+  {
+    "deckId": 7,
+    "id": 701,
+    "question": "What is Jetpack Room?",
+    "answer": "A persistence library that provides an abstraction layer over SQLite to allow fluent database access while leveraging its full power."
+  },
+  {
+    "deckId": 7,
+    "id": 702,
+    "question": "What does @Entity do in Room?",
+    "answer": "It defines a class as a database table where each field represents a column."
+  },
+  {
+    "deckId": 7,
+    "id": 703,
+    "question": "What is the purpose of @Dao in Room?",
+    "answer": "Data Access Object: an interface or abstract class containing methods used for accessing the database."
+  },
+  {
+    "deckId": 7,
+    "id": 704,
+    "question": "What is @Database in Room?",
+    "answer": "An annotation for the main access point class that holds the database and serves as the connection to your app's persisted data."
+  },
+  {
+    "deckId": 7,
+    "id": 705,
+    "question": "What are Room TypeConverters?",
+    "answer": "Methods that allow you to persist custom data types (like Date) by converting them to a type Room knows how to store."
+  },
+  {
+    "deckId": 7,
+    "id": 706,
+    "question": "What is @Insert(onConflict) for?",
+    "answer": "It specifies the strategy to use when a conflict occurs during insertion, such as OnConflictStrategy.REPLACE."
+  },
+  {
+    "deckId": 7,
+    "id": 707,
+    "question": "What does @Query do?",
+    "answer": "It allows you to write raw SQL queries for DAO methods, which are verified at compile-time by Room."
+  },
+  {
+    "deckId": 7,
+    "id": 708,
+    "question": "How does Room support reactive UI?",
+    "answer": "By returning observable types like Flow, LiveData, or RxJava from DAO methods."
+  },
+  {
+    "deckId": 7,
+    "id": 709,
+    "question": "What are Room Migrations?",
+    "answer": "Classes that define how to transition the database schema from one version to another while preserving user data."
+  },
+  {
+    "deckId": 7,
+    "id": 710,
+    "question": "What is @Relation used for?",
+    "answer": "It is used in POJOs to automatically fetch related entities in one-to-many or many-to-many relationships."
+  },
+  {
+    "deckId": 7,
+    "id": 711,
+    "question": "What does @Embedded do?",
+    "answer": "It allows you to use a nested object as a field within an Entity, flattening its fields into the table."
+  },
+  {
+    "deckId": 7,
+    "id": 712,
+    "question": "Why shouldn't you access Room on the main thread?",
+    "answer": "To avoid UI stutters or ANR (Application Not Responding) errors; Room enforces this for synchronous queries."
+  },
+  {
+    "deckId": 7,
+    "id": 713,
+    "question": "What is @Transaction in Room?",
+    "answer": "An annotation that ensures multiple database operations are executed as a single atomic unit."
+  },
+  {
+    "deckId": 7,
+    "id": 714,
+    "question": "What is an In-memory database in Room?",
+    "answer": "A database created via Room.inMemoryDatabaseBuilder that resides in RAM and is lost when the app process dies."
+  },
+  {
+    "deckId": 7,
+    "id": 715,
+    "question": "What is Room Auto-migration?",
+    "answer": "A feature introduced in Room 2.4.0 that can automatically generate migration code for simple schema changes."
+  },
+  {
+    "deckId": 7,
+    "id": 716,
+    "question": "What is @PrimaryKey(autoGenerate = true)?",
+    "answer": "It tells Room to automatically assign unique IDs to new records."
+  },
+  {
+    "deckId": 7,
+    "id": 717,
+    "question": "What is @Ignore used for?",
+    "answer": "It tells Room to ignore a specific field in an Entity or a method in a DAO."
+  },
+  {
+    "deckId": 7,
+    "id": 718,
+    "question": "How to pre-populate a Room database?",
+    "answer": "By using .createFromAsset() or .createFromFile() when building the database instance."
+  },
+  {
+    "deckId": 7,
+    "id": 719,
+    "question": "What is exportSchema in @Database?",
+    "answer": "A property that, when true, exports the database schema to a JSON file for version history and testing."
+  },
+  {
+    "deckId": 7,
+    "id": 720,
+    "question": "What is the benefit of Room over raw SQLite?",
+    "answer": "Compile-time SQL verification, reduced boilerplate, and easy integration with modern reactive components."
+  },
+  {
+    "deckId": 7,
+    "id": 721,
+    "question": "What is @ColumnInfo?",
+    "answer": "An annotation used to customize the column name or properties in the database table."
+  },
+  {
+    "deckId": 7,
+    "id": 722,
+    "question": "Can Room return a PagingSource?",
+    "answer": "Yes, Room integrates with the Paging library to handle large data sets efficiently."
+  },
+  {
+    "deckId": 7,
+    "id": 723,
+    "question": "What is KSP in Room?",
+    "answer": "Kotlin Symbol Processing, a faster alternative to KAPT for Room's code generation."
+  },
+  {
+    "deckId": 7,
+    "id": 724,
+    "question": "What is Multi-instance Invalidation?",
+    "answer": "A Room feature that keeps multiple database instances in sync across different processes."
+  },
+  {
+    "deckId": 7,
+    "id": 725,
+    "question": "How do you handle Many-to-Many in Room?",
+    "answer": "By using an associative entity (junction table) and @Relation with an 'associateBy' parameter."
+  },
+  {
+    "deckId": 7,
+    "id": 726,
+    "question": "What is SQLDelight?",
+    "answer": "A library that generates typesafe Kotlin APIs from SQL statements, widely used in Kotlin Multiplatform (KMP)."
+  },
+  {
+    "deckId": 7,
+    "id": 727,
+    "question": "What are .sq files in SQLDelight?",
+    "answer": "Files where you write raw SQL schema and queries, from which SQLDelight generates Kotlin code."
+  },
+  {
+    "deckId": 7,
+    "id": 728,
+    "question": "What are SQLDelight Drivers?",
+    "answer": "Platform-specific implementations (e.g., AndroidSqliteDriver, NativeSqliteDriver) that open database connections."
+  },
+  {
+    "deckId": 7,
+    "id": 729,
+    "question": "SQLDelight vs Room?",
+    "answer": "SQLDelight is SQL-first (code from SQL), while Room is code-first (SQL from annotations/mapping)."
+  },
+  {
+    "deckId": 7,
+    "id": 730,
+    "question": "Why is SQLDelight popular for KMP?",
+    "answer": "Because it has no dependency on the Android runtime and works on iOS, Desktop, and Web."
+  },
+  {
+    "deckId": 7,
+    "id": 731,
+    "question": "What are SQLDelight Column Adapters?",
+    "answer": "Used to map custom Kotlin types (like Enums) to types that SQLDelight knows how to store."
+  },
+  {
+    "deckId": 7,
+    "id": 732,
+    "question": "How are SQLDelight migrations managed?",
+    "answer": "Via .sqm files or by naming .sq files with version numbers to define schema updates."
+  },
+  {
+    "deckId": 7,
+    "id": 733,
+    "question": "What is 'expect/actual' in KMP database setup?",
+    "answer": "A pattern used to provide the correct SQLDelight driver for each target platform."
+  },
+  {
+    "deckId": 7,
+    "id": 734,
+    "question": "What is a SQL Primary Key?",
+    "answer": "A constraint that uniquely identifies each record in a table and cannot contain null values."
+  },
+  {
+    "deckId": 7,
+    "id": 735,
+    "question": "What is a SQL Foreign Key?",
+    "answer": "A field that links a column in one table to the primary key of another table, ensuring referential integrity."
+  },
+  {
+    "deckId": 7,
+    "id": 736,
+    "question": "What is a SQL Index?",
+    "answer": "A database object used to speed up data retrieval operations, though it can slow down writes."
+  },
+  {
+    "deckId": 7,
+    "id": 737,
+    "question": "What is an INNER JOIN?",
+    "answer": "A SQL join that returns records that have matching values in both tables."
+  },
+  {
+    "deckId": 7,
+    "id": 738,
+    "question": "What is a LEFT JOIN?",
+    "answer": "A SQL join that returns all records from the left table and matching records from the right table."
+  },
+  {
+    "deckId": 7,
+    "id": 739,
+    "question": "What are ACID properties?",
+    "answer": "Atomicity, Consistency, Isolation, and Durability - properties that guarantee reliable database transactions."
+  },
+  {
+    "deckId": 7,
+    "id": 740,
+    "question": "What is SQL Normalization?",
+    "answer": "The process of organizing data to reduce redundancy and improve data integrity."
+  },
+  {
+    "deckId": 7,
+    "id": 741,
+    "question": "What is SQLite WAL Mode?",
+    "answer": "Write-Ahead Logging, which improves concurrency by allowing readers and writers to operate simultaneously."
+  },
+  {
+    "deckId": 7,
+    "id": 742,
+    "question": "Best Practice: Naming Conventions?",
+    "answer": "Use snake_case for tables and columns (e.g., user_profile) for broader compatibility."
+  },
+  {
+    "deckId": 7,
+    "id": 743,
+    "question": "Best Practice: Large Data?",
+    "answer": "Avoid storing large images or blobs in the database; store the file path instead."
+  },
+  {
+    "deckId": 7,
+    "id": 744,
+    "question": "What is SQL Injection?",
+    "answer": "A security vulnerability where an attacker can interfere with queries; use bind parameters to prevent it."
+  },
+  {
+    "deckId": 7,
+    "id": 745,
+    "question": "How to handle database versions?",
+    "answer": "Always increment the version number and provide migration paths to prevent app crashes."
+  },
+  {
+    "deckId": 7,
+    "id": 746,
+    "question": "What is a UNIQUE constraint?",
+    "answer": "Ensures that all values in a column are distinct from each other."
+  },
+  {
+    "deckId": 7,
+    "id": 747,
+    "question": "What is GROUP BY in SQL?",
+    "answer": "A statement used to group rows that have the same values into summary rows."
+  },
+  {
+    "deckId": 7,
+    "id": 748,
+    "question": "What is a SQL View?",
+    "answer": "A virtual table based on the result-set of an SQL statement."
+  },
+  {
+    "deckId": 7,
+    "id": 749,
+    "question": "What is the 'EXPLAIN QUERY PLAN' command?",
+    "answer": "Used in SQLite to describe how a query will be executed, helping in performance optimization."
+  },
+  {
+    "deckId": 7,
+    "id": 750,
+    "question": "What is the 'VACUUM' command?",
+    "answer": "A SQL command that rebuilds the database file, repacking it into a minimal amount of disk space."
+  }
+]

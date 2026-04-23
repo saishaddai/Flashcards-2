@@ -1,0 +1,186 @@
+[
+  {
+    "deckId": 10,
+    "id": 1001,
+    "question": "What is the NavHost in Jetpack Navigation?",
+    "answer": "A container that displays the current destination from the navigation graph."
+  },
+  {
+    "deckId": 10,
+    "id": 1002,
+    "question": "What is a NavGraph?",
+    "answer": "An XML or Kotlin DSL file that contains all navigation-related information, including destinations and actions."
+  },
+  {
+    "deckId": 10,
+    "id": 1003,
+    "question": "What does NavController do?",
+    "answer": "It is the object that manages app navigation within a NavHost, handling transitions between destinations."
+  },
+  {
+    "deckId": 10,
+    "id": 1004,
+    "question": "How do you navigate to a destination by route in Compose?",
+    "answer": "By calling navController.navigate(\"route_name\")."
+  },
+  {
+    "deckId": 10,
+    "id": 1005,
+    "question": "What is a 'Route' in Jetpack Navigation Compose?",
+    "answer": "A unique string (or serialized object in Nav3) that identifies a destination."
+  },
+  {
+    "deckId": 10,
+    "id": 1006,
+    "question": "What is popBackStack() used for?",
+    "answer": "To remove the current destination from the back stack and return to the previous one."
+  },
+  {
+    "deckId": 10,
+    "id": 1007,
+    "question": "What is the purpose of 'launchSingleTop'?",
+    "answer": "It prevents multiple instances of the same destination from being added to the top of the back stack."
+  },
+  {
+    "deckId": 10,
+    "id": 1008,
+    "question": "What is 'popUpTo' used for when navigating?",
+    "answer": "To clear the back stack up to a specific destination before performing the navigation."
+  },
+  {
+    "deckId": 10,
+    "id": 1009,
+    "question": "What is the 'inclusive' parameter in popUpTo?",
+    "answer": "If true, it also pops the destination specified in popUpTo from the back stack."
+  },
+  {
+    "deckId": 10,
+    "id": 1010,
+    "question": "How do you pass arguments in Navigation Compose (pre-Type Safety)?",
+    "answer": "By appending them to the route string, like 'details/{id}' and defining them in the composable function."
+  },
+  {
+    "deckId": 10,
+    "id": 1011,
+    "question": "What is Safe Args?",
+    "answer": "A Gradle plugin that generates type-safe directions and argument classes for navigation (primarily for XML-based navigation)."
+  },
+  {
+    "deckId": 10,
+    "id": 1012,
+    "question": "What is 'Deep Linking' in Navigation?",
+    "answer": "The ability to navigate directly to a specific destination in your app from an external source (like a URL or Notification)."
+  },
+  {
+    "deckId": 10,
+    "id": 1013,
+    "question": "What is Navigation 3 (Nav3)?",
+    "answer": "The next evolution of Jetpack Navigation that focuses on type-safe, multi-platform, and simplified navigation APIs."
+  },
+  {
+    "deckId": 10,
+    "id": 1014,
+    "question": "How does Navigation 3 handle type safety differently?",
+    "answer": "It uses Kotlin Serialization and objects/classes as routes instead of manually parsed strings."
+  },
+  {
+    "deckId": 10,
+    "id": 1015,
+    "question": "What is a NavBackStackEntry?",
+    "answer": "A class that represents a destination in the back stack and provides access to its arguments, lifecycle, and ViewModelStore."
+  },
+  {
+    "deckId": 10,
+    "id": 1016,
+    "question": "What is the benefit of using Hilt with Navigation?",
+    "answer": "It allows you to get a ViewModel scoped to a specific navigation graph using hiltNavGraphViewModel()."
+  },
+  {
+    "deckId": 10,
+    "id": 1017,
+    "question": "What is the 'startDestination'?",
+    "answer": "The destination that is automatically loaded when the NavHost is first displayed."
+  },
+  {
+    "deckId": 10,
+    "id": 1018,
+    "question": "How do you define an argument as optional in a route?",
+    "answer": "By using query parameter syntax: 'route?argName={argName}'."
+  },
+  {
+    "deckId": 10,
+    "id": 1019,
+    "question": "What is a 'Nested Navigation Graph'?",
+    "answer": "A way to group related destinations into a modular sub-graph, useful for encapsulating complex flows like login or checkout."
+  },
+  {
+    "deckId": 10,
+    "id": 1020,
+    "question": "What is 'NavOptions'?",
+    "answer": "A class used to define specific navigation behaviors like custom animations, singleTop, and popUpTo."
+  },
+  {
+    "deckId": 10,
+    "id": 1021,
+    "question": "How to handle bottom navigation with Jetpack Navigation?",
+    "answer": "By linking the BottomNavigationView or Compose NavigationBar items to the NavController via routes."
+  },
+  {
+    "deckId": 10,
+    "id": 1022,
+    "question": "What is the purpose of the 'NavHostController'?",
+    "answer": "A subclass of NavController that provides additional methods for setup with a NavHost (e.g., setLifecycleOwner)."
+  },
+  {
+    "deckId": 10,
+    "id": 1023,
+    "question": "Best Practice: Navigation Logic location?",
+    "answer": "Keep navigation logic outside of individual composables; pass lambdas to composables to handle navigation events."
+  },
+  {
+    "deckId": 10,
+    "id": 1024,
+    "question":"What is 'restoreState' in navigation options?",
+    "answer": "It determines whether to restore the saved state of a destination when it was previously popped via popUpTo."
+  },
+  {
+    "deckId": 10,
+    "id": 1025,
+    "question": "What is an 'Action' in XML navigation?",
+    "answer": "A definition of a transition between two destinations, often including animations and argument passing."
+  },
+  {
+    "deckId": 10,
+    "id": 1026,
+    "question": "How to pass complex objects in Navigation (pre-Nav3)?",
+    "answer": "The recommended way was to pass an ID and fetch the object from a repository, or use Parcelable if necessary (though discouraged for large data)."
+  },
+  {
+    "deckId": 10,
+    "id": 1027,
+    "question": "What is the 'currentBackStackEntryAsState()' function?",
+    "answer": "A Compose utility to observe the current navigation destination as a State object."
+  },
+  {
+    "deckId": 10,
+    "id": 1028,
+    "question": "What is the 'OnBackPressedCallback'?",
+    "answer": "An API used to intercept the system back button press to perform custom logic before or instead of popping the back stack."
+  },
+  {
+    "deckId": 10,
+    "id": 1029,
+    "question": "How to provide custom transitions in Navigation Compose?",
+    "answer": "By using the 'enterTransition', 'exitTransition', etc., parameters in the 'composable()' or 'navigation()' functions."
+  },
+  {
+    "deckId": 10,
+    "id": 1030,
+    "question": "What is the 'NavType' class used for?",
+    "answer": "It defines how an argument is parsed from a route string (e.g., IntType, StringType, BoolType)."
+  }
+]
+
+
+
+

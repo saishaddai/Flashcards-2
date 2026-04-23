@@ -1,0 +1,182 @@
+[
+  {
+    "deckId": 14,
+    "id": 2001,
+    "question": "What is Continuous Integration (CI)?",
+    "answer": "A practice where developers frequently merge code into a shared repository with automated builds."
+  },
+  {
+    "deckId": 14,
+    "id": 2002,
+    "question": "What is Continuous Delivery (CD)?",
+    "answer": "The process of automatically preparing code changes for release to production."
+  },
+  {
+    "deckId": 14,
+    "id": 2003,
+    "question": "What is Continuous Deployment?",
+    "answer": "Automatically releasing every validated change to production without manual approval."
+  },
+  {
+    "deckId": 14,
+    "id": 2004,
+    "question": "Why is CI/CD important in Android development?",
+    "answer": "It ensures faster releases, fewer bugs, and consistent app quality."
+  },
+  {
+    "deckId": 14,
+    "id": 2005,
+    "question": "What is Gradle in Android?",
+    "answer": "The build automation tool used for compiling, testing, and packaging Android apps."
+  },
+  {
+    "deckId": 14,
+    "id": 2006,
+    "question": "What is a CI pipeline?",
+    "answer": "A sequence of automated steps for building, testing, and validating code changes."
+  },
+  {
+    "deckId": 14,
+    "id": 2007,
+    "question": "What is GitHub Actions?",
+    "answer": "A CI/CD tool that automates workflows directly in GitHub repositories."
+  },
+  {
+    "deckId": 14,
+    "id": 2008,
+    "question": "What is GitLab CI/CD?",
+    "answer": "An integrated CI/CD system in GitLab for automating builds and deployments."
+  },
+  {
+    "deckId": 14,
+    "id": 2009,
+    "question": "What is Bitrise?",
+    "answer": "A CI/CD platform specialized for mobile app development, including Android."
+  },
+  {
+    "deckId": 14,
+    "id": 2010,
+    "question": "What is Firebase Test Lab?",
+    "answer": "A Google tool for testing Android apps on real and virtual devices in the cloud."
+  },
+  {
+    "deckId": 14,
+    "id": 2011,
+    "question": "What is Android Lint?",
+    "answer": "A static analysis tool that checks for potential bugs and style issues in Android code."
+  },
+  {
+    "deckId": 14,
+    "id": 2012,
+    "question": "What is Espresso?",
+    "answer": "A Google-recommended library for UI testing in Android apps."
+  },
+  {
+    "deckId": 14,
+    "id": 2013,
+    "question": "What is Robolectric?",
+    "answer": "A testing framework that runs Android tests on the JVM without an emulator."
+  },
+  {
+    "deckId": 14,
+    "id": 2014,
+    "question": "What is JUnit?",
+    "answer": "A widely used Java testing framework for unit tests in Android development."
+  },
+  {
+    "deckId": 14,
+    "id": 2015,
+    "question": "What is a build variant in Android?",
+    "answer": "Different versions of an app defined by build types and product flavors."
+  },
+  {
+    "deckId": 14,
+    "id": 2016,
+    "question": "What is a best practice for CI pipelines?",
+    "answer": "Keep builds fast and provide immediate feedback to developers."
+  },
+  {
+    "deckId": 14,
+    "id": 2017,
+    "question": "What is caching in CI/CD?",
+    "answer": "Storing dependencies and build outputs to speed up subsequent builds."
+  },
+  {
+    "deckId": 14,
+    "id": 2018,
+    "question": "What is artifact management?",
+    "answer": "Storing build outputs like APKs or AABs for distribution and testing."
+  },
+  {
+    "deckId": 14,
+    "id": 2019,
+    "question": "What is Play Console integration?",
+    "answer": "Automating app uploads and releases to Google Play via CI/CD pipelines."
+  },
+  {
+    "deckId": 14,
+    "id": 2020,
+    "question": "What is Fastlane?",
+    "answer": "An automation tool for building, testing, and releasing Android apps."
+  },
+  {
+    "deckId": 14,
+    "id": 2021,
+    "question": "What is a smoke test?",
+    "answer": "A quick test to check if the basic functionality of an app works after a build."
+  },
+  {
+    "deckId": 14,
+    "id": 2022,
+    "question": "What is a regression test?",
+    "answer": "Tests that ensure new changes don’t break existing functionality."
+  },
+  {
+    "deckId": 14,
+    "id": 2023,
+    "question": "What is SonarQube?",
+    "answer": "A tool for continuous inspection of code quality and security."
+  },
+  {
+    "deckId": 14,
+    "id": 2024,
+    "question": "What is a CI/CD trigger?",
+    "answer": "An event like a commit or pull request that starts the pipeline."
+  },
+  {
+    "deckId": 14,
+    "id": 2025,
+    "question": "What is a pipeline stage?",
+    "answer": "A defined step in CI/CD such as build, test, or deploy."
+  },
+  {
+    "deckId": 14,
+    "id": 2026,
+    "question": "What is dependency management in Android?",
+    "answer": "Using Gradle to handle external libraries and versioning."
+  },
+  {
+    "deckId": 14,
+    "id": 2027,
+    "question": "What is a pull request build?",
+    "answer": "A CI build triggered to validate changes before merging into the main branch."
+  },
+  {
+    "deckId": 14,
+    "id": 2028,
+    "question": "What is a release pipeline?",
+    "answer": "A CI/CD pipeline focused on preparing and distributing production-ready builds."
+  },
+  {
+    "deckId": 14,
+    "id": 2029,
+    "question": "What is a Canary release?",
+    "answer": "Releasing an app to a small group of users before full rollout."
+  },
+  {
+    "deckId": 14,
+    "id": 2030,
+    "question": "What is a best practice for Android CI/CD security?",
+    "answer": "Store sensitive keys securely using environment variables or secret managers."
+  }
+]

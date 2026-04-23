@@ -1,0 +1,182 @@
+[
+  {
+    "deckId": 11,
+    "id": 1001,
+    "question": "What is Material Design?",
+    "answer": "A design system by Google for consistent, intuitive, and beautiful user interfaces."
+  },
+  {
+    "deckId": 11,
+    "id": 1002,
+    "question": "What is the main goal of Material Design?",
+    "answer": "To unify user experience across platforms and devices with clear design principles."
+  },
+  {
+    "deckId": 11,
+    "id": 1003,
+    "question": "What are Material Design components?",
+    "answer": "Pre-built UI elements like buttons, cards, and navigation bars following Material guidelines."
+  },
+  {
+    "deckId": 11,
+    "id": 1004,
+    "question": "What is Material Design 3 (M3)?",
+    "answer": "The latest version of Material Design with dynamic color, updated components, and accessibility focus."
+  },
+  {
+    "deckId": 11,
+    "id": 1005,
+    "question": "What is dynamic color in M3?",
+    "answer": "A system that adapts app colors to the user’s wallpaper and theme."
+  },
+  {
+    "deckId": 11,
+    "id": 1006,
+    "question": "What is Material Expressive?",
+    "answer": "An approach in Material Design emphasizing creativity, personality, and brand identity in UI."
+  },
+  {
+    "deckId": 11,
+    "id": 1007,
+    "question": "What is the Material Components library?",
+    "answer": "A set of Android libraries implementing Material Design UI elements."
+  },
+  {
+    "deckId": 11,
+    "id": 1008,
+    "question": "What is Jetpack Compose?",
+    "answer": "A modern Android UI toolkit for building native interfaces with declarative code."
+  },
+  {
+    "deckId": 11,
+    "id": 1009,
+    "question": "How does Material Design improve accessibility?",
+    "answer": "By ensuring contrast, scalable text, and accessible touch targets."
+  },
+  {
+    "deckId": 11,
+    "id": 1010,
+    "question": "What is the Material Theming system?",
+    "answer": "A customization framework to adapt Material Design to a brand’s identity."
+  },
+  {
+    "deckId": 11,
+    "id": 1011,
+    "question": "What is the purpose of elevation in Material Design?",
+    "answer": "To represent depth and hierarchy using shadows."
+  },
+  {
+    "deckId": 11,
+    "id": 1012,
+    "question": "What is a Floating Action Button (FAB)?",
+    "answer": "A circular button for primary actions, often floating above content."
+  },
+  {
+    "deckId": 11,
+    "id": 1013,
+    "question": "What is Material You?",
+    "answer": "Google’s personalization design philosophy introduced with Material Design 3."
+  },
+  {
+    "deckId": 11,
+    "id": 1014,
+    "question": "What is a Snackbar?",
+    "answer": "A lightweight message bar for brief feedback at the bottom of the screen."
+  },
+  {
+    "deckId": 11,
+    "id": 1015,
+    "question": "What is the difference between Material Design 2 and 3?",
+    "answer": "M3 adds dynamic color, updated components, and stronger accessibility compared to M2."
+  },
+  {
+    "deckId": 11,
+    "id": 1016,
+    "question": "What is the Material Design color system?",
+    "answer": "A structured palette with primary, secondary, and surface colors for consistency."
+  },
+  {
+    "deckId": 11,
+    "id": 1017,
+    "question": "What is the Material Design typography scale?",
+    "answer": "A set of predefined text styles for hierarchy and readability."
+  },
+  {
+    "deckId": 11,
+    "id": 1018,
+    "question": "What is Material Motion?",
+    "answer": "Guidelines for animations and transitions to enhance usability and delight."
+  },
+  {
+    "deckId": 11,
+    "id": 1019,
+    "question": "What is the role of icons in Material Design?",
+    "answer": "To visually represent actions, content, or navigation consistently."
+  },
+  {
+    "deckId": 11,
+    "id": 1020,
+    "question": "What is Material Design’s grid system?",
+    "answer": "A layout structure ensuring alignment and spacing across UI elements."
+  },
+  {
+    "deckId": 11,
+    "id": 1021,
+    "question": "What is Material Design’s shape system?",
+    "answer": "Customizable corner styles like rounded or cut to reflect brand identity."
+  },
+  {
+    "deckId": 11,
+    "id": 1022,
+    "question": "What is Material Design’s baseline grid?",
+    "answer": "A typographic grid ensuring consistent vertical rhythm in text layouts."
+  },
+  {
+    "deckId": 11,
+    "id": 1023,
+    "question": "What is Material Design’s adaptive layout?",
+    "answer": "Responsive design principles for different screen sizes and orientations."
+  },
+  {
+    "deckId": 11,
+    "id": 1024,
+    "question": "What is Material Design’s dark theme?",
+    "answer": "A color scheme optimized for low-light environments and battery saving."
+  },
+  {
+    "deckId": 11,
+    "id": 1025,
+    "question": "What is Material Design’s ripple effect?",
+    "answer": "A visual feedback animation when users interact with UI elements."
+  },
+  {
+    "deckId": 11,
+    "id": 1026,
+    "question": "What is Material Design’s adaptive icon?",
+    "answer": "Icons that adjust shape across devices for consistency."
+  },
+  {
+    "deckId": 11,
+    "id": 1027,
+    "question": "What is Material Design’s bottom navigation?",
+    "answer": "A bar at the bottom for switching between top-level destinations."
+  },
+  {
+    "deckId": 11,
+    "id": 1028,
+    "question": "What is Material Design’s top app bar?",
+    "answer": "A toolbar at the top providing navigation and actions."
+  },
+  {
+    "deckId": 11,
+    "id": 1029,
+    "question": "What is a Material Design card?",
+    "answer": "A container with elevation and rounded corners for grouping content."
+  },
+  {
+    "deckId": 11,
+    "id": 1030,
+    "question": "What is a tip for Material Design performance?",
+    "answer": "Use lightweight components and avoid overusing shadows and animations."
+  }
+]

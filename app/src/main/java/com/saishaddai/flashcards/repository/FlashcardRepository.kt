@@ -1,9 +1,9 @@
 package com.saishaddai.flashcards.repository
 
-interface FlashcardRepository<A> {
+interface FlashcardRepository<A, B> {
 
-    suspend fun getData(id: Int, size: Int = 20): List<A>
+    suspend fun getData(type: A, size: Int = 20): List<B>
 
-    suspend fun getDataCount(id: Int): Int
+    suspend fun getDataCount(type: A): Int
 
 }

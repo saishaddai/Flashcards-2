@@ -1,0 +1,368 @@
+[
+  {
+    "deckId": 2,
+    "id": 23,
+    "question": "What are the core building blocks of an Android Application?",
+    "answer": "Activities, Fragments, Services, Content Providers, Broadcast Receivers, and Views."
+  },
+  {
+    "deckId": 2,
+    "id": 24,
+    "question": "What is an Activity?",
+    "answer": "A component that provides a screen with which users can interact."
+  },
+  {
+    "deckId": 2,
+    "id": 25,
+    "question": "What is a Fragment?",
+    "answer": "A reusable portion of an Activity's user interface."
+  },
+  {
+    "deckId": 2,
+    "id": 26,
+    "question": "What is a Service?",
+    "answer": "A component that performs long-running operations in the background."
+  },
+  {
+    "deckId": 2,
+    "id": 27,
+    "question": "What is a Content Provider?",
+    "answer": "A component that manages access to a structured set of data."
+  },
+  {
+    "deckId": 2,
+    "id": 28,
+    "question": "What is a Broadcast Receiver?",
+    "answer": "A component that responds to system-wide broadcast announcements."
+  },
+  {
+    "deckId": 2,
+    "id": 31,
+    "question": "What is the Manifest File?",
+    "answer": "An XML file that defines essential information about an app to the Android system."
+  },
+  {
+    "deckId": 2,
+    "id": 32,
+    "question": "What is an Intent?",
+    "answer": "A messaging object used to request an action from another app component."
+  },
+  {
+    "deckId": 2,
+    "id": 33,
+    "question": "What is an Explicit Intent?",
+    "answer": "An Intent that specifies the exact component to start by name."
+  },
+  {
+    "deckId": 2,
+    "id": 34,
+    "question": "What is an Implicit Intent?",
+    "answer": "An Intent that declares a general action to perform, letting the system find a match."
+  },
+  {
+    "deckId": 2,
+    "id": 50,
+    "question": "What is a PendingIntent?",
+    "answer": "A description of an Intent and target action to be performed later by another app."
+  },
+  {
+    "deckId": 2,
+    "id": 51,
+    "question": "What are IntentFilters?",
+    "answer": "Expressions in the manifest that specify the types of Intents a component can receive."
+  },
+  {
+    "deckId": 2,
+    "id": 35,
+    "question": "What is the Android Lifecycle?",
+    "answer": "A set of states an app component goes through from creation to destruction."
+  },
+  {
+    "deckId": 2,
+    "id": 36,
+    "question": "What is an Activity Lifecycle?",
+    "answer": "The specific sequence of states an Activity goes through, like onCreate and onResume."
+  },
+  {
+    "deckId": 2,
+    "id": 39,
+    "question": "What is the Fragment Lifecycle?",
+    "answer": "The sequence of states a Fragment goes through, closely tied to its host Activity."
+  },
+  {
+    "deckId": 2,
+    "id": 41,
+    "question": "What happens when the device is moved from Portrait mode to Landscape?",
+    "answer": "By default, the current Activity is destroyed and recreated."
+  },
+  {
+    "deckId": 2,
+    "id": 37,
+    "question": "What is an Application Context in Android?",
+    "answer": "A Context tied to the lifecycle of the entire application process."
+  },
+  {
+    "deckId": 2,
+    "id": 38,
+    "question": "What is Activity Context in Android?",
+    "answer": "A Context tied to the lifecycle of a specific Activity."
+  },
+  {
+    "deckId": 2,
+    "id": 72,
+    "question": "ApplicationContext vs BaseContext?",
+    "answer": "ApplicationContext is global, while BaseContext is specific to the component it's in."
+  },
+  {
+    "deckId": 2,
+    "id": 29,
+    "question": "What is a View?",
+    "answer": "A basic building block for user interface components."
+  },
+  {
+    "deckId": 2,
+    "id": 30,
+    "question": "What are Layouts?",
+    "answer": "Containers that define the structure for user interface components."
+  },
+  {
+    "deckId": 2,
+    "id": 53,
+    "question": "What is ConstraintLayout?",
+    "answer": "A flexible layout manager that allows for complex UI structures with flat view hierarchies."
+  },
+  {
+    "deckId": 2,
+    "id": 58,
+    "question": "What is RecyclerView?",
+    "answer": "A flexible and efficient version of ListView for displaying large data sets."
+  },
+  {
+    "deckId": 2,
+    "id": 59,
+    "question": "What is the ‘ViewHolderPattern’ in RecyclerView?",
+    "answer": "A pattern that improves performance by caching view references to avoid repeated findViewById calls."
+  },
+  {
+    "deckId": 2,
+    "id": 40,
+    "question": "What is the difference between replacing and adding fragments in the backstack?",
+    "answer": "Replace removes the existing fragment while add overlays the new one."
+  },
+  {
+    "deckId": 2,
+    "id": 42,
+    "question": "What does RTL mean in UI Design?",
+    "answer": "Right-to-Left, a design approach for languages like Arabic or Hebrew."
+  },
+  {
+    "deckId": 2,
+    "id": 57,
+    "question": "How to support different screen sizes?",
+    "answer": "By using flexible layouts, resource qualifiers, and vector drawables."
+  },
+  {
+    "deckId": 2,
+    "id": 66,
+    "question": "How do Fragments communicate?",
+    "answer": "Primarily through a shared ViewModel or via the host Activity."
+  },
+  {
+    "deckId": 2,
+    "id": 45,
+    "question": "What is a Thread?",
+    "answer": "An independent path of execution within a program."
+  },
+  {
+    "deckId": 2,
+    "id": 71,
+    "question": "What is the Main thread in Android?",
+    "answer": "The primary thread responsible for handling UI events and updates."
+  },
+  {
+    "deckId": 2,
+    "id": 69,
+    "question": "What is a Looper?",
+    "answer": "A class that runs a message loop for a thread."
+  },
+  {
+    "deckId": 2,
+    "id": 70,
+    "question": "What is a MessageQueue?",
+    "answer": "A queue that holds the list of messages to be dispatched by a Looper."
+  },
+  {
+    "deckId": 2,
+    "id": 48,
+    "question": "What is a Handler?",
+    "answer": "A class used to send and process Message and Runnable objects associated with a thread's MessageQueue."
+  },
+  {
+    "deckId": 2,
+    "id": 54,
+    "question": "What is ANR?",
+    "answer": "Application Not Responding, an error when the UI thread is blocked for too long."
+  },
+  {
+    "deckId": 2,
+    "id": 64,
+    "question": "What is ‘WorkManager’?",
+    "answer": "The recommended API for persistent, deferrable background work in Android."
+  },
+  {
+    "deckId": 2,
+    "id": 88,
+    "question": "What is a Work Request?",
+    "answer": "An object that defines how and when a task should be run by WorkManager."
+  },
+  {
+    "deckId": 2,
+    "id": 89,
+    "question": "What are the result types in WorkManager?",
+    "answer": "The possible outcomes: Success, Failure, and Retry."
+  },
+  {
+    "deckId": 2,
+    "id": 90,
+    "question": "Which are the states of a Work in WorkManager?",
+    "answer": "Enqueued, running, succeeded, failed, blocked, and cancelled."
+  },
+  {
+    "deckId": 2,
+    "id": 91,
+    "question": "Worker vs CoroutineWorker?",
+    "answer": "Worker uses a background thread, while CoroutineWorker is optimized for Kotlin coroutines."
+  },
+  {
+    "deckId": 2,
+    "id": 92,
+    "question": "WorkManager vs JobScheduler?",
+    "answer": "WorkManager is a higher-level API that uses JobScheduler and other mechanisms under the hood."
+  },
+  {
+    "deckId": 2,
+    "id": 43,
+    "question": "What is an Intent Service?",
+    "answer": "A base class for Services that handle asynchronous requests on a separate thread."
+  },
+  {
+    "deckId": 2,
+    "id": 55,
+    "question": "What is commit() in SharedPreferences?",
+    "answer": "A synchronous method to save changes to SharedPreferences."
+  },
+  {
+    "deckId": 2,
+    "id": 56,
+    "question": "What is apply() in SharedPreferences?",
+    "answer": "An asynchronous method to save changes to SharedPreferences."
+  },
+  {
+    "deckId": 2,
+    "id": 63,
+    "question": "What are Storage methods?",
+    "answer": "Options include SharedPreferences, internal storage, external storage, and SQLite."
+  },
+  {
+    "deckId": 2,
+    "id": 46,
+    "question": "What is Parcelable in Android?",
+    "answer": "An interface for classes whose instances can be written to and restored from a Parcel."
+  },
+  {
+    "deckId": 2,
+    "id": 47,
+    "question": "Serializable vs Parcelable?",
+    "answer": "Serializable is a standard Java interface, while Parcelable is Android-specific and faster."
+  },
+  {
+    "deckId": 2,
+    "id": 75,
+    "question": "What is DVM?",
+    "answer": "Dalvik Virtual Machine, the original runtime used by Android to execute app code."
+  },
+  {
+    "deckId": 2,
+    "id": 76,
+    "question": "What is ART?",
+    "answer": "Android Runtime, the modern runtime that replaced DVM with ahead-of-time compilation."
+  },
+  {
+    "deckId": 2,
+    "id": 78,
+    "question": "What are the ‘.dex’ files?",
+    "answer": "Compiled Android application code that runs on the Dalvik or ART runtimes."
+  },
+  {
+    "deckId": 2,
+    "id": 65,
+    "question": "What is the Zygote process?",
+    "answer": "A parent process in Android that pre-loads common classes and resources to speed up app launching."
+  },
+  {
+    "deckId": 2,
+    "id": 79,
+    "question": "What is the Android boot process?",
+    "answer": "The sequence from power-on to the system being ready, including Bootloader, Kernel, and Zygote."
+  },
+  {
+    "deckId": 2,
+    "id": 67,
+    "question": "What is a Binder?",
+    "answer": "A mechanism for inter-process communication in Android."
+  },
+  {
+    "deckId": 2,
+    "id": 61,
+    "question": "What is AIDL?",
+    "answer": "Android Interface Definition Language, used to define the interface for inter-process communication."
+  },
+  {
+    "deckId": 2,
+    "id": 80,
+    "question": "What is ‘compile’ in Gradle?",
+    "answer": "A deprecated configuration for adding dependencies; use implementation or api instead."
+  },
+  {
+    "deckId": 2,
+    "id": 81,
+    "question": "What is ‘implementation’ in Gradle?",
+    "answer": "A configuration that keeps dependencies private to the module, improving build times."
+  },
+  {
+    "deckId": 2,
+    "id": 82,
+    "question": "What is ‘api’ in Gradle?",
+    "answer": "A configuration that exposes dependencies to other modules that depend on it."
+  },
+  {
+    "deckId": 2,
+    "id": 83,
+    "question": "What is 'libs.versions.toml‘ in Gradle?",
+    "answer": "A version catalog file used to manage dependencies and versions centrally."
+  },
+  {
+    "deckId": 2,
+    "id": 84,
+    "question": "What is the difference between build.gradle (Project and Module)?",
+    "answer": "Project-level defines global settings, while module-level defines specific settings for that module."
+  },
+  {
+    "deckId": 2,
+    "id": 85,
+    "question": "What is versionName and versionCode in Gradle?",
+    "answer": "versionCode is an internal integer, while versionName is a string shown to users."
+  },
+  {
+    "deckId": 2,
+    "id": 86,
+    "question": "What are flavors in Gradle?",
+    "answer": "Configurations used to create different versions of an app from the same codebase."
+  },
+  {
+    "deckId": 2,
+    "id": 87,
+    "question": "Flavors vs buildTypes?",
+    "answer": "Flavors define what is built (e.g., free vs pro), while buildTypes define how it is built (e.g., debug vs release."
+  }
+]

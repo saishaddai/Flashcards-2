@@ -1,6 +1,7 @@
 package com.saishaddai.flashcards.di
 
 import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.DeckRepository
 import com.saishaddai.flashcards.repository.FlashcardRepository
@@ -22,14 +23,14 @@ import org.koin.dsl.module
 
 val appModule = module {
     // Repositories
-    single<FlashcardRepository<Flashcard>> { JSONFlashcardRepository(androidContext()) }
+    single<FlashcardRepository<DeckType, Flashcard>> { JSONFlashcardRepository(androidContext()) }
     single<DeckRepository<Deck>> { JSONDeckRepository(get()) }
     single<StatsRepository> { HardcodedStatsRepository() }
     single<SettingsRepository> { HardcodedSettingsRepository() }
 
     // ViewModels
     viewModel { DecksViewModel(androidApplication(), get()) }
-    viewModel { (deckId: Int) -> FlashcardViewModel(androidApplication(), deckId, get()) }
+    viewModel { (deckType: DeckType) -> FlashcardViewModel(androidApplication(), deckType.id, get()) }
     viewModel { StatsViewModel(get()) }
     viewModel { FinishSessionViewModel() }
     viewModel { SettingsViewModel(get()) }

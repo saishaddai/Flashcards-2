@@ -1,0 +1,182 @@
+[
+  {
+    "deckId": 6,
+    "id": 93,
+    "question": "What is Jetpack Compose?",
+    "answer": "Android's modern toolkit for building native UI using a declarative approach."
+  },
+  {
+    "deckId": 6,
+    "id": 94,
+    "question": "What is a Composable function?",
+    "answer": "A function annotated with @Composable that defines a part of the UI."
+  },
+  {
+    "deckId": 6,
+    "id": 95,
+    "question": "What is State in Compose?",
+    "answer": "An observable value that triggers a recomposition when it changes."
+  },
+  {
+    "deckId": 6,
+    "id": 96,
+    "question": "What is Recomposition?",
+    "answer": "The process of calling Composable functions again when their inputs change to update the UI."
+  },
+  {
+    "deckId": 6,
+    "id": 97,
+    "question": "What is 'remember' in Compose?",
+    "answer": "A function used to store an object in memory during recomposition."
+  },
+  {
+    "deckId": 6,
+    "id": 98,
+    "question": "What is a 'Side-effect' in Compose?",
+    "answer": "A change to the state of the app that happens outside the scope of a Composable function."
+  },
+  {
+    "deckId": 6,
+    "id": 99,
+    "question": "What is a Modifier in Compose?",
+    "answer": "An ordered collection of elements that decorate or augment a Composable."
+  },
+  {
+    "deckId": 6,
+    "id": 100,
+    "question": "What is a 'Scaffold' in Compose?",
+    "answer": "A Composable that provides a standard layout structure for common UI components."
+  },
+  {
+    "deckId": 6,
+    "id": 101,
+    "question": "What is 'CompositionLocal'?",
+    "answer": "A way to pass data through the Composition tree without explicitly passing it as a parameter."
+  },
+  {
+    "deckId": 6,
+    "id": 102,
+    "question": "What is 'derivedStateOf'?",
+    "answer": "A function used to create a State that depends on other State objects, optimizing recomposition."
+  },
+  {
+    "deckId": 6,
+    "id": 103,
+    "question": "What is a 'LazyColumn'?",
+    "answer": "A vertically scrolling list that only composes and lays out currently visible items."
+  },
+  {
+    "deckId": 6,
+    "id": 104,
+    "question": "What is 'LaunchedEffect'?",
+    "answer": "A Composable used to run side effects in the scope of a Composable, cancelled when it leaves composition."
+  },
+  {
+    "deckId": 6,
+    "id": 105,
+    "question": "What is 'rememberUpdatedState'?",
+    "answer": "A way to reference a value in an effect that shouldn't restart when the value changes."
+  },
+  {
+    "deckId": 6,
+    "id": 106,
+    "question": "What is 'rememberSaveable'?",
+    "answer": "A function similar to 'remember', but it survives Activity or process recreation by saving state in a Bundle."
+  },
+  {
+    "deckId": 6,
+    "id": 107,
+    "question": "What is 'Slot API'?",
+    "answer": "A pattern where a Composable accepts other Composables as parameters, allowing for highly customizable components."
+  },
+  {
+    "deckId": 6,
+    "id": 108,
+    "question": "What is 'Unidirectional Data Flow' (UDF)?",
+    "answer": "A design pattern where state flows down to UI components and events flow up to the state holder."
+  },
+  {
+    "deckId": 6,
+    "id": 109,
+    "question": "What is 'animate*AsState'?",
+    "answer": "A family of functions used to create simple animations that transition between values when the target state changes."
+  },
+  {
+    "deckId": 6,
+    "id": 110,
+    "question": "What is 'DisposableEffect'?",
+    "answer": "A side-effect API used for effects that need to be cleaned up when the Composable leaves the composition."
+  },
+  {
+    "deckId": 6,
+    "id": 111,
+    "question": "What is 'SideEffect'?",
+    "answer": "An API used to share Compose state with non-Compose objects, running after every successful recomposition."
+  },
+  {
+    "deckId": 6,
+    "id": 112,
+    "question": "What is 'produceState'?",
+    "answer": "A side-effect API that converts non-Compose state (like Flow or LiveData) into a Compose State object."
+  },
+  {
+    "deckId": 6,
+    "id": 113,
+    "question": "What is 'Intrinsic Measurement'?",
+    "answer": "A feature that allows Compose to query children about their preferred size before the actual measurement pass."
+  },
+  {
+    "deckId": 6,
+    "id": 114,
+    "question": "What is 'Semantics' in Compose?",
+    "answer": "A mechanism used to describe the UI for accessibility services and the testing framework."
+  },
+  {
+    "deckId": 6,
+    "id": 115,
+    "question": "What is 'SubcomposeLayout'?",
+    "answer": "A layout that allows for deferred composition, where the composition of some children depends on the measurement of others."
+  },
+  {
+    "deckId": 6,
+    "id": 116,
+    "question": "What is 'BoxWithConstraints'?",
+    "answer": "A layout Composable that provides its measurement constraints to its content, useful for responsive designs."
+  },
+  {
+    "deckId": 6,
+    "id": 117,
+    "question": "What is 'LocalConfiguration'?",
+    "answer": "A CompositionLocal that provides access to the current device Configuration (e.g., orientation, dimensions)."
+  },
+  {
+    "deckId": 6,
+    "id": 118,
+    "question": "What is 'PointerInput'?",
+    "answer": "A modifier used to handle low-level touch, mouse, or stylus input events."
+  },
+  {
+    "deckId": 6,
+    "id": 119,
+    "question": "What is 'FocusRequester'?",
+    "answer": "An object used to programmatically request or change focus for a specific UI element."
+  },
+  {
+    "deckId": 6,
+    "id": 120,
+    "question": "What is 'WindowInsets'?",
+    "answer": "An API used to handle system UI elements like the status bar, ensuring content doesn't overlap with them."
+  },
+  {
+    "deckId": 6,
+    "id": 121,
+    "question": "What is 'VisualTransformation'?",
+    "answer": "An interface used to change the visual representation of input text, such as for password masking."
+  },
+  {
+    "deckId": 6,
+    "id": 122,
+    "question": "What is 'Brush' in Compose?",
+    "answer": "An object used to define how to fill an area with color, gradients, or patterns when drawing shapes or text."
+  }
+]

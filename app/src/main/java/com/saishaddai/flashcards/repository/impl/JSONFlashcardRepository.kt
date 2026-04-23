@@ -12,6 +12,7 @@ import com.saishaddai.flashcards.model.DeckType.KOTLIN
 import com.saishaddai.flashcards.model.DeckType.KOTLIN_MP
 import com.saishaddai.flashcards.model.DeckType.FIREBASE
 import com.saishaddai.flashcards.model.DeckType.MATERIAL_3
+import com.saishaddai.flashcards.model.DeckType.ANDROID_OPS
 import com.saishaddai.flashcards.model.DeckType.LIBRARIES
 import com.saishaddai.flashcards.model.DeckType.NAVIGATION
 import com.saishaddai.flashcards.model.DeckType.SECURITY
@@ -57,7 +58,7 @@ class JSONFlashcardRepository(private val context: Context? = null) :
             JETPACK.id -> getListFromJson(context, JETPACK)
             TESTING.id -> getListFromJson(context, TESTING)
             GRADLE.id -> getListFromJson(context, GRADLE)
-            DeckType.ANDROID_OPS.id -> emptyList<Flashcard>().storeCount(DeckType.ANDROID_OPS.id)
+            ANDROID_OPS.id -> getListFromJson(context, ANDROID_OPS)
             LIBRARIES.id -> getListFromJson(context, LIBRARIES)
             DESIGN_PATTERNS.id -> getListFromJson(context, DESIGN_PATTERNS)
             COROUTINES.id -> getListFromJson(context, COROUTINES)

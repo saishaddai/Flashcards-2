@@ -1,14 +1,182 @@
 [
   {
     "deckId": 19,
-    "id": 1901,
+    "id": 3001,
     "question": "What is GraphQL?",
-    "answer": "A query language for APIs and a runtime for fulfilling those queries with your existing data."
+    "answer": "A query language for APIs that lets clients request exactly the data they need."
   },
   {
     "deckId": 19,
-    "id": 1902,
-    "question": "What is a 'Query' in GraphQL?",
-    "answer": "A request for specific data from the server, where the client defines exactly which fields they need."
+    "id": 3002,
+    "question": "Why use GraphQL in Android?",
+    "answer": "It reduces over-fetching and under-fetching compared to REST APIs."
+  },
+  {
+    "deckId": 19,
+    "id": 3003,
+    "question": "What is a GraphQL schema?",
+    "answer": "A contract defining types, queries, and mutations available in the API."
+  },
+  {
+    "deckId": 19,
+    "id": 3004,
+    "question": "What is Apollo Android?",
+    "answer": "A popular GraphQL client library for Android recommended by Google."
+  },
+  {
+    "deckId": 19,
+    "id": 3005,
+    "question": "What is a GraphQL query?",
+    "answer": "A request for specific fields of data from the server."
+  },
+  {
+    "deckId": 19,
+    "id": 3006,
+    "question": "What is a GraphQL mutation?",
+    "answer": "An operation to modify server-side data, like create or update."
+  },
+  {
+    "deckId": 19,
+    "id": 3007,
+    "question": "What is a GraphQL subscription?",
+    "answer": "A way to receive real-time updates from the server."
+  },
+  {
+    "deckId": 19,
+    "id": 3008,
+    "question": "What is Apollo Kotlin?",
+    "answer": "The modern Apollo client for Android using Kotlin Multiplatform."
+  },
+  {
+    "deckId": 19,
+    "id": 3009,
+    "question": "What is code generation in Apollo?",
+    "answer": "Automatically creating Kotlin models from GraphQL queries and schema."
+  },
+  {
+    "deckId": 19,
+    "id": 3010,
+    "question": "What is a resolver in GraphQL?",
+    "answer": "A function that fetches the data for a field in the schema."
+  },
+  {
+    "deckId": 19,
+    "id": 3011,
+    "question": "What is the benefit of GraphQL fragments?",
+    "answer": "They allow reusing field selections across queries."
+  },
+  {
+    "deckId": 19,
+    "id": 3012,
+    "question": "What is GraphQL introspection?",
+    "answer": "A feature that lets clients query the schema itself."
+  },
+  {
+    "deckId": 19,
+    "id": 3013,
+    "question": "What is caching in Apollo?",
+    "answer": "Storing query results locally to reduce network calls."
+  },
+  {
+    "deckId": 19,
+    "id": 3014,
+    "question": "What is normalized caching?",
+    "answer": "A cache strategy that stores data by unique IDs for efficient updates."
+  },
+  {
+    "deckId": 19,
+    "id": 3015,
+    "question": "What is GraphQL Playground?",
+    "answer": "An interactive IDE for testing GraphQL queries and mutations."
+  },
+  {
+    "deckId": 19,
+    "id": 3016,
+    "question": "What is GraphiQL?",
+    "answer": "A browser-based IDE for exploring GraphQL APIs."
+  },
+  {
+    "deckId": 19,
+    "id": 3017,
+    "question": "What is a best practice for GraphQL queries?",
+    "answer": "Request only the fields needed to minimize payload size."
+  },
+  {
+    "deckId": 19,
+    "id": 3018,
+    "question": "What is batching in GraphQL?",
+    "answer": "Combining multiple queries into a single request to reduce network overhead."
+  },
+  {
+    "deckId": 19,
+    "id": 3019,
+    "question": "What is GraphQL federation?",
+    "answer": "A way to combine multiple GraphQL services into one unified schema."
+  },
+  {
+    "deckId": 19,
+    "id": 3020,
+    "question": "What is GraphQL scalar type?",
+    "answer": "Basic data types like String, Int, Float, Boolean, and ID."
+  },
+  {
+    "deckId": 19,
+    "id": 3021,
+    "question": "What is GraphQL input type?",
+    "answer": "A type used to pass structured data into mutations."
+  },
+  {
+    "deckId": 19,
+    "id": 3022,
+    "question": "What is GraphQL union type?",
+    "answer": "A type that can represent one of several object types."
+  },
+  {
+    "deckId": 19,
+    "id": 3023,
+    "question": "What is GraphQL interface?",
+    "answer": "A type that defines fields implemented by multiple object types."
+  },
+  {
+    "deckId": 19,
+    "id": 3024,
+    "question": "What is GraphQL error handling?",
+    "answer": "Returning structured error messages alongside partial data."
+  },
+  {
+    "deckId": 19,
+    "id": 3025,
+    "question": "What is GraphQL pagination?",
+    "answer": "Fetching data in chunks using cursor or offset-based approaches."
+  },
+  {
+    "deckId": 19,
+    "id": 3026,
+    "question": "What is GraphQL over-fetching?",
+    "answer": "Receiving more data than needed, which GraphQL helps avoid."
+  },
+  {
+    "deckId": 19,
+    "id": 3027,
+    "question": "What is GraphQL under-fetching?",
+    "answer": "Not receiving enough data, requiring multiple requests in REST."
+  },
+  {
+    "deckId": 19,
+    "id": 3028,
+    "question": "What is GraphQL schema stitching?",
+    "answer": "Combining multiple schemas into one for easier integration."
+  },
+  {
+    "deckId": 19,
+    "id": 3029,
+    "question": "What is GraphQL directive?",
+    "answer": "A way to modify query execution, like @include or @skip."
+  },
+  {
+    "deckId": 19,
+    "id": 3030,
+    "question": "What is a tip for GraphQL integration in Android?",
+    "answer": "Use Apollo Kotlin with coroutines for efficient async data fetching."
   }
 ]

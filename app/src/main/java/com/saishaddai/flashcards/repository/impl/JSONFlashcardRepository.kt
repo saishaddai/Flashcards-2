@@ -2,26 +2,8 @@ package com.saishaddai.flashcards.repository.impl
 
 import android.content.Context
 import com.saishaddai.flashcards.model.DeckType
-import com.saishaddai.flashcards.model.DeckType.ANDROID_CORE
-import com.saishaddai.flashcards.model.DeckType.COROUTINES
-import com.saishaddai.flashcards.model.DeckType.DESIGN_PATTERNS
-import com.saishaddai.flashcards.model.DeckType.JETPACK
-import com.saishaddai.flashcards.model.DeckType.GRADLE
-import com.saishaddai.flashcards.model.DeckType.DI
-import com.saishaddai.flashcards.model.DeckType.OOP
-import com.saishaddai.flashcards.model.DeckType.KOTLIN
-import com.saishaddai.flashcards.model.DeckType.KOTLIN_MP
-import com.saishaddai.flashcards.model.DeckType.GRAPHQL
-import com.saishaddai.flashcards.model.DeckType.COMPOSE
-import com.saishaddai.flashcards.model.DeckType.FIREBASE
-import com.saishaddai.flashcards.model.DeckType.MATERIAL_3
-import com.saishaddai.flashcards.model.DeckType.ANDROID_OPS
-import com.saishaddai.flashcards.model.DeckType.LIBRARIES
-import com.saishaddai.flashcards.model.DeckType.NAVIGATION
-import com.saishaddai.flashcards.model.DeckType.SECURITY
-import com.saishaddai.flashcards.model.DeckType.TESTING
+import com.saishaddai.flashcards.model.DeckType.*
 import com.saishaddai.flashcards.model.Flashcard
-import com.saishaddai.flashcards.model.fcdata.databaseCards
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.utils.random
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +34,7 @@ class JSONFlashcardRepository(private val context: Context? = null) :
             KOTLIN_MP.id -> getListFromJson(context, KOTLIN_MP)
             SECURITY.id -> getListFromJson(context, SECURITY)
             COMPOSE.id -> getListFromJson(context, COMPOSE)
-            DeckType.DATABASES.id -> databaseCards.storeCount(DeckType.DATABASES.id)
+            DATABASES.id -> getListFromJson(context, DATABASES)
             DI.id -> getListFromJson(context, DI)
             MATERIAL_3.id -> getListFromJson(context, MATERIAL_3)
             NAVIGATION.id -> getListFromJson(context, NAVIGATION)

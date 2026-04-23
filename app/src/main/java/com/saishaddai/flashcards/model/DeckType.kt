@@ -19,7 +19,8 @@ enum class DeckType(val id: Int, val jsonFile: String = "") {
     DESIGN_PATTERNS(16, "patterns.json"),
     COROUTINES(17, "coroutines.json"),
     FIREBASE(18, "firebase.json"),
-    GRAPHQL(19, "graphql.json");
+    GRAPHQL(19, "graphql.json"),
+    SENSORS(20, "sensors.json");
 
     companion object {
         fun fromId(id: Int): DeckType = entries.find { it.id == id } ?: OOP

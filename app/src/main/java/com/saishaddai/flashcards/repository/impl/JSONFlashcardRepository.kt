@@ -2,7 +2,6 @@ package com.saishaddai.flashcards.repository.impl
 
 import android.content.Context
 import com.saishaddai.flashcards.model.DeckType
-import com.saishaddai.flashcards.model.DeckType.*
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.utils.random
@@ -17,42 +16,20 @@ class JSONFlashcardRepository(private val context: Context? = null) :
 
     override suspend fun getData(type: DeckType, size: Int): List<Flashcard> =
         withContext(Dispatchers.IO) {
-            getFlashcardsForDeck(type.id).random(size)
+            getFlashcardsForDeck(type).random(size)
         }
 
     override suspend fun getDataCount(type: DeckType): Int {
-        return countMap[type.id] ?: getFlashcardsForDeck(type.id).size.also {
-            countMap[type.id] = it
-        }
+        return countMap[type.id] ?: getFlashcardsForDeck(type).size
+            .also {
+                countMap[type.id] = it
+            }
     }
 
-    fun getFlashcardsForDeck(deckId: Int): List<Flashcard> {
-        return when (deckId) {
-            OOP.id -> getListFromJson(context, OOP)
-            ANDROID_CORE.id -> getListFromJson(context, ANDROID_CORE)
-            KOTLIN.id -> getListFromJson(context, KOTLIN)
-            KOTLIN_MP.id -> getListFromJson(context, KOTLIN_MP)
-            SECURITY.id -> getListFromJson(context, SECURITY)
-            COMPOSE.id -> getListFromJson(context, COMPOSE)
-            DATABASES.id -> getListFromJson(context, DATABASES)
-            DI.id -> getListFromJson(context, DI)
-            MATERIAL_3.id -> getListFromJson(context, MATERIAL_3)
-            NAVIGATION.id -> getListFromJson(context, NAVIGATION)
-            JETPACK.id -> getListFromJson(context, JETPACK)
-            TESTING.id -> getListFromJson(context, TESTING)
-            GRADLE.id -> getListFromJson(context, GRADLE)
-            ANDROID_OPS.id -> getListFromJson(context, ANDROID_OPS)
-            LIBRARIES.id -> getListFromJson(context, LIBRARIES)
-            DESIGN_PATTERNS.id -> getListFromJson(context, DESIGN_PATTERNS)
-            COROUTINES.id -> getListFromJson(context, COROUTINES)
-            FIREBASE.id -> getListFromJson(context, FIREBASE)
-            GRAPHQL.id -> getListFromJson(context, GRAPHQL)
-            else -> emptyList()
-        }
-    }
+    fun getFlashcardsForDeck(deckType: DeckType): List<Flashcard> =
+        getListFromJson(context, deckType)
 
-
-    private fun getListFromJson(context: Context?, deckType : DeckType) : List<Flashcard> {
+    private fun getListFromJson(context: Context?, deckType: DeckType): List<Flashcard> {
         return context?.let {
             loadFlashcardsFromJson(it, deckType.jsonFile)
                 .storeCount(deckType.id)

@@ -1,0 +1,182 @@
+[
+  {
+    "deckId": 11,
+    "id": 1101,
+    "question": "What is Android Jetpack?",
+    "answer": "A suite of libraries, tools, and guidance to help developers write high-quality apps easier by providing common infrastructure code."
+  },
+  {
+    "deckId": 11,
+    "id": 1102,
+    "question": "What is the purpose of WorkManager?",
+    "answer": "To schedule deferrable, asynchronous tasks that are expected to run even if the app exits or the device restarts."
+  },
+  {
+    "deckId": 11,
+    "id": 1103,
+    "question": "When should you use WorkManager over Coroutines?",
+    "answer": "Use WorkManager for tasks that must be guaranteed to complete (e.g., uploading logs), whereas Coroutines are for tasks that can be cancelled when the user leaves the screen."
+  },
+  {
+    "deckId": 11,
+    "id": 1104,
+    "question": "What is DataStore?",
+    "answer": "A data storage solution that allows you to store key-value pairs or typed objects with protocol buffers, replacing SharedPreferences."
+  },
+  {
+    "deckId": 11,
+    "id": 1105,
+    "question": "What are the two types of DataStore?",
+    "answer": "Preferences DataStore (key-value) and Proto DataStore (custom data types via Protocol Buffers)."
+  },
+  {
+    "deckId": 11,
+    "id": 1106,
+    "question": "What is the Lifecycle library?",
+    "answer": "A library that provides classes and interfaces that let you build lifecycle-aware components that automatically adjust their behavior based on the lifecycle state of an Activity or Fragment."
+  },
+  {
+    "deckId": 11,
+    "id": 1107,
+    "question": "What is a ViewModel?",
+    "answer": "A class designed to store and manage UI-related data in a lifecycle-conscious way, allowing data to survive configuration changes like screen rotations."
+  },
+  {
+    "deckId": 11,
+    "id": 1108,
+    "question": "What is LiveData?",
+    "answer": "An observable data holder class that is lifecycle-aware, meaning it only updates app component observers that are in an active lifecycle state."
+  },
+  {
+    "deckId": 11,
+    "id": 1109,
+    "question": "What is the Paging library?",
+    "answer": "A library that helps you load and display small chunks of data at a time from a larger dataset, reducing network usage and system resources."
+  },
+  {
+    "deckId": 11,
+    "id": 1110,
+    "question": "What is CameraX?",
+    "answer": "A Jetpack support library built to help make camera app development easier by providing a consistent and easy-to-use API surface across most Android devices."
+  },
+  {
+    "deckId": 11,
+    "id": 1111,
+    "question": "What is Hilt?",
+    "answer": "A dependency injection library for Android that reduces the boilerplate of doing manual dependency injection in your project."
+  },
+  {
+    "deckId": 11,
+    "id": 1112,
+    "question": "What is the purpose of the App Startup library?",
+    "answer": "To provide a straightforward, efficient way to initialize components at application startup, reducing startup time by sharing a single content provider."
+  },
+  {
+    "deckId": 11,
+    "id": 1113,
+    "question": "What is the Benchmark library?",
+    "answer": "A tool to measure the performance of your code directly on a device, helping to identify regressions and hotspots."
+  },
+  {
+    "deckId": 11,
+    "id": 1114,
+    "question": "What is the Security-Crypto library?",
+    "answer": "A library that provides an implementation of the Security Best Practices for Android, including encrypted SharedPreferences and File encryption."
+  },
+  {
+    "deckId": 11,
+    "id": 1115,
+    "question": "What is the WindowManager library?",
+    "answer": "A library that helps you build apps for new device form factors like foldables and multi-window environments."
+  },
+  {
+    "deckId": 11,
+    "id": 1116,
+    "question": "What is Media3?",
+    "answer": "The new home for media support libraries, combining ExoPlayer and MediaSession into a single, unified API."
+  },
+  {
+    "deckId": 11,
+    "id": 1117,
+    "question": "What is the difference between On-Demand and Periodic work in WorkManager?",
+    "answer": "On-demand work runs once as soon as constraints are met; Periodic work runs repeatedly on a specific interval."
+  },
+  {
+    "deckId": 11,
+    "id": 1118,
+    "question": "What are WorkManager Constraints?",
+    "answer": "Conditions that must be met for work to run, such as 'Device is Charging' or 'Connected to Unmetered Network'."
+  },
+  {
+    "deckId": 11,
+    "id": 1119,
+    "question": "What is the SavedStateHandle in ViewModel?",
+    "answer": "A key-value map that allows you to write and retrieve data to and from the saved state, ensuring data persists even if the process is killed by the system."
+  },
+  {
+    "deckId": 11,
+    "id": 1120,
+    "question": "What is the purpose of LifecycleOwner?",
+    "answer": "An interface implemented by classes that have an Android Lifecycle (like Activity or Fragment), allowing other components to observe them."
+  },
+  {
+    "deckId": 11,
+    "id": 1121,
+    "question": "What is the core benefit of DataStore over SharedPreferences?",
+    "answer": "DataStore handles data updates safely on a background thread using Coroutines/Flow, whereas SharedPreferences has no safe way to handle errors or thread-safety."
+  },
+  {
+    "deckId": 11,
+    "id": 1122,
+    "question": "What is a PagingSource?",
+    "answer": "A class in the Paging library that defines how to fetch chunks of data from a specific backend (like a network or database)."
+  },
+  {
+    "deckId": 11,
+    "id": 1123,
+    "question": "What is a RemoteMediator in Paging?",
+    "answer": "A component used to load data from a network into a local database cache when the user reaches the end of currently loaded data."
+  },
+  {
+    "deckId": 11,
+    "id": 1124,
+    "question": "What is the Hilt @AndroidEntryPoint annotation?",
+    "answer": "It marks an Android component (Activity, Fragment, View, Service, BroadcastReceiver) for dependency injection."
+  },
+  {
+    "deckId": 11,
+    "id": 1125,
+    "question": "What is the @ViewModelInject replacement in Hilt?",
+    "answer": "Hilt now uses standard @Inject constructor injection for ViewModels combined with the @HiltViewModel annotation."
+  },
+  {
+    "deckId": 11,
+    "id": 1126,
+    "question": "What is the 'ViewBinding' library?",
+    "answer": "A feature that allows you to more easily write code that interacts with views, replacing findViewById with auto-generated binding classes."
+  },
+  {
+    "deckId": 11,
+    "id": 1127,
+    "question": "What is the difference between ViewBinding and DataBinding?",
+    "answer": "ViewBinding is only for binding views to code; DataBinding also supports binding data to views directly in XML and two-way binding."
+  },
+  {
+    "deckId": 11,
+    "id": 1128,
+    "question": "What is the 'SplashScreen' library?",
+    "answer": "A library that provides a backward-compatible API for showing and customizing the app's splash screen across different Android versions."
+  },
+  {
+    "deckId": 11,
+    "id": 1129,
+    "question": "What is the 'Palette' library?",
+    "answer": "A library that allows you to extract prominent colors from images to use in your UI for a more immersive experience."
+  },
+  {
+    "deckId": 11,
+    "id": 1130,
+    "question": "What is the purpose of 'Emoji2' library?",
+    "answer": "It ensures that Android devices have the latest emojis even if the system hasn't been updated, preventing 'tofu' (empty boxes)."
+  }
+]

@@ -7,9 +7,12 @@ import com.saishaddai.flashcards.model.DeckType.COROUTINES
 import com.saishaddai.flashcards.model.DeckType.DESIGN_PATTERNS
 import com.saishaddai.flashcards.model.DeckType.JETPACK
 import com.saishaddai.flashcards.model.DeckType.GRADLE
+import com.saishaddai.flashcards.model.DeckType.DI
 import com.saishaddai.flashcards.model.DeckType.OOP
 import com.saishaddai.flashcards.model.DeckType.KOTLIN
 import com.saishaddai.flashcards.model.DeckType.KOTLIN_MP
+import com.saishaddai.flashcards.model.DeckType.GRAPHQL
+import com.saishaddai.flashcards.model.DeckType.COMPOSE
 import com.saishaddai.flashcards.model.DeckType.FIREBASE
 import com.saishaddai.flashcards.model.DeckType.MATERIAL_3
 import com.saishaddai.flashcards.model.DeckType.ANDROID_OPS
@@ -18,9 +21,7 @@ import com.saishaddai.flashcards.model.DeckType.NAVIGATION
 import com.saishaddai.flashcards.model.DeckType.SECURITY
 import com.saishaddai.flashcards.model.DeckType.TESTING
 import com.saishaddai.flashcards.model.Flashcard
-import com.saishaddai.flashcards.model.fcdata.composeCards
 import com.saishaddai.flashcards.model.fcdata.databaseCards
-import com.saishaddai.flashcards.model.fcdata.diCards
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.utils.random
 import kotlinx.coroutines.Dispatchers
@@ -50,9 +51,9 @@ class JSONFlashcardRepository(private val context: Context? = null) :
             KOTLIN.id -> getListFromJson(context, KOTLIN)
             KOTLIN_MP.id -> getListFromJson(context, KOTLIN_MP)
             SECURITY.id -> getListFromJson(context, SECURITY)
-            DeckType.COMPOSE.id -> composeCards.storeCount(DeckType.COMPOSE.id)
+            COMPOSE.id -> getListFromJson(context, COMPOSE)
             DeckType.DATABASES.id -> databaseCards.storeCount(DeckType.DATABASES.id)
-            DeckType.DAGGER_HILT.id -> diCards.storeCount(DeckType.DAGGER_HILT.id)
+            DI.id -> getListFromJson(context, DI)
             MATERIAL_3.id -> getListFromJson(context, MATERIAL_3)
             NAVIGATION.id -> getListFromJson(context, NAVIGATION)
             JETPACK.id -> getListFromJson(context, JETPACK)
@@ -63,7 +64,7 @@ class JSONFlashcardRepository(private val context: Context? = null) :
             DESIGN_PATTERNS.id -> getListFromJson(context, DESIGN_PATTERNS)
             COROUTINES.id -> getListFromJson(context, COROUTINES)
             FIREBASE.id -> getListFromJson(context, FIREBASE)
-            DeckType.GRAPHQL.id -> getListFromJson(context, DeckType.GRAPHQL)
+            GRAPHQL.id -> getListFromJson(context, GRAPHQL)
             else -> emptyList()
         }
     }

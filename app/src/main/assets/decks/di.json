@@ -1,0 +1,182 @@
+[
+  {
+    "deckId": 8,
+    "id": 101,
+    "question": "What is Dependency Injection?",
+    "answer": "A design pattern where an object receives its dependencies from an external source rather than creating them itself."
+  },
+  {
+    "deckId": 8,
+    "id": 102,
+    "question": "What is the main benefit of DI?",
+    "answer": "It promotes loose coupling, making code more modular, testable, and maintainable."
+  },
+  {
+    "deckId": 8,
+    "id": 103,
+    "question": "What is the difference between DI and Service Locator?",
+    "answer": "DI provides dependencies to the class (push), while Service Locator requires the class to request them (pull)."
+  },
+  {
+    "deckId": 8,
+    "id": 104,
+    "question": "What are the three common types of DI?",
+    "answer": "Constructor Injection, Setter Injection, and Interface/Field Injection."
+  },
+  {
+    "deckId": 8,
+    "id": 105,
+    "question": "Why is Constructor Injection preferred?",
+    "answer": "It ensures the object is always in a valid state and makes dependencies explicit and immutable."
+  },
+  {
+    "deckId": 8,
+    "id": 106,
+    "question": "What is Dagger 2?",
+    "answer": "A fully static, compile-time dependency injection framework for Java, Kotlin, and Android."
+  },
+  {
+    "deckId": 8,
+    "id": 107,
+    "question": "What does @Inject do in Dagger?",
+    "answer": "It marks a constructor, field, or method that Dagger should use to provide or satisfy a dependency."
+  },
+  {
+    "deckId": 8,
+    "id": 108,
+    "question": "What is a @Module in Dagger?",
+    "answer": "A class annotated with @Module that contains methods (annotated with @Provides or @Binds) to instruct Dagger how to create dependencies."
+  },
+  {
+    "deckId": 8,
+    "id": 109,
+    "question": "What is a @Component in Dagger?",
+    "answer": "An interface that acts as a bridge between modules and the classes that require dependencies."
+  },
+  {
+    "deckId": 8,
+    "id": 110,
+    "question": "What is Hilt?",
+    "answer": "A dependency injection library for Android that is built on top of Dagger to simplify its usage and boilerplate."
+  },
+  {
+    "deckId": 8,
+    "id": 111,
+    "question": "What does @HiltAndroidApp do?",
+    "answer": "It triggers Hilt's code generation and must be applied to the Application class."
+  },
+  {
+    "deckId": 8,
+    "id": 112,
+    "question": "What is @AndroidEntryPoint?",
+    "answer": "An annotation used on Android components (Activities, Fragments, Views) to enable field injection."
+  },
+  {
+    "deckId": 8,
+    "id": 113,
+    "question": "What is the purpose of @InstallIn in Hilt?",
+    "answer": "It specifies which Hilt component (e.g., SingletonComponent, ActivityComponent) a module should be installed into."
+  },
+  {
+    "deckId": 8,
+    "id": 114,
+    "question": "What is @ViewModelInject (deprecated) replaced by in Hilt?",
+    "answer": "@HiltViewModel."
+  },
+  {
+    "deckId": 8,
+    "id": 115,
+    "question": "What is a @Qualifier in Dagger/Hilt?",
+    "answer": "An annotation used to distinguish between multiple bindings of the same type."
+  },
+  {
+    "deckId": 8,
+    "id": 116,
+    "question": "What is Koin?",
+    "answer": "A pragmatic lightweight dependency injection framework for Kotlin (including KMP) that uses a DSL instead of code generation."
+  },
+  {
+    "deckId": 8,
+    "id": 117,
+    "question": "How does Koin differ from Dagger/Hilt?",
+    "answer": "Koin resolves dependencies at runtime, while Dagger/Hilt does so at compile-time."
+  },
+  {
+    "deckId": 8,
+    "id": 118,
+    "question": "What does the 'single' keyword mean in Koin?",
+    "answer": "It defines a singleton definition, which provides the same instance throughout the app's lifecycle."
+  },
+  {
+    "deckId": 8,
+    "id": 119,
+    "question": "What does 'factory' do in Koin?",
+    "answer": "It provides a new instance of the requested type every time it is injected."
+  },
+  {
+    "deckId": 8,
+    "id": 120,
+    "question": "How do you start Koin in an Android app?",
+    "answer": "By calling the startKoin { } function, usually in the Application class."
+  },
+  {
+    "deckId": 8,
+    "id": 121,
+    "question": "What is 'get()' in a Koin module?",
+    "answer": "A function used to automatically resolve and inject a constructor dependency."
+  },
+  {
+    "deckId": 8,
+    "id": 122,
+    "question": "What is 'by inject()' in Koin?",
+    "answer": "A Kotlin property delegate used to lazily inject dependencies into classes."
+  },
+  {
+    "deckId": 8,
+    "id": 123,
+    "question": "How do you inject a ViewModel in Koin?",
+    "answer": "By using the 'viewModel' keyword in the module and 'by viewModel()' in the Fragment/Activity."
+  },
+  {
+    "deckId": 8,
+    "id": 124,
+    "question": "What is 'koin-annotations'?",
+    "answer": "An optional library that adds compile-time safety and annotation support to Koin."
+  },
+  {
+    "deckId": 8,
+    "id": 125,
+    "question": "Which DI framework is most popular for Kotlin Multiplatform (KMP)?",
+    "answer": "Koin is widely used due to its pure Kotlin implementation and lack of code generation requirements."
+  },
+  {
+    "deckId": 8,
+    "id": 126,
+    "question": "Can you use Hilt in a KMP 'commonMain' source set?",
+    "answer": "No, Hilt is Android-specific. You would need to use Koin or manual DI."
+  },
+  {
+    "deckId": 8,
+    "id": 127,
+    "question": "What is 'Scoping' in DI?",
+    "answer": "Limiting the lifetime of a dependency to match a specific component's lifecycle (e.g., Activity or Fragment)."
+  },
+  {
+    "deckId": 8,
+    "id": 128,
+    "question": "What is the 'Dependency Inversion Principle'?",
+    "answer": "High-level modules should not depend on low-level modules; both should depend on abstractions."
+  },
+  {
+    "deckId": 8,
+    "id": 129,
+    "question": "What is a 'Circular Dependency'?",
+    "answer": "A situation where two or more classes depend on each other, preventing DI frameworks from initializing them."
+  },
+  {
+    "deckId": 8,
+    "id": 130,
+    "question": "What is 'Inversion of Control' (IoC)?",
+    "answer": "A principle where the control flow of a program is inverted: instead of the programmer calling a library, the framework calls the programmer's code."
+  }
+]

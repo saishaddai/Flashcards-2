@@ -3,10 +3,8 @@ package com.saishaddai.flashcards.repository.impl
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.DeckType.*
-import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.model.sessions
 import com.saishaddai.flashcards.repository.DeckRepository
-import com.saishaddai.flashcards.repository.FlashcardRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -31,7 +29,7 @@ class JSONDeckRepository(
         Deck(SECURITY.id, "Security", "Android Security"),
         Deck(COMPOSE.id, "Compose", "Jetpack Compose UI"),
         Deck(DATABASES.id, "Databases", "Android Databases"),
-        Deck(DAGGER_HILT.id, "Dagger/Hilt", "Android Dependency Injection"),
+        Deck(DI.id, "DI", "Android Dependency Injection"),
         Deck(MATERIAL_3.id, "Material 3", "Android Material Design"),
         Deck(NAVIGATION.id, "Navigation", "Android Navigation Component"),
         Deck(JETPACK.id, "Jetpack", "Android Jetpack"),

@@ -20,4 +20,5 @@ enum class DeckType(val id: Int, val jsonFile: String = "") {
     COROUTINES(17, "coroutines.json"),
     FIREBASE(18, "firebase.json"),
     GRAPHQL(19, "graphql.json")
+    //TODO Maybe a deck dedicated to camera, work manager, sensors, video
 }

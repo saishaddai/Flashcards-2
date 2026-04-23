@@ -1,0 +1,182 @@
+[
+  {
+    "deckId": 12,
+    "id": 1201,
+    "question": "What is the Test Pyramid?",
+    "answer": "A strategy that suggests having a large number of unit tests, fewer integration tests, and even fewer end-to-end (UI) tests."
+  },
+  {
+    "deckId": 12,
+    "id": 1202,
+    "question": "What is a Unit Test?",
+    "answer": "A test that verifies a small, isolated piece of code (like a single function or class) without external dependencies."
+  },
+  {
+    "deckId": 12,
+    "id": 1203,
+    "question": "What is an Instrumentation Test in Android?",
+    "answer": "A test that runs on a physical device or emulator, allowing interaction with the Android framework and UI."
+  },
+  {
+    "deckId": 12,
+    "id": 1204,
+    "question": "What is the purpose of Robolectric?",
+    "answer": "It allows running Android instrumentation tests on a local JVM instead of a device, significantly speeding up execution."
+  },
+  {
+    "deckId": 12,
+    "id": 1205,
+    "question": "In KMP, where do shared unit tests reside?",
+    "answer": "In the 'commonTest' source set, allowing them to run across all targeted platforms."
+  },
+  {
+    "deckId": 12,
+    "id": 1206,
+    "question": "What is Test-Driven Development (TDD)?",
+    "answer": "A process where you write a failing test first, then write the minimum code to pass it, and finally refactor."
+  },
+  {
+    "deckId": 12,
+    "id": 1207,
+    "question": "What is a Mock object?",
+    "answer": "A simulated object that mimics the behavior of a real component, used to isolate the code under test."
+  },
+  {
+    "deckId": 12,
+    "id": 1208,
+    "question": "What is the difference between a Mock and a Spy?",
+    "answer": "A Mock is a full dummy implementation, while a Spy wraps a real object, allowing you to track interactions while keeping original behavior."
+  },
+  {
+    "deckId": 12,
+    "id": 1209,
+    "question": "What is a Stub?",
+    "answer": "An object that provides hardcoded answers to calls made during the test, usually without tracking interactions."
+  },
+  {
+    "deckId": 12,
+    "id": 1210,
+    "question": "What library is commonly used for mocking in Kotlin/Android?",
+    "answer": "MockK is the most popular library, specifically designed for Kotlin features like coroutines and objects."
+  },
+  {
+    "deckId": 12,
+    "id": 1211,
+    "question": "What is Espresso?",
+    "answer": "Android's official testing framework for writing UI tests that simulate user interactions within a single app."
+  },
+  {
+    "deckId": 12,
+    "id": 1212,
+    "question": "How do you test Jetpack Compose UI?",
+    "answer": "Using the 'compose-test' library, which provides a 'ComposeTestRule' to find elements by semantics and perform actions."
+  },
+  {
+    "deckId": 12,
+    "id": 1213,
+    "question": "What is Code Coverage?",
+    "answer": "A metric that measures the percentage of source code executed during testing, often generated using tools like Jacoco or Kover."
+  },
+  {
+    "deckId": 12,
+    "id": 1214,
+    "question": "What is the 'Given-When-Then' pattern?",
+    "answer": "A structure for writing tests: Given (setup), When (action), Then (verification)."
+  },
+  {
+    "deckId": 12,
+    "id": 1215,
+    "question": "What are Integration Tests?",
+    "answer": "Tests that verify how different modules or components of the app work together (e.g., Database + Repository)."
+  },
+  {
+    "deckId": 12,
+    "id": 1216,
+    "question": "What is the purpose of a Test Double?",
+    "answer": "A generic term for any object used to replace a real dependency in a test (includes Mocks, Fakes, Stubs, Spies)."
+  },
+  {
+    "deckId": 12,
+    "id": 1217,
+    "question": "What is a Fake object?",
+    "answer": "A simplified but functional implementation of a dependency, like an 'InMemoryDatabase' instead of a real SQL database."
+  },
+  {
+    "deckId": 12,
+    "id": 1218,
+    "question": "What is UI Automator?",
+    "answer": "A testing framework for cross-app UI testing, allowing interactions with system dialogs and other applications."
+  },
+  {
+    "deckId": 12,
+    "id": 1219,
+    "question": "What is the purpose of 'runTest' in Kotlin Coroutines testing?",
+    "answer": "It executes coroutines in a controlled environment, skipping delays and allowing for synchronous-like testing of asynchronous code."
+  },
+  {
+    "deckId": 12,
+    "id": 1220,
+    "question": "What is a Flaky Test?",
+    "answer": "A test that sometimes passes and sometimes fails without any changes to the code, usually due to timing or environment issues."
+  },
+  {
+    "deckId": 12,
+    "id": 1221,
+    "question": "What is the role of Truth or AssertJ in testing?",
+    "answer": "Fluent assertion libraries that make test failure messages more readable and expressive."
+  },
+  {
+    "deckId": 12,
+    "id": 1222,
+    "question": "In KMP, how are platform-specific tests handled?",
+    "answer": "They are placed in 'androidTest' or 'iosTest' source sets and can use platform-specific libraries (like MockK on Android or XCTest on iOS)."
+  },
+  {
+    "deckId": 12,
+    "id": 1223,
+    "question": "What is the benefit of Hermetic Testing?",
+    "answer": "Ensures tests are self-contained and don't depend on external factors like network or global state, increasing reliability."
+  },
+  {
+    "deckId": 12,
+    "id": 1224,
+    "question": "What is Snapshot Testing?",
+    "answer": "A technique where the UI's rendered output is compared against a reference image to detect unintended visual changes."
+  },
+  {
+    "deckId": 12,
+    "id": 1225,
+    "question": "What is the 'MainDispatcherRule' used for?",
+    "answer": "A custom JUnit Rule to swap the Coroutine Main dispatcher with a test dispatcher during unit tests."
+  },
+  {
+    "deckId": 12,
+    "id": 1226,
+    "question": "What is the purpose of Idling Resources in Espresso?",
+    "answer": "They tell Espresso to wait for asynchronous operations (like network calls) to finish before performing assertions."
+  },
+  {
+    "deckId": 12,
+    "id": 1227,
+    "question": "What is 'kotlin-test'?",
+    "answer": "The multiplatform testing library provided by Kotlin that offers common assertions and annotations for KMP projects."
+  },
+  {
+    "deckId": 12,
+    "id": 1228,
+    "question": "What is Regression Testing?",
+    "answer": "Re-running previously passed tests to ensure that new code changes haven't introduced bugs in existing functionality."
+  },
+  {
+    "deckId": 12,
+    "id": 1229,
+    "question": "Why is Dependency Injection important for testing?",
+    "answer": "It allows easy replacement of real dependencies with test doubles, making components isolated and testable."
+  },
+  {
+    "deckId": 12,
+    "id": 1230,
+    "question": "What is the 'Single Assertion' principle?",
+    "answer": "The practice of having only one logical assertion per test to make it clear why a test failed."
+  }
+]

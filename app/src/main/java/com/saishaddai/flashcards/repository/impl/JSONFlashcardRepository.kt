@@ -28,18 +28,18 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
 class JSONFlashcardRepository(private val context: Context? = null) :
-    FlashcardRepository<Flashcard> {
+    FlashcardRepository<DeckType, Flashcard> {
 
     val countMap: MutableMap<Int, Int> = mutableMapOf()
 
-    override suspend fun getData(id: Int, size: Int): List<Flashcard> =
+    override suspend fun getData(type: DeckType, size: Int): List<Flashcard> =
         withContext(Dispatchers.IO) {
-            getFlashcardsForDeck(id).random(size)
+            getFlashcardsForDeck(type.id).random(size)
         }
 
-    override suspend fun getDataCount(id: Int): Int {
-        return countMap[id] ?: getFlashcardsForDeck(id).size.also {
-            countMap[id] = it
+    override suspend fun getDataCount(type: DeckType): Int {
+        return countMap[type.id] ?: getFlashcardsForDeck(type.id).size.also {
+            countMap[type.id] = it
         }
     }
 

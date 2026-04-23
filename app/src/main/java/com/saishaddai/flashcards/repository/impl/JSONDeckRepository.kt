@@ -1,6 +1,7 @@
 package com.saishaddai.flashcards.repository.impl
 
 import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.DeckType.*
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.model.sessions
@@ -10,13 +11,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class JSONDeckRepository(
-    private val flashcardRepository: FlashcardRepository<Flashcard>
+    private val context: android.content.Context
 ) : DeckRepository<Deck> {
 
     override suspend fun getData(): List<Deck> = withContext(Dispatchers.IO) {
+        val flashcardRepository = JSONFlashcardRepository(context)
         decks.onEach {
             if (it.cardCount == 0) {
-                it.cardCount = flashcardRepository.getDataCount(it.id)
+                it.cardCount = flashcardRepository.getDataCount(DeckType.fromId(it.id))
             }
         }
     }

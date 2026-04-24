@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -46,9 +46,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.Flashcard
@@ -57,30 +54,47 @@ import com.saishaddai.flashcards.screens.commons.TransparentButton
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
-import java.util.UUID
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FlashcardScreen(
     onCancelSessionClick: () -> Unit,
     onFinishedSessionClick: () -> Unit,
-    deck: Deck
+    deck: Deck,
+    viewModel: FlashcardViewModel = koinViewModel(parameters = { parametersOf(deck.id) })
 ) {
-    val viewModelKey = remember(deck) { "FlashcardViewModel_${deck.id}_${UUID.randomUUID()}" }
-
-    val viewModel: FlashcardViewModel = viewModel(
-        key = viewModelKey,
-        factory = viewModelFactory {
-            initializer {
-                val application = checkNotNull(this[androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
-                FlashcardViewModel(application, deck.id)
-            }
-        }
-    )
     val flashcards by viewModel.flashcards.collectAsState()
     val showAnswer by viewModel.showAnswer.collectAsState()
     val isFinished by viewModel.isFinished.collectAsState()
 
+    FlashcardContent(
+        deck = deck,
+        flashcards = flashcards,
+        showAnswer = showAnswer,
+        isFinished = isFinished,
+        onShowResponseClicked = viewModel::onShowResponseClicked,
+        onPageChanged = viewModel::onPageChanged,
+        onFinishSession = viewModel::onFinishSession,
+        onCancelSessionClick = onCancelSessionClick,
+        onFinishedSessionClick = onFinishedSessionClick
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FlashcardContent(
+    deck: Deck,
+    flashcards: List<Flashcard>,
+    showAnswer: Boolean,
+    isFinished: Boolean,
+    onShowResponseClicked: () -> Unit,
+    onPageChanged: () -> Unit,
+    onFinishSession: () -> Unit,
+    onCancelSessionClick: () -> Unit,
+    onFinishedSessionClick: () -> Unit
+) {
     if (isFinished) {
         onFinishedSessionClick()
         return
@@ -92,7 +106,7 @@ fun FlashcardScreen(
 
     // Hide answer when the user starts swiping to a new page
     LaunchedEffect(pagerState.currentPage) {
-        viewModel.onPageChanged()
+        onPageChanged()
     }
 
     if (showCancelConfirmation) {
@@ -215,7 +229,7 @@ fun FlashcardScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             ShowResponseButton(
-                onClick = { viewModel.onShowResponseClicked() },
+                onClick = onShowResponseClicked,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !showAnswer
             )
@@ -224,7 +238,7 @@ fun FlashcardScreen(
                 BlueButton(
                     icon = Icons.Default.Check,
                     text = stringResource(R.string.flashcard_button_finish_session),
-                    onClick = { viewModel.onFinishSession() }
+                    onClick = onFinishSession
                 )
             } else {
                 CancelSessionButton(
@@ -383,10 +397,19 @@ fun CancelSessionButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 fun FlashcardScreenPreview() {
     Flashcards2Theme {
-        FlashcardScreen(
+        FlashcardContent(
             onCancelSessionClick = {},
             onFinishedSessionClick = {},
-            deck = Deck(1, "Preview Text", "preview name long version", isSelected = false)
+            deck = Deck(id = 1, name = "Preview Text", longName = "preview name long version", isSelected = false),
+            flashcards = listOf(
+                Flashcard(deckId = 1, id = 1, question = "What is Kotlin?", answer = "A modern programming language."),
+                Flashcard(deckId = 1, id = 2, question = "What is Jetpack Compose?", answer = "A modern toolkit for building native UI.")
+            ),
+            showAnswer = true,
+            isFinished = false,
+            onShowResponseClicked = {},
+            onPageChanged = {},
+            onFinishSession = {}
         )
     }
 }

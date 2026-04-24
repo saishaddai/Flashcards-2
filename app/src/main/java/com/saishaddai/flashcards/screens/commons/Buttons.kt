@@ -38,7 +38,10 @@ fun BlueButton(
         shape = RoundedCornerShape(50),
         colors = ButtonDefaults.buttonColors(
             containerColor = RoyalBlue,
-            disabledContainerColor = RoyalBlue.copy(alpha = 0.5f),)
+            contentColor = Color.White,
+            disabledContainerColor = RoyalBlue.copy(alpha = 0.5f),
+            disabledContentColor = Color.White.copy(alpha = 0.5f)
+        )
     ) {
         Icon(
             imageVector = icon,

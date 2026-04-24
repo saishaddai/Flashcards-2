@@ -37,9 +37,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.BlueButton
@@ -49,23 +46,33 @@ import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.utils.DeckAssets
 import com.saishaddai.flashcards.utils.getMasteryLevel
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
+import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeckListScreen(
     onStartSessionClick: (Deck) -> Unit,
-    viewModel: DecksViewModel = viewModel(
-        factory = viewModelFactory {
-            initializer {
-                val application = checkNotNull(this[androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
-                DecksViewModel(application)
-            }
-        }
-    )
+    viewModel: DecksViewModel = koinViewModel()
 ) {
     val decksState by viewModel.decks.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    val selectedDeck = decksState.find { it.isSelected }
+
+    DeckListContent(
+        decks = decksState,
+        isLoading = isLoading,
+        onDeckSelected = viewModel::onDeckSelected,
+        onStartSessionClick = onStartSessionClick
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeckListContent(
+    decks: List<Deck>,
+    isLoading: Boolean,
+    onDeckSelected: (Deck) -> Unit,
+    onStartSessionClick: (Deck) -> Unit
+) {
+    val selectedDeck = decks.find { it.isSelected }
     var showEmptyDeckDialog by remember { mutableStateOf(false) }
 
     if (isLoading) {
@@ -111,8 +118,8 @@ fun DeckListScreen(
             )
 
             DeckGrid(
-                decks = decksState,
-                onDeckSelected = viewModel::onDeckSelected,
+                decks = decks,
+                onDeckSelected = onDeckSelected,
                 modifier = Modifier.weight(1f)
             )
 
@@ -219,7 +226,13 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
 @Preview
 @Composable
 fun DeckListScreenPreview() {
-    DeckListScreen(
+    DeckListContent(
+        decks = listOf(
+            Deck(1, "Kotlin", "Kotlin Fundamentals", mastery = 50, cardCount = 20, isSelected = true),
+            Deck(2, "Android", "Android Development", mastery = 30, cardCount = 15)
+        ),
+        isLoading = false,
+        onDeckSelected = {},
         onStartSessionClick = {}
     )
 }

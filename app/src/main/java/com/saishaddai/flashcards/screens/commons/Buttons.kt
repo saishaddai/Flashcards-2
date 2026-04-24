@@ -2,7 +2,6 @@ package com.saishaddai.flashcards.screens.commons
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,8 +25,8 @@ import com.saishaddai.flashcards.utils.TestTags
 fun BlueButton(
     icon: ImageVector,
     text: String,
-    enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onClick: () -> Unit) {
     Button(
         onClick = onClick,

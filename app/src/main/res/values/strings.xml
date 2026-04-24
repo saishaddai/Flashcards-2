@@ -112,4 +112,8 @@
     <string name="last_updated">Last Updated: Apr 10, 2026</string>
     <string name="designed_for">Designed for Android Developers</string>
 
+    <!-- Loader -->
+    <string name="loading">Loading…</string>
+    <string name="loading_decks">Starting up…</string>
+
 </resources>

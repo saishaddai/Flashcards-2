@@ -76,7 +76,7 @@ fun DeckListContent(
     var showEmptyDeckDialog by remember { mutableStateOf(false) }
 
     if (isLoading) {
-        FullLoader()
+        FullLoader(stringResource(R.string.loading_decks))
     } else {
         if (showEmptyDeckDialog) {
             AlertDialog(

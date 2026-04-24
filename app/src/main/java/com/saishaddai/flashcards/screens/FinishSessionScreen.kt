@@ -52,7 +52,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.BlueButton
@@ -63,15 +62,15 @@ import nl.dionsegijn.konfetti.compose.KonfettiView
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
 import nl.dionsegijn.konfetti.core.emitter.Emitter
+import org.koin.androidx.compose.koinViewModel
 import java.util.concurrent.TimeUnit
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FinishSessionScreen(
     deck: Deck,
     onFinishSession: () -> Unit,
     onShareSummary: (Deck) -> Unit,
-    viewModel: FinishSessionViewModel = viewModel()
+    viewModel: FinishSessionViewModel = koinViewModel()
 ) {
     val navigateToDeckList by viewModel.navigateToDeckList.collectAsState()
 
@@ -82,6 +81,20 @@ fun FinishSessionScreen(
         }
     }
 
+    FinishSessionContent(
+        deck = deck,
+        onBackToDecksClicked = { viewModel.onBackToDecksClicked() },
+        onShareSummary = onShareSummary
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FinishSessionContent(
+    deck: Deck,
+    onBackToDecksClicked: () -> Unit,
+    onShareSummary: (Deck) -> Unit
+) {
     val parties = remember {
         listOf(
             Party(
@@ -108,7 +121,7 @@ fun FinishSessionScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { viewModel.onBackToDecksClicked() }) {
+                    IconButton(onClick = onBackToDecksClicked) {
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = stringResource(R.string.finish_nav_icon_content_desc),
@@ -194,7 +207,7 @@ fun FinishSessionScreen(
                     text = stringResource(R.string.finish_goal_reached),
                 )
                 Spacer(modifier = Modifier.height(32.dp))
-                BackToDecksButton(onClick = { viewModel.onBackToDecksClicked() })
+                BackToDecksButton(onClick = onBackToDecksClicked)
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
@@ -302,6 +315,10 @@ fun BackToDecksButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 fun FinishSessionScreenPreview() {
     Flashcards2Theme {
         val deck = Deck(1, "Preview Text", "preview name long version", isSelected = false)
-        FinishSessionScreen(deck, {}, {})
+        FinishSessionContent(
+            deck = deck,
+            onBackToDecksClicked = {},
+            onShareSummary = {}
+        )
     }
 }

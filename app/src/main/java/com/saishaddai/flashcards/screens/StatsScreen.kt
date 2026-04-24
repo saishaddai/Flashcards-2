@@ -49,7 +49,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.Header
@@ -58,11 +57,12 @@ import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import com.saishaddai.flashcards.viewmodel.StatsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun StatsScreen(
-    decksViewModel: DecksViewModel = viewModel(),
-    statsViewModel: StatsViewModel = viewModel(),
+    decksViewModel: DecksViewModel = koinViewModel(),
+    statsViewModel: StatsViewModel = koinViewModel(),
     onPromoClick: (Deck) -> Unit = {},
 ) {
     val promoDeck = decksViewModel.getRandomDeck()
@@ -73,6 +73,37 @@ fun StatsScreen(
     val studyTime by statsViewModel.studyTime.collectAsState()
     val accuracyRate by statsViewModel.accuracyRate.collectAsState()
 
+    StatsContent(
+        promoDeck = promoDeck,
+        weeklyActivity = weeklyActivity,
+        skillMastery = skillMastery,
+        cardsReviewed = cardsReviewed,
+        currentStreak = currentStreak,
+        studyTime = studyTime,
+        accuracyRate = accuracyRate,
+        onBackClicked = statsViewModel::onBackClicked,
+        onShareClicked = statsViewModel::onShareClicked,
+        onMoreOptionsClicked = statsViewModel::onMoreOptionsClicked,
+        onViewAllSkillsClicked = statsViewModel::onViewAllSkillsClicked,
+        onPromoClick = onPromoClick
+    )
+}
+
+@Composable
+fun StatsContent(
+    promoDeck: Deck?,
+    weeklyActivity: Int,
+    skillMastery: List<MasteryData>,
+    cardsReviewed: String,
+    currentStreak: String,
+    studyTime: String,
+    accuracyRate: String,
+    onBackClicked: () -> Unit,
+    onShareClicked: () -> Unit,
+    onMoreOptionsClicked: () -> Unit,
+    onViewAllSkillsClicked: () -> Unit,
+    onPromoClick: (Deck) -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -88,7 +119,7 @@ fun StatsScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { statsViewModel.onBackClicked() }) {
+            IconButton(onClick = onBackClicked) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
@@ -96,14 +127,14 @@ fun StatsScreen(
                 )
             }
             Row {
-                IconButton(onClick = { statsViewModel.onShareClicked() }) {
+                IconButton(onClick = onShareClicked) {
                     Icon(
                         imageVector = Icons.Default.Share,
                         contentDescription = "Share",
                         tint = Color.White
                     )
                 }
-                IconButton(onClick = { statsViewModel.onMoreOptionsClicked() }) {
+                IconButton(onClick = onMoreOptionsClicked) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = "More",
@@ -122,11 +153,11 @@ fun StatsScreen(
         Spacer(modifier = Modifier.height(24.dp))
         WeeklyActivityCard(weeklyActivity)
         Spacer(modifier = Modifier.height(32.dp))
-        SkillMasterySection(skillMastery, statsViewModel::onViewAllSkillsClicked)
+        SkillMasterySection(skillMastery, onViewAllSkillsClicked)
         Spacer(modifier = Modifier.height(32.dp))
         AtAGlanceSection(cardsReviewed, currentStreak, studyTime, accuracyRate)
         Spacer(modifier = Modifier.height(32.dp))
-        
+
         promoDeck?.let { deck ->
             PromoWidget(
                 randomDeck = deck,
@@ -187,9 +218,9 @@ fun WeeklyActivityCard(activityCount: Int) {
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(40.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -246,9 +277,9 @@ fun SkillMasterySection(masteryList: List<MasteryData>, onViewAllClick: () -> Un
                 Text(text = "View all", color = RoyalBlue, fontWeight = FontWeight.Bold)
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         LazyRow(
             contentPadding = PaddingValues(end = 24.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -321,9 +352,9 @@ fun AtAGlanceSection(
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 StatCard(
@@ -412,6 +443,22 @@ fun StatCard(
 @Composable
 fun StatsScreenPreview() {
     Flashcards2Theme {
-        StatsScreen()
+        StatsContent(
+            promoDeck = Deck(1, "Kotlin", "Kotlin Fundamentals", isSelected = false),
+            weeklyActivity = 42,
+            skillMastery = listOf(
+                MasteryData("Language", 85, "Advanced", RoyalBlue),
+                MasteryData("UI/UX", 60, "Intermediate", Color(0xFFF59E0B))
+            ),
+            cardsReviewed = "1,234",
+            currentStreak = "7",
+            studyTime = "12h 30m",
+            accuracyRate = "92%",
+            onBackClicked = {},
+            onShareClicked = {},
+            onMoreOptionsClicked = {},
+            onViewAllSkillsClicked = {},
+            onPromoClick = {}
+        )
     }
 }

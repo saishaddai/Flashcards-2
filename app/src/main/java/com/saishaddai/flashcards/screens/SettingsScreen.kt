@@ -56,21 +56,32 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 const val FLASHCARDS_PER_SESSION = 20f
 const val DAILY_GOAL = 50f
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = viewModel()
+    viewModel: SettingsViewModel = koinViewModel()
+) {
+    SettingsScreenContent(
+        onRestartMasteryClicked = viewModel::onRestartMasteryClicked,
+        onPreferredStudyTimeClicked = viewModel::onPreferredStudyTimeClicked
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SettingsScreenContent(
+    onRestartMasteryClicked: () -> Unit,
+    onPreferredStudyTimeClicked: () -> Unit
 ) {
     var showRestartDialog by remember { mutableStateOf(false) }
 
@@ -92,7 +103,7 @@ fun SettingsScreen(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    viewModel.onRestartMasteryClicked()
+                    onRestartMasteryClicked()
                     showRestartDialog = false
                 }) {
                     Text(
@@ -192,7 +203,7 @@ fun SettingsScreen(
             title = stringResource(R.string.settings_preferred_study_time),
             description = stringResource(R.string.settings_preferred_study_time_description),
             actionLabel = "09:00 PM",
-            onClick = { viewModel.onPreferredStudyTimeClicked() }
+            onClick = { onPreferredStudyTimeClicked() }
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -417,6 +428,9 @@ fun SettingsFooter() {
 @Composable
 fun SettingsScreenPreview() {
     Flashcards2Theme {
-        SettingsScreen()
+        SettingsScreenContent(
+            onRestartMasteryClicked = {},
+            onPreferredStudyTimeClicked = {}
+        )
     }
 }

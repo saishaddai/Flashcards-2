@@ -23,6 +23,7 @@ class JSONDeckRepository(
 
     val decks = listOf(
         Deck(OOP.id, "OOP", "Object-Oriented Programming", isSelected = true),
+        Deck(SENSORS.id, "Sensors", "Android Sensors"),//in this position for testing purposes
         Deck(ANDROID_CORE.id, "Android Core", "Android Core Technologies"),
         Deck(KOTLIN.id, "Kotlin", "Kotlin Programming Language"),
         Deck(KOTLIN_MP.id, "Kotlin MP", "Kotlin Multiplatform"),
@@ -41,6 +42,7 @@ class JSONDeckRepository(
         Deck(COROUTINES.id, "Coroutines", "Android Coroutines"),
         Deck(FIREBASE.id, "Firebase", "Firebase Integration"),
         Deck(GRAPHQL.id, "GraphQL", "GraphQL Integration")
+
     ).map {
         it.apply {
             mastery = sessions.find { session -> session.deckId == it.id }?.currentXP ?: 0

@@ -19,9 +19,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Replay
@@ -61,6 +61,7 @@ import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -189,21 +190,34 @@ fun SettingsScreenContent(
 
         // PERSONALIZATION
         SectionHeader(title = stringResource(R.string.settings_section_personalization))
-        var darkMode by remember { mutableStateOf(true) }
+        var shouldSkipDescription by remember { mutableStateOf(true) }
         SwitchSetting(
-            icon = Icons.Default.DarkMode,
-            title = stringResource(R.string.settings_dark_mode),
-            description = stringResource(R.string.settings_dark_mode_description),
-            checked = darkMode,
-            onCheckedChange = { darkMode = it }
+            icon = Icons.Default.Add,
+            title = stringResource(R.string.settings_quick_start),
+            description = stringResource(R.string.settings_quick_start_text),
+            checked = shouldSkipDescription,
+            testTag = TestTags.SETTINGS_QUICK_START,
+            onCheckedChange = { shouldSkipDescription = it }
         )
-        
-        ActionSetting(
-            icon = Icons.Default.AccessTime,
-            title = stringResource(R.string.settings_preferred_study_time),
-            description = stringResource(R.string.settings_preferred_study_time_description),
-            actionLabel = "09:00 PM",
-            onClick = { onPreferredStudyTimeClicked() }
+
+        var shouldShowAnswers by remember { mutableStateOf(true) }
+        SwitchSetting(
+            icon = Icons.Default.Add,
+            title = stringResource(R.string.settings_show_answers),
+            description = stringResource(R.string.settings_show_answers_text),
+            checked = shouldShowAnswers,
+            testTag = TestTags.SETTINGS_SHOW_ANSWERS,
+            onCheckedChange = { shouldShowAnswers = it }
+        )
+
+        var shouldShowSuggestions by remember { mutableStateOf(true) }
+        SwitchSetting(
+            icon = Icons.Default.Add,
+            title = stringResource(R.string.settings_show_suggestions),
+            description = stringResource(R.string.settings_show_suggestions_text),
+            checked = shouldShowSuggestions,
+            testTag = TestTags.SETTINGS_SHOW_SUGGESTIONS,
+            onCheckedChange = { shouldShowSuggestions = it }
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -216,7 +230,16 @@ fun SettingsScreenContent(
             title = stringResource(R.string.settings_daily_reminders),
             description = stringResource(R.string.settings_daily_reminders_description),
             checked = studyReminders,
+            testTag = TestTags.SETTINGS_STUDY_REMINDERS,
             onCheckedChange = { studyReminders = it }
+        )
+
+        ActionSetting(
+            icon = Icons.Default.AccessTime,
+            title = stringResource(R.string.settings_preferred_study_time),
+            description = stringResource(R.string.settings_preferred_study_time_description),
+            actionLabel = "09:00 PM",
+            onClick = { onPreferredStudyTimeClicked() }
         )
 
         var notificationSound by remember { mutableStateOf(false) }
@@ -225,6 +248,7 @@ fun SettingsScreenContent(
             title = stringResource(R.string.settings_notification_sound),
             description = stringResource(R.string.settings_notification_sound_description),
             checked = notificationSound,
+            testTag = TestTags.SETTINGS_NOTIFICATION_SOUND,
             onCheckedChange = { notificationSound = it }
         )
 
@@ -314,12 +338,14 @@ fun SwitchSetting(
     title: String,
     description: String,
     checked: Boolean,
+    testTag: String,
     onCheckedChange: (Boolean) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .padding(vertical = 12.dp)
+            .testTag(testTag),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

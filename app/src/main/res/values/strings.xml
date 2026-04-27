@@ -91,8 +91,12 @@
     <string name="settings_flashcards_per_session_reset">Reset</string>
 
     <string name="settings_section_personalization">PERSONALIZATION</string>
-    <string name="settings_dark_mode">Dark Mode</string>
-    <string name="settings_dark_mode_description">Always use dark theme</string>
+    <string name="settings_quick_start">Quick Start Session</string>
+    <string name="settings_quick_start_text">Double Click on Deck Starts Session</string>
+    <string name="settings_show_answers">Show Answers by Default</string>
+    <string name="settings_show_answers_text">Avoid open the answers for every card</string>
+    <string name="settings_show_suggestions">Show Suggestions</string>
+    <string name="settings_show_suggestions_text">Suggestions appears in other screens</string>
     <string name="settings_preferred_study_time">Preferred Study Time</string>
     <string name="settings_preferred_study_time_description">Best time for focused sessions</string>
 

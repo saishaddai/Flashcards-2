@@ -115,5 +115,6 @@
     <!-- Loader -->
     <string name="loading">Loading…</string>
     <string name="loading_decks">Starting up…</string>
+    <string name="loading_stats">Getting Stats…</string>
 
 </resources>

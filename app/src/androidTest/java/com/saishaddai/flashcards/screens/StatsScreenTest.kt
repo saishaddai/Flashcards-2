@@ -3,7 +3,9 @@ package com.saishaddai.flashcards.screens
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
@@ -11,6 +13,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.repository.DeckRepository
+import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -24,33 +27,52 @@ class StatsScreenTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Test
-    fun testStatsScreen_initState_checkElementsDisplayed() {
+    fun testStatsScreen_isLoading_showsFullLoader() {
         composeTestRule.setContent {
-            StatsScreen()
+            StatsContent(
+                promoDeck = null,
+                weeklyActivity = 0,
+                skillMastery = emptyList(),
+                cardsReviewed = "0",
+                currentStreak = "0",
+                studyTime = "0",
+                accuracyRate = "0%",
+                isLoading = true,
+                onBackClicked = {},
+                onShareClicked = {},
+                onMoreOptionsClicked = {},
+                onViewAllSkillsClicked = {},
+                onPromoClick = {}
+            )
         }
+
+        composeTestRule.onNodeWithTag(TestTags.FULL_LOADER).assertIsDisplayed()
     }
 
     @Test
-    fun testStatsScreen_onSeeAllClick_showsAllDecksInfoCards() {
-        // 1. Setup with multiple decks
-        // 2. Set content// 3. Click "See All" (or the equivalent UI element)
-        // 4. Verify that elements that were hidden are now visible
-    }
+    fun testStatsScreen_loadedState_showsContent() {
+        val statsTitle = context.getString(R.string.stats_title)
+        
+        composeTestRule.setContent {
+            StatsContent(
+                promoDeck = null,
+                weeklyActivity = 10,
+                skillMastery = emptyList(),
+                cardsReviewed = "100",
+                currentStreak = "5",
+                studyTime = "2h",
+                accuracyRate = "80%",
+                isLoading = false,
+                onBackClicked = {},
+                onShareClicked = {},
+                onMoreOptionsClicked = {},
+                onViewAllSkillsClicked = {},
+                onPromoClick = {}
+            )
+        }
 
-    @Test
-    fun testStatsScreen_onScrollableContent_checkElementsDisplayed() {
-    }
-
-    @Test
-    fun testStatsScreen_onBackClick_checkNavigationCalled() {
-    }
-
-    @Test
-    fun testStatsScreen_onPromoClick_checkNavigationCalled() {
-    }
-
-    @Test
-    fun testStatsScreen_onShareClick_triggersCallBack() {
+        composeTestRule.onNodeWithTag(TestTags.FULL_LOADER).assertDoesNotExist()
+        composeTestRule.onNodeWithText(statsTitle).assertIsDisplayed()
     }
 
     @Test
@@ -59,16 +81,21 @@ class StatsScreenTest {
 
         val mockDeckName = "Test Deck"
         val mockDeck = Deck(id = 1, name = mockDeckName, longName = "Test Deck Long", cardCount = 10)
-        val fakeRepository = object : DeckRepository<Deck> {
-            override suspend fun getData(): List<Deck> = listOf(mockDeck)
-        }
-        val application = context.applicationContext as android.app.Application
-        val viewModel = DecksViewModel(application, fakeRepository)
-
 
         composeTestRule.setContent {
-            StatsScreen(
-                decksViewModel = viewModel,
+            StatsContent(
+                promoDeck = mockDeck,
+                weeklyActivity = 42,
+                skillMastery = emptyList(),
+                cardsReviewed = "1,234",
+                currentStreak = "7",
+                studyTime = "12h 30m",
+                accuracyRate = "92%",
+                isLoading = false,
+                onBackClicked = {},
+                onShareClicked = {},
+                onMoreOptionsClicked = {},
+                onViewAllSkillsClicked = {},
                 onPromoClick = { promoClicked = true }
             )
         }
@@ -94,19 +121,5 @@ class StatsScreenTest {
         composeTestRule.onNodeWithText(startNowText).assertIsDisplayed().assertIsEnabled().performClick()
 
         assertTrue("Promo click lambda should have been triggered", promoClicked)
-
     }
-
-    /**
-     * Tests provided by Gemini I should tackle.
-     * 1.
-     * Zero-State / Empty Decks: In your onPromoClick test, you mock a deck. What if the repository returns an empty list? Does the StatsScreen crash, or does it show a placeholder?
-     * 2.
-     * Formatting Check: You are checking for the "Start Now" text. You should also check if the Deck Name is correctly formatted inside the string (e.g., if the string resource is Start learning %s, verify the final string contains the mock name).
-     * 3.
-     * Multiple Decks in Stats: If the StatsScreen shows a list of all decks (via the "See All" button you have a placeholder for), test that clicking "See All" expands the list or navigates correctly.
-     * 4.
-     * Scrolling to elements: You correctly noted the need to scroll to the PromoWidget. Ensure you also test that the Top Bar (with the Back/Share buttons) remains accessible or behaves correctly when the content is scrolled.
-     */
-
 }

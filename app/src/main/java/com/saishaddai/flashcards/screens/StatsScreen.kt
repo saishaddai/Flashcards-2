@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
@@ -72,6 +73,7 @@ fun StatsScreen(
     val currentStreak by statsViewModel.currentStreak.collectAsState()
     val studyTime by statsViewModel.studyTime.collectAsState()
     val accuracyRate by statsViewModel.accuracyRate.collectAsState()
+    val isLoading by statsViewModel.isLoading.collectAsState()
 
     StatsContent(
         promoDeck = promoDeck,
@@ -81,6 +83,7 @@ fun StatsScreen(
         currentStreak = currentStreak,
         studyTime = studyTime,
         accuracyRate = accuracyRate,
+        isLoading = isLoading,
         onBackClicked = statsViewModel::onBackClicked,
         onShareClicked = statsViewModel::onShareClicked,
         onMoreOptionsClicked = statsViewModel::onMoreOptionsClicked,
@@ -98,72 +101,77 @@ fun StatsContent(
     currentStreak: String,
     studyTime: String,
     accuracyRate: String,
+    isLoading: Boolean,
     onBackClicked: () -> Unit,
     onShareClicked: () -> Unit,
     onMoreOptionsClicked: () -> Unit,
     onViewAllSkillsClicked: () -> Unit,
     onPromoClick: (Deck) -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF1A1A2E))
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 24.dp)
-    ) {
-        // Top Actions Row from Mockup
-        Row(
+    if (isLoading) {
+        FullLoader(message = stringResource(R.string.loading_stats))
+    } else {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .background(Color(0xFF1A1A2E))
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp)
         ) {
-            IconButton(onClick = onBackClicked) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = Color.White
-                )
-            }
-            Row {
-                IconButton(onClick = onShareClicked) {
+            // Top Actions Row from Mockup
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onBackClicked) {
                     Icon(
-                        imageVector = Icons.Default.Share,
-                        contentDescription = "Share",
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
                         tint = Color.White
                     )
                 }
-                IconButton(onClick = onMoreOptionsClicked) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = "More",
-                        tint = Color.White
-                    )
+                Row {
+                    IconButton(onClick = onShareClicked) {
+                        Icon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = "Share",
+                            tint = Color.White
+                        )
+                    }
+                    IconButton(onClick = onMoreOptionsClicked) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = "More",
+                            tint = Color.White
+                        )
+                    }
                 }
             }
-        }
 
-        Header(
-            headText = stringResource(R.string.stats_head_title),
-            titleText = stringResource(R.string.stats_title),
-            subtitleText = stringResource(R.string.stats_subtitle)
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-        WeeklyActivityCard(weeklyActivity)
-        Spacer(modifier = Modifier.height(32.dp))
-        SkillMasterySection(skillMastery, onViewAllSkillsClicked)
-        Spacer(modifier = Modifier.height(32.dp))
-        AtAGlanceSection(cardsReviewed, currentStreak, studyTime, accuracyRate)
-        Spacer(modifier = Modifier.height(32.dp))
-
-        promoDeck?.let { deck ->
-            PromoWidget(
-                randomDeck = deck,
-                onPromoClick = onPromoClick
+            Header(
+                headText = stringResource(R.string.stats_head_title),
+                titleText = stringResource(R.string.stats_title),
+                subtitleText = stringResource(R.string.stats_subtitle)
             )
+
             Spacer(modifier = Modifier.height(24.dp))
+            WeeklyActivityCard(weeklyActivity)
+            Spacer(modifier = Modifier.height(32.dp))
+            SkillMasterySection(skillMastery, onViewAllSkillsClicked)
+            Spacer(modifier = Modifier.height(32.dp))
+            AtAGlanceSection(cardsReviewed, currentStreak, studyTime, accuracyRate)
+            Spacer(modifier = Modifier.height(32.dp))
+
+            promoDeck?.let { deck ->
+                PromoWidget(
+                    randomDeck = deck,
+                    onPromoClick = onPromoClick
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }
@@ -454,6 +462,7 @@ fun StatsScreenPreview() {
             currentStreak = "7",
             studyTime = "12h 30m",
             accuracyRate = "92%",
+            isLoading = false,
             onBackClicked = {},
             onShareClicked = {},
             onMoreOptionsClicked = {},

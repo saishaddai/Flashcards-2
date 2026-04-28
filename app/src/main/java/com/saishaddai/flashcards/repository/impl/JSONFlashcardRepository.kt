@@ -8,6 +8,7 @@ import com.saishaddai.flashcards.utils.random
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import timber.log.Timber
 
 class JSONFlashcardRepository(private val context: Context? = null) :
     FlashcardRepository<DeckType, Flashcard> {
@@ -43,7 +44,7 @@ class JSONFlashcardRepository(private val context: Context? = null) :
                 .use { it.readText() }
             Json.decodeFromString<List<Flashcard>>(jsonString)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Timber.e(e, "Error loading flashcards from JSON")
             emptyList()
         }
     }

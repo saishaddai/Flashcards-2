@@ -110,7 +110,7 @@
     <string name="settings_system_restart">Restart Mastery Experience</string>
     <string name="settings_system_restart_description">This action will reset all your learned cards and cannot be undone.</string>
     <string name="settings_restart_dialog_cancel">Cancel</string>
-    <string name="settings_restart_dialog_confirm">Ye, Restart</string>
+    <string name="settings_restart_dialog_confirm">Yes, Restart</string>
 
     <string name="app_version">2.0.0</string>
     <string name="last_updated">Last Updated: Apr 10, 2026</string>

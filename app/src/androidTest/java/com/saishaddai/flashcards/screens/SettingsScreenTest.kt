@@ -5,7 +5,9 @@ import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
+import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasParent
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isOn
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -19,6 +21,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
+import com.saishaddai.flashcards.utils.TestTags
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -41,6 +44,19 @@ class SettingsScreenTest {
         override suspend fun saveDarkMode(enabled: Boolean) {}
         override suspend fun saveStudyReminders(enabled: Boolean) {}
         override suspend fun saveNotificationSound(enabled: Boolean) {}
+    }
+
+    @Test
+    fun settingsScreen_isLoading_showsFullLoader() {
+        composeTestRule.setContent {
+            SettingsScreenContent(
+                isLoading = true,
+                onRestartMasteryClicked = {},
+                onPreferredStudyTimeClicked = {}
+            )
+        }
+
+        composeTestRule.onNodeWithTag(TestTags.FULL_LOADER).assertIsDisplayed()
     }
 
     @Test
@@ -89,7 +105,7 @@ class SettingsScreenTest {
             .performClick()
 
         // 2. Verify Dialog Title is displayed
-        composeTestRule.onNodeWithText(context.getString(R.string.settings_system_restart))
+        composeTestRule.onNode(hasText(context.getString(R.string.settings_system_restart)) and hasAnyAncestor(hasTestTag("restart_dialog")))
             .assertIsDisplayed()
 
         // 3. Click Confirm in Dialog
@@ -108,10 +124,8 @@ class SettingsScreenTest {
     fun settingsScreen_toggleSwitches_updatesUI() {
         composeTestRule.setContent { SettingsScreen() }
 
-        val remindersText = context.getString(R.string.settings_daily_reminders)
-
-        // Find the switch specifically (use hasAnyAncestor to distinguish from the text)
-        composeTestRule.onNode(isOn() and hasParent(hasText(remindersText)))
+        // Find the switch by tag
+        composeTestRule.onNodeWithTag(TestTags.SETTINGS_STUDY_REMINDERS + "_switch")
             .assertIsOn()
             .performClick()
             .assertIsOff()

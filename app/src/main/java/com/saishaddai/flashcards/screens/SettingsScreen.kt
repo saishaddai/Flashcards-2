@@ -39,9 +39,9 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -57,7 +57,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.saishaddai.flashcards.R
+import com.saishaddai.flashcards.repository.UserSettings
 import com.saishaddai.flashcards.screens.commons.BlueButton
+import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
@@ -65,214 +67,234 @@ import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 
-const val FLASHCARDS_PER_SESSION = 20f
-const val DAILY_GOAL = 50f
+const val DEFAULT_FLASHCARDS_PER_SESSION = 20
+const val DEFAULT_DAILY_GOAL = 50
 
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel()
 ) {
+    val isLoading by viewModel.isLoading.collectAsState()
+    val userSettings by viewModel.userSettings.collectAsState()
+
     SettingsScreenContent(
+        isLoading = isLoading,
+        userSettings = userSettings,
         onRestartMasteryClicked = viewModel::onRestartMasteryClicked,
-        onPreferredStudyTimeClicked = viewModel::onPreferredStudyTimeClicked
+        onPreferredStudyTimeClicked = viewModel::onPreferredStudyTimeClicked,
+        onFlashcardsPerSessionChanged = viewModel::onFlashcardsPerSessionChanged,
+        onDailyStudyGoalChanged = viewModel::onDailyStudyGoalChanged,
+        onQuickStartChanged = viewModel::onQuickStartChanged,
+        onShowAnswersChanged = viewModel::onShowAnswersChanged,
+        onShowSuggestionsChanged = viewModel::onShowSuggestionsChanged,
+        onStudyRemindersChanged = viewModel::onStudyRemindersChanged,
+        onNotificationSoundChanged = viewModel::onNotificationSoundChanged
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreenContent(
+    isLoading: Boolean,
+    userSettings: UserSettings?,
     onRestartMasteryClicked: () -> Unit,
-    onPreferredStudyTimeClicked: () -> Unit
+    onPreferredStudyTimeClicked: () -> Unit,
+    onFlashcardsPerSessionChanged: (Int) -> Unit = {},
+    onDailyStudyGoalChanged: (Int) -> Unit = {},
+    onQuickStartChanged: (Boolean) -> Unit = {},
+    onShowAnswersChanged: (Boolean) -> Unit = {},
+    onShowSuggestionsChanged: (Boolean) -> Unit = {},
+    onStudyRemindersChanged: (Boolean) -> Unit = {},
+    onNotificationSoundChanged: (Boolean) -> Unit = {}
 ) {
     var showRestartDialog by remember { mutableStateOf(false) }
 
-    if (showRestartDialog) {
-        AlertDialog(
-            onDismissRequest = { showRestartDialog = false },
-            title = {
-                Text(
-                    text = stringResource(R.string.settings_system_restart),
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            },
-            text = {
-                Text(
-                    text = stringResource(R.string.settings_system_restart_description),
-                    color = Color(0xFFB0B0B0)
-                )
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    onRestartMasteryClicked()
-                    showRestartDialog = false
-                }) {
+    if (isLoading || userSettings == null) {
+        FullLoader(message = null)
+    } else {
+        if (showRestartDialog) {
+            AlertDialog(
+                onDismissRequest = { showRestartDialog = false },
+                modifier = Modifier.testTag("restart_dialog"),
+                title = {
                     Text(
-                        text = stringResource(R.string.settings_restart_dialog_confirm),
-                        color = Color(0xFFF06292),
-                        fontWeight = FontWeight.Bold
+                        text = stringResource(R.string.settings_system_restart),
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showRestartDialog = false }) {
+                },
+                text = {
                     Text(
-                        text = stringResource(R.string.settings_restart_dialog_cancel),
-                        color = RoyalBlue,
-                        fontWeight = FontWeight.Bold
+                        text = stringResource(R.string.settings_system_restart_description),
+                        color = Color(0xFFB0B0B0)
                     )
-                }
-            },
-            containerColor = Color(0xFF2C2C4E),
-            shape = RoundedCornerShape(28.dp)
-        )
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF1A1A2E))
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 24.dp)
-    ) {
-        Header(
-            headText = stringResource(R.string.settings_head_title),
-            titleText = stringResource(R.string.settings_title),
-            subtitleText = stringResource(R.string.settings_subtitle)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // STUDY SESSION
-        SectionHeader(title = stringResource(R.string.settings_section_study_session))
-        var flashcardsPerSession by remember { mutableFloatStateOf(FLASHCARDS_PER_SESSION) }
-        SliderSetting(
-            icon = Icons.Default.School,
-            title = stringResource(R.string.settings_flashcards_per_session),
-            value = flashcardsPerSession.toInt().toString(),
-            currentValue = flashcardsPerSession,
-            onValueChange = { flashcardsPerSession = it },
-            range = 5f..50f,
-            minLabel = stringResource(R.string.settings_flashcards_per_session_min),
-            maxLabel = stringResource(R.string.settings_flashcards_per_session_max),
-            modifier = Modifier.testTag("slider_session")
-        )
-
-        var dailyStudyGoal by remember { mutableFloatStateOf(DAILY_GOAL) }
-        SliderSetting(
-            icon = Icons.Default.Flag,
-            title = stringResource(R.string.settings_daily_goal),
-            value = stringResource(R.string.settings_daily_goal_value, dailyStudyGoal.toInt()),
-            currentValue = dailyStudyGoal,
-            onValueChange = { dailyStudyGoal = it },
-            range = 10f..100f,
-            minLabel = stringResource(R.string.settings_daily_goal_min),
-            maxLabel = stringResource(R.string.settings_daily_goal_max)
-        )
-
-        val resetEnabled by remember {
-            derivedStateOf {
-                flashcardsPerSession != FLASHCARDS_PER_SESSION || dailyStudyGoal != DAILY_GOAL
-            }
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        onRestartMasteryClicked()
+                        showRestartDialog = false
+                    }) {
+                        Text(
+                            text = stringResource(R.string.settings_restart_dialog_confirm),
+                            color = Color(0xFFF06292),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showRestartDialog = false }) {
+                        Text(
+                            text = stringResource(R.string.settings_restart_dialog_cancel),
+                            color = RoyalBlue,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                },
+                containerColor = Color(0xFF2C2C4E),
+                shape = RoundedCornerShape(28.dp)
+            )
         }
-        
-        BlueButton(
-            icon = Icons.Default.Replay,
-            text = stringResource(R.string.settings_flashcards_per_session_reset),
-            enabled = resetEnabled,
-            onClick = {
-                flashcardsPerSession = FLASHCARDS_PER_SESSION
-                dailyStudyGoal = DAILY_GOAL
-            }
-        )
 
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // PERSONALIZATION
-        SectionHeader(title = stringResource(R.string.settings_section_personalization))
-        var shouldSkipDescription by remember { mutableStateOf(true) }
-        SwitchSetting(
-            icon = Icons.Default.Add,
-            title = stringResource(R.string.settings_quick_start),
-            description = stringResource(R.string.settings_quick_start_text),
-            checked = shouldSkipDescription,
-            testTag = TestTags.SETTINGS_QUICK_START,
-            onCheckedChange = { shouldSkipDescription = it }
-        )
-
-        var shouldShowAnswers by remember { mutableStateOf(true) }
-        SwitchSetting(
-            icon = Icons.Default.Add,
-            title = stringResource(R.string.settings_show_answers),
-            description = stringResource(R.string.settings_show_answers_text),
-            checked = shouldShowAnswers,
-            testTag = TestTags.SETTINGS_SHOW_ANSWERS,
-            onCheckedChange = { shouldShowAnswers = it }
-        )
-
-        var shouldShowSuggestions by remember { mutableStateOf(true) }
-        SwitchSetting(
-            icon = Icons.Default.Add,
-            title = stringResource(R.string.settings_show_suggestions),
-            description = stringResource(R.string.settings_show_suggestions_text),
-            checked = shouldShowSuggestions,
-            testTag = TestTags.SETTINGS_SHOW_SUGGESTIONS,
-            onCheckedChange = { shouldShowSuggestions = it }
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // NOTIFICATIONS
-        SectionHeader(title = stringResource(R.string.settings_section_notifications))
-        var studyReminders by remember { mutableStateOf(true) }
-        SwitchSetting(
-            icon = Icons.Default.Notifications,
-            title = stringResource(R.string.settings_daily_reminders),
-            description = stringResource(R.string.settings_daily_reminders_description),
-            checked = studyReminders,
-            testTag = TestTags.SETTINGS_STUDY_REMINDERS,
-            onCheckedChange = { studyReminders = it }
-        )
-
-        ActionSetting(
-            icon = Icons.Default.AccessTime,
-            title = stringResource(R.string.settings_preferred_study_time),
-            description = stringResource(R.string.settings_preferred_study_time_description),
-            actionLabel = "09:00 PM",
-            onClick = { onPreferredStudyTimeClicked() }
-        )
-
-        var notificationSound by remember { mutableStateOf(false) }
-        SwitchSetting(
-            icon = Icons.AutoMirrored.Filled.VolumeUp,
-            title = stringResource(R.string.settings_notification_sound),
-            description = stringResource(R.string.settings_notification_sound_description),
-            checked = notificationSound,
-            testTag = TestTags.SETTINGS_NOTIFICATION_SOUND,
-            onCheckedChange = { notificationSound = it }
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // SYSTEM
-        SectionHeader(title = stringResource(R.string.settings_section_system))
-        RestartMasteryButton(onClick = { showRestartDialog = true })
-        Text(
-            text = stringResource(R.string.settings_system_restart_description),
-            color = Color(0xFFB0B0B0),
-            fontSize = 12.sp,
-            textAlign = TextAlign.Center,
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp)
-        )
+                .fillMaxSize()
+                .background(Color(0xFF1A1A2E))
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp)
+        ) {
+            Header(
+                headText = stringResource(R.string.settings_head_title),
+                titleText = stringResource(R.string.settings_title),
+                subtitleText = stringResource(R.string.settings_subtitle)
+            )
 
-        Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Footer
-        SettingsFooter()
-        
-        Spacer(modifier = Modifier.height(32.dp))
+            // STUDY SESSION
+            SectionHeader(title = stringResource(R.string.settings_section_study_session))
+            SliderSetting(
+                icon = Icons.Default.School,
+                title = stringResource(R.string.settings_flashcards_per_session),
+                value = userSettings.flashcardsPerSession.toString(),
+                currentValue = userSettings.flashcardsPerSession.toFloat(),
+                onValueChange = { onFlashcardsPerSessionChanged(it.toInt()) },
+                range = 5f..50f,
+                minLabel = stringResource(R.string.settings_flashcards_per_session_min),
+                maxLabel = stringResource(R.string.settings_flashcards_per_session_max),
+                modifier = Modifier.testTag("slider_session")
+            )
+
+            SliderSetting(
+                icon = Icons.Default.Flag,
+                title = stringResource(R.string.settings_daily_goal),
+                value = stringResource(R.string.settings_daily_goal_value, userSettings.dailyStudyGoal),
+                currentValue = userSettings.dailyStudyGoal.toFloat(),
+                onValueChange = { onDailyStudyGoalChanged(it.toInt()) },
+                range = 10f..100f,
+                minLabel = stringResource(R.string.settings_daily_goal_min),
+                maxLabel = stringResource(R.string.settings_daily_goal_max)
+            )
+
+            val resetEnabled by remember(userSettings) {
+                derivedStateOf {
+                    userSettings.flashcardsPerSession != DEFAULT_FLASHCARDS_PER_SESSION || 
+                    userSettings.dailyStudyGoal != DEFAULT_DAILY_GOAL
+                }
+            }
+            
+            BlueButton(
+                icon = Icons.Default.Replay,
+                text = stringResource(R.string.settings_flashcards_per_session_reset),
+                enabled = resetEnabled,
+                onClick = {
+                    onFlashcardsPerSessionChanged(DEFAULT_FLASHCARDS_PER_SESSION)
+                    onDailyStudyGoalChanged(DEFAULT_DAILY_GOAL)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // PERSONALIZATION
+            SectionHeader(title = stringResource(R.string.settings_section_personalization))
+            SwitchSetting(
+                icon = Icons.Default.Add,
+                title = stringResource(R.string.settings_quick_start),
+                description = stringResource(R.string.settings_quick_start_text),
+                checked = userSettings.quickStart,
+                testTag = TestTags.SETTINGS_QUICK_START,
+                onCheckedChange = onQuickStartChanged
+            )
+
+            SwitchSetting(
+                icon = Icons.Default.Add,
+                title = stringResource(R.string.settings_show_answers),
+                description = stringResource(R.string.settings_show_answers_text),
+                checked = userSettings.showAnswers,
+                testTag = TestTags.SETTINGS_SHOW_ANSWERS,
+                onCheckedChange = onShowAnswersChanged
+            )
+
+            SwitchSetting(
+                icon = Icons.Default.Add,
+                title = stringResource(R.string.settings_show_suggestions),
+                description = stringResource(R.string.settings_show_suggestions_text),
+                checked = userSettings.showSuggestions,
+                testTag = TestTags.SETTINGS_SHOW_SUGGESTIONS,
+                onCheckedChange = onShowSuggestionsChanged
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // NOTIFICATIONS
+            SectionHeader(title = stringResource(R.string.settings_section_notifications))
+            SwitchSetting(
+                icon = Icons.Default.Notifications,
+                title = stringResource(R.string.settings_daily_reminders),
+                description = stringResource(R.string.settings_daily_reminders_description),
+                checked = userSettings.studyReminders,
+                testTag = TestTags.SETTINGS_STUDY_REMINDERS,
+                onCheckedChange = onStudyRemindersChanged
+            )
+
+            ActionSetting(
+                icon = Icons.Default.AccessTime,
+                title = stringResource(R.string.settings_preferred_study_time),
+                description = stringResource(R.string.settings_preferred_study_time_description),
+                actionLabel = userSettings.preferredStudyTime,
+                onClick = { onPreferredStudyTimeClicked() }
+            )
+
+            SwitchSetting(
+                icon = Icons.AutoMirrored.Filled.VolumeUp,
+                title = stringResource(R.string.settings_notification_sound),
+                description = stringResource(R.string.settings_notification_sound_description),
+                checked = userSettings.notificationSound,
+                testTag = TestTags.SETTINGS_NOTIFICATION_SOUND,
+                onCheckedChange = onNotificationSoundChanged
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // SYSTEM
+            SectionHeader(title = stringResource(R.string.settings_section_system))
+            RestartMasteryButton(onClick = { showRestartDialog = true })
+            Text(
+                text = stringResource(R.string.settings_system_restart_description),
+                color = Color(0xFFB0B0B0),
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp)
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // Footer
+            SettingsFooter()
+            
+            Spacer(modifier = Modifier.height(32.dp))
+        }
     }
 }
 
@@ -360,6 +382,7 @@ fun SwitchSetting(
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
+            modifier = Modifier.testTag(testTag + "_switch"),
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
                 checkedTrackColor = RoyalBlue,
@@ -455,6 +478,18 @@ fun SettingsFooter() {
 fun SettingsScreenPreview() {
     Flashcards2Theme {
         SettingsScreenContent(
+            isLoading = false,
+            userSettings = UserSettings(
+                flashcardsPerSession = 20,
+                dailyStudyGoal = 50,
+                isDarkMode = true,
+                studyReminders = true,
+                notificationSound = false,
+                preferredStudyTime = "09:00 PM",
+                quickStart = true,
+                showAnswers = true,
+                showSuggestions = true
+            ),
             onRestartMasteryClicked = {},
             onPreferredStudyTimeClicked = {}
         )

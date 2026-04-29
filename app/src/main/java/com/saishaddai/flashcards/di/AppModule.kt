@@ -5,10 +5,10 @@ import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.DeckRepository
 import com.saishaddai.flashcards.repository.FlashcardRepository
-import com.saishaddai.flashcards.repository.HardcodedSettingsRepository
 import com.saishaddai.flashcards.repository.HardcodedStatsRepository
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.StatsRepository
+import com.saishaddai.flashcards.repository.impl.DataStoreSettingsRepository
 import com.saishaddai.flashcards.repository.impl.JSONDeckRepository
 import com.saishaddai.flashcards.repository.impl.JSONFlashcardRepository
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
@@ -26,7 +26,7 @@ val appModule = module {
     single<FlashcardRepository<DeckType, Flashcard>> { JSONFlashcardRepository(androidContext()) }
     single<DeckRepository<Deck>> { JSONDeckRepository(get()) }
     single<StatsRepository> { HardcodedStatsRepository() }
-    single<SettingsRepository> { HardcodedSettingsRepository() }
+    single<SettingsRepository> { DataStoreSettingsRepository(androidContext()) }
 
     // ViewModels
     viewModel { DecksViewModel(androidApplication(), get()) }

@@ -16,6 +16,7 @@ konfettiCompose = "2.0.5"
 mockitoKotlin = "5.4.0"
 mockitoAndroid = "5.15.2"
 timber = "5.0.1"
+datastore = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,6 +52,7 @@ koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", versi
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 
 [plugins]

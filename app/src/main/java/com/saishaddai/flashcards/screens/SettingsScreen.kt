@@ -42,7 +42,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -58,6 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.saishaddai.flashcards.R
+import com.saishaddai.flashcards.repository.UserSettings
 import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.Header
@@ -67,19 +67,28 @@ import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 
-const val FLASHCARDS_PER_SESSION = 20f
-const val DAILY_GOAL = 50f
+const val DEFAULT_FLASHCARDS_PER_SESSION = 20
+const val DEFAULT_DAILY_GOAL = 50
 
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel()
 ) {
     val isLoading by viewModel.isLoading.collectAsState()
+    val userSettings by viewModel.userSettings.collectAsState()
 
     SettingsScreenContent(
         isLoading = isLoading,
+        userSettings = userSettings,
         onRestartMasteryClicked = viewModel::onRestartMasteryClicked,
-        onPreferredStudyTimeClicked = viewModel::onPreferredStudyTimeClicked
+        onPreferredStudyTimeClicked = viewModel::onPreferredStudyTimeClicked,
+        onFlashcardsPerSessionChanged = viewModel::onFlashcardsPerSessionChanged,
+        onDailyStudyGoalChanged = viewModel::onDailyStudyGoalChanged,
+        onQuickStartChanged = viewModel::onQuickStartChanged,
+        onShowAnswersChanged = viewModel::onShowAnswersChanged,
+        onShowSuggestionsChanged = viewModel::onShowSuggestionsChanged,
+        onStudyRemindersChanged = viewModel::onStudyRemindersChanged,
+        onNotificationSoundChanged = viewModel::onNotificationSoundChanged
     )
 }
 
@@ -87,12 +96,20 @@ fun SettingsScreen(
 @Composable
 fun SettingsScreenContent(
     isLoading: Boolean,
+    userSettings: UserSettings?,
     onRestartMasteryClicked: () -> Unit,
-    onPreferredStudyTimeClicked: () -> Unit
+    onPreferredStudyTimeClicked: () -> Unit,
+    onFlashcardsPerSessionChanged: (Int) -> Unit = {},
+    onDailyStudyGoalChanged: (Int) -> Unit = {},
+    onQuickStartChanged: (Boolean) -> Unit = {},
+    onShowAnswersChanged: (Boolean) -> Unit = {},
+    onShowSuggestionsChanged: (Boolean) -> Unit = {},
+    onStudyRemindersChanged: (Boolean) -> Unit = {},
+    onNotificationSoundChanged: (Boolean) -> Unit = {}
 ) {
     var showRestartDialog by remember { mutableStateOf(false) }
 
-    if (isLoading) {
+    if (isLoading || userSettings == null) {
         FullLoader(message = null)
     } else {
         if (showRestartDialog) {
@@ -155,34 +172,33 @@ fun SettingsScreenContent(
 
             // STUDY SESSION
             SectionHeader(title = stringResource(R.string.settings_section_study_session))
-            var flashcardsPerSession by remember { mutableFloatStateOf(FLASHCARDS_PER_SESSION) }
             SliderSetting(
                 icon = Icons.Default.School,
                 title = stringResource(R.string.settings_flashcards_per_session),
-                value = flashcardsPerSession.toInt().toString(),
-                currentValue = flashcardsPerSession,
-                onValueChange = { flashcardsPerSession = it },
+                value = userSettings.flashcardsPerSession.toString(),
+                currentValue = userSettings.flashcardsPerSession.toFloat(),
+                onValueChange = { onFlashcardsPerSessionChanged(it.toInt()) },
                 range = 5f..50f,
                 minLabel = stringResource(R.string.settings_flashcards_per_session_min),
                 maxLabel = stringResource(R.string.settings_flashcards_per_session_max),
                 modifier = Modifier.testTag("slider_session")
             )
 
-            var dailyStudyGoal by remember { mutableFloatStateOf(DAILY_GOAL) }
             SliderSetting(
                 icon = Icons.Default.Flag,
                 title = stringResource(R.string.settings_daily_goal),
-                value = stringResource(R.string.settings_daily_goal_value, dailyStudyGoal.toInt()),
-                currentValue = dailyStudyGoal,
-                onValueChange = { dailyStudyGoal = it },
+                value = stringResource(R.string.settings_daily_goal_value, userSettings.dailyStudyGoal),
+                currentValue = userSettings.dailyStudyGoal.toFloat(),
+                onValueChange = { onDailyStudyGoalChanged(it.toInt()) },
                 range = 10f..100f,
                 minLabel = stringResource(R.string.settings_daily_goal_min),
                 maxLabel = stringResource(R.string.settings_daily_goal_max)
             )
 
-            val resetEnabled by remember {
+            val resetEnabled by remember(userSettings) {
                 derivedStateOf {
-                    flashcardsPerSession != FLASHCARDS_PER_SESSION || dailyStudyGoal != DAILY_GOAL
+                    userSettings.flashcardsPerSession != DEFAULT_FLASHCARDS_PER_SESSION || 
+                    userSettings.dailyStudyGoal != DEFAULT_DAILY_GOAL
                 }
             }
             
@@ -191,8 +207,8 @@ fun SettingsScreenContent(
                 text = stringResource(R.string.settings_flashcards_per_session_reset),
                 enabled = resetEnabled,
                 onClick = {
-                    flashcardsPerSession = FLASHCARDS_PER_SESSION
-                    dailyStudyGoal = DAILY_GOAL
+                    onFlashcardsPerSessionChanged(DEFAULT_FLASHCARDS_PER_SESSION)
+                    onDailyStudyGoalChanged(DEFAULT_DAILY_GOAL)
                 }
             )
 
@@ -200,66 +216,61 @@ fun SettingsScreenContent(
 
             // PERSONALIZATION
             SectionHeader(title = stringResource(R.string.settings_section_personalization))
-            var shouldSkipDescription by remember { mutableStateOf(true) }
             SwitchSetting(
                 icon = Icons.Default.Add,
                 title = stringResource(R.string.settings_quick_start),
                 description = stringResource(R.string.settings_quick_start_text),
-                checked = shouldSkipDescription,
+                checked = userSettings.quickStart,
                 testTag = TestTags.SETTINGS_QUICK_START,
-                onCheckedChange = { shouldSkipDescription = it }
+                onCheckedChange = onQuickStartChanged
             )
 
-            var shouldShowAnswers by remember { mutableStateOf(true) }
             SwitchSetting(
                 icon = Icons.Default.Add,
                 title = stringResource(R.string.settings_show_answers),
                 description = stringResource(R.string.settings_show_answers_text),
-                checked = shouldShowAnswers,
+                checked = userSettings.showAnswers,
                 testTag = TestTags.SETTINGS_SHOW_ANSWERS,
-                onCheckedChange = { shouldShowAnswers = it }
+                onCheckedChange = onShowAnswersChanged
             )
 
-            var shouldShowSuggestions by remember { mutableStateOf(true) }
             SwitchSetting(
                 icon = Icons.Default.Add,
                 title = stringResource(R.string.settings_show_suggestions),
                 description = stringResource(R.string.settings_show_suggestions_text),
-                checked = shouldShowSuggestions,
+                checked = userSettings.showSuggestions,
                 testTag = TestTags.SETTINGS_SHOW_SUGGESTIONS,
-                onCheckedChange = { shouldShowSuggestions = it }
+                onCheckedChange = onShowSuggestionsChanged
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             // NOTIFICATIONS
             SectionHeader(title = stringResource(R.string.settings_section_notifications))
-            var studyReminders by remember { mutableStateOf(true) }
             SwitchSetting(
                 icon = Icons.Default.Notifications,
                 title = stringResource(R.string.settings_daily_reminders),
                 description = stringResource(R.string.settings_daily_reminders_description),
-                checked = studyReminders,
+                checked = userSettings.studyReminders,
                 testTag = TestTags.SETTINGS_STUDY_REMINDERS,
-                onCheckedChange = { studyReminders = it }
+                onCheckedChange = onStudyRemindersChanged
             )
 
             ActionSetting(
                 icon = Icons.Default.AccessTime,
                 title = stringResource(R.string.settings_preferred_study_time),
                 description = stringResource(R.string.settings_preferred_study_time_description),
-                actionLabel = "09:00 PM",
+                actionLabel = userSettings.preferredStudyTime,
                 onClick = { onPreferredStudyTimeClicked() }
             )
 
-            var notificationSound by remember { mutableStateOf(false) }
             SwitchSetting(
                 icon = Icons.AutoMirrored.Filled.VolumeUp,
                 title = stringResource(R.string.settings_notification_sound),
                 description = stringResource(R.string.settings_notification_sound_description),
-                checked = notificationSound,
+                checked = userSettings.notificationSound,
                 testTag = TestTags.SETTINGS_NOTIFICATION_SOUND,
-                onCheckedChange = { notificationSound = it }
+                onCheckedChange = onNotificationSoundChanged
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -468,6 +479,17 @@ fun SettingsScreenPreview() {
     Flashcards2Theme {
         SettingsScreenContent(
             isLoading = false,
+            userSettings = UserSettings(
+                flashcardsPerSession = 20,
+                dailyStudyGoal = 50,
+                isDarkMode = true,
+                studyReminders = true,
+                notificationSound = false,
+                preferredStudyTime = "09:00 PM",
+                quickStart = true,
+                showAnswers = true,
+                showSuggestions = true
+            ),
             onRestartMasteryClicked = {},
             onPreferredStudyTimeClicked = {}
         )

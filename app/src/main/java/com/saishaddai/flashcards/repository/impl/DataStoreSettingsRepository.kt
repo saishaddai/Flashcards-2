@@ -1,4 +1,4 @@
-package com.saishaddai.flashcards.repository
+package com.saishaddai.flashcards.repository.impl
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -9,6 +9,8 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.saishaddai.flashcards.repository.SettingsRepository
+import com.saishaddai.flashcards.repository.UserSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -30,7 +32,7 @@ class DataStoreSettingsRepository(private val context: Context) : SettingsReposi
         val SHOW_SUGGESTIONS = booleanPreferencesKey("show_suggestions")
     }
 
-    val settingsFlow: Flow<UserSettings> = context.dataStore.data
+    override fun getSettings(): Flow<UserSettings> = context.dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
@@ -86,39 +88,27 @@ class DataStoreSettingsRepository(private val context: Context) : SettingsReposi
         }
     }
 
-    suspend fun savePreferredStudyTime(time: String) {
+    override suspend fun savePreferredStudyTime(time: String) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.PREFERRED_STUDY_TIME] = time
         }
     }
 
-    suspend fun saveQuickStart(enabled: Boolean) {
+    override suspend fun saveQuickStart(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.QUICK_START] = enabled
         }
     }
 
-    suspend fun saveShowAnswers(enabled: Boolean) {
+    override suspend fun saveShowAnswers(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.SHOW_ANSWERS] = enabled
         }
     }
 
-    suspend fun saveShowSuggestions(enabled: Boolean) {
+    override suspend fun saveShowSuggestions(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.SHOW_SUGGESTIONS] = enabled
         }
     }
 }
-
-data class UserSettings(
-    val flashcardsPerSession: Int,
-    val dailyStudyGoal: Int,
-    val isDarkMode: Boolean,
-    val studyReminders: Boolean,
-    val notificationSound: Boolean,
-    val preferredStudyTime: String,
-    val quickStart: Boolean,
-    val showAnswers: Boolean,
-    val showSuggestions: Boolean
-)

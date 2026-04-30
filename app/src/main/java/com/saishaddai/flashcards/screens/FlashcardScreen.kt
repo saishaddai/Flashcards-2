@@ -50,6 +50,7 @@ import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.screens.commons.BlueButton
+import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.TransparentButton
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
@@ -68,12 +69,14 @@ fun FlashcardScreen(
     val flashcards by viewModel.flashcards.collectAsState()
     val showAnswer by viewModel.showAnswer.collectAsState()
     val isFinished by viewModel.isFinished.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     FlashcardContent(
         deck = deck,
         flashcards = flashcards,
         showAnswer = showAnswer,
         isFinished = isFinished,
+        isLoading = isLoading,
         onShowResponseClicked = viewModel::onShowResponseClicked,
         onPageChanged = viewModel::onPageChanged,
         onFinishSession = viewModel::onFinishSession,
@@ -89,12 +92,18 @@ fun FlashcardContent(
     flashcards: List<Flashcard>,
     showAnswer: Boolean,
     isFinished: Boolean,
+    isLoading: Boolean,
     onShowResponseClicked: () -> Unit,
     onPageChanged: () -> Unit,
     onFinishSession: () -> Unit,
     onCancelSessionClick: () -> Unit,
     onFinishedSessionClick: () -> Unit
 ) {
+    if (isLoading) {
+        FullLoader(message = stringResource(R.string.loading))
+        return
+    }
+
     if (isFinished) {
         onFinishedSessionClick()
         return
@@ -407,6 +416,7 @@ fun FlashcardScreenPreview() {
             ),
             showAnswer = true,
             isFinished = false,
+            isLoading = false,
             onShowResponseClicked = {},
             onPageChanged = {},
             onFinishSession = {}

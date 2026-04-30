@@ -6,6 +6,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
+import androidx.compose.ui.test.onNodeWithTag
+import com.saishaddai.flashcards.utils.TestTags
 import org.junit.Rule
 import org.junit.Test
 
@@ -91,5 +93,27 @@ class FlashcardScreenTest {
         // <string name="flashcard_cancel_dialog_dismiss">No, Continue</string>
         composeTestRule.onNodeWithText("Yes, Cancel").assertIsDisplayed()
         composeTestRule.onNodeWithText("No, Continue").assertIsDisplayed()
+    }
+
+    @Test
+    fun flashcardScreen_isLoading_showsFullLoader() {
+        composeTestRule.setContent {
+            Flashcards2Theme {
+                FlashcardContent(
+                    deck = testDeck,
+                    flashcards = emptyList(),
+                    showAnswer = false,
+                    isFinished = false,
+                    isLoading = true,
+                    onShowResponseClicked = {},
+                    onPageChanged = {},
+                    onFinishSession = {},
+                    onCancelSessionClick = {},
+                    onFinishedSessionClick = {}
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithTag(TestTags.FULL_LOADER).assertIsDisplayed()
     }
 }

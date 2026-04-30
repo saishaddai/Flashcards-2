@@ -26,13 +26,18 @@ class FlashcardViewModel(
     private val _isFinished = MutableStateFlow(false)
     val isFinished: StateFlow<Boolean> = _isFinished.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     init {
         loadFlashcards()
     }
 
     private fun loadFlashcards() {
         viewModelScope.launch {
+            _isLoading.value = true
             _flashcards.value = repository.getData(DeckType.fromId(deckId))
+            _isLoading.value = false
         }
     }
 

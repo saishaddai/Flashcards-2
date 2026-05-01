@@ -1,5 +1,6 @@
 package com.saishaddai.flashcards.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -227,7 +228,7 @@ fun FlashcardContent(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Flashcard(currentCard)
+                    Flashcard(currentCard, onClick = onShowResponseClicked)
                     if (showAnswer) {
                         Spacer(modifier = Modifier.height(16.dp))
                         FlashcardAnswer(currentCard)
@@ -293,11 +294,12 @@ fun ProgressIndicator(current: Int, total: Int) {
 }
 
 @Composable
-fun Flashcard(flashcard: Flashcard) {
+fun Flashcard(flashcard: Flashcard, onClick: () -> Unit = {}) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp),
+            .height(200.dp)
+            .clickable(enabled = true, onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF2C2C4E)

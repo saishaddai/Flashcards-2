@@ -68,6 +68,28 @@ class FlashcardScreenTest {
     }
 
     @Test
+    fun flashcardScreen_clickFlashcard_revealsAnswer() {
+        composeTestRule.setContent {
+            Flashcards2Theme {
+                FlashcardScreen(
+                    onCancelSessionClick = {},
+                    onFinishedSessionClick = {},
+                    deck = testDeck
+                )
+            }
+        }
+
+        // The answer label "ANSWER" should NOT be displayed initially
+        composeTestRule.onNodeWithText("ANSWER").assertDoesNotExist()
+
+        // Click on the Flashcard (Question Card)
+        composeTestRule.onNodeWithText("QUESTION").performClick()
+
+        // Now the "ANSWER" label should be displayed
+        composeTestRule.onNodeWithText("ANSWER").assertIsDisplayed()
+    }
+
+    @Test
     fun flashcardScreen_clickCancelSession_showsConfirmationDialog() {
         composeTestRule.setContent {
             Flashcards2Theme {

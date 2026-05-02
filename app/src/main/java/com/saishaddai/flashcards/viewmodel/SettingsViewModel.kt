@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class SettingsViewModel(
     private val repository: SettingsRepository
@@ -33,8 +34,13 @@ class SettingsViewModel(
         }
     }
 
-    fun onPreferredStudyTimeClicked() {
-        // TODO: Implement time picker logic or navigation
+    fun onPreferredStudyTimeChanged(hour: Int, minute: Int) {
+        viewModelScope.launch {
+            val amPm = if (hour < 12) "AM" else "PM"
+            val hourFormatted = if (hour % 12 == 0) 12 else hour % 12
+            val time = String.format(Locale.getDefault(), "%02d:%02d %s", hourFormatted, minute, amPm)
+            repository.savePreferredStudyTime(time)
+        }
     }
 
     fun onFlashcardsPerSessionChanged(count: Int) {

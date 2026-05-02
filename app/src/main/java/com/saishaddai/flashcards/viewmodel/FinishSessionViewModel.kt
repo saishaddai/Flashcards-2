@@ -6,6 +6,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class FinishSessionViewModel : ViewModel() {
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     private val _navigateToDeckList = MutableStateFlow(false)
     val navigateToDeckList: StateFlow<Boolean> = _navigateToDeckList.asStateFlow()
 

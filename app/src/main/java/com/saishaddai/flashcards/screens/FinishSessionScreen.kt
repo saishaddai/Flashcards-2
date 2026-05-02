@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
@@ -73,6 +74,7 @@ fun FinishSessionScreen(
     viewModel: FinishSessionViewModel = koinViewModel()
 ) {
     val navigateToDeckList by viewModel.navigateToDeckList.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     LaunchedEffect(navigateToDeckList) {
         if (navigateToDeckList) {
@@ -83,6 +85,7 @@ fun FinishSessionScreen(
 
     FinishSessionContent(
         deck = deck,
+        isLoading = isLoading,
         onBackToDecksClicked = { viewModel.onBackToDecksClicked() },
         onShareSummary = onShareSummary
     )
@@ -92,9 +95,15 @@ fun FinishSessionScreen(
 @Composable
 fun FinishSessionContent(
     deck: Deck,
+    isLoading: Boolean = false,
     onBackToDecksClicked: () -> Unit,
     onShareSummary: (Deck) -> Unit
 ) {
+    if (isLoading) {
+        FullLoader(message = stringResource(R.string.loading))
+        return
+    }
+
     val parties = remember {
         listOf(
             Party(
@@ -317,6 +326,7 @@ fun FinishSessionScreenPreview() {
         val deck = Deck(1, "Preview Text", "preview name long version", isSelected = false)
         FinishSessionContent(
             deck = deck,
+            isLoading = false,
             onBackToDecksClicked = {},
             onShareSummary = {}
         )

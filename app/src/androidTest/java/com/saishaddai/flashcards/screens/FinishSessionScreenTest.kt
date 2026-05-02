@@ -3,11 +3,13 @@ package com.saishaddai.flashcards.screens
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
+import com.saishaddai.flashcards.utils.TestTags
 import org.junit.Rule
 import org.junit.Test
 
@@ -41,14 +43,13 @@ class FinishSessionScreenTest {
         composeTestRule.onNodeWithText("All Done!").assertIsDisplayed()
 
         // Verify the success message with deck name
-        // stringResource(R.string.finish_great_job, deck.name) -> "Great job on your 'OOP' prep today."
         composeTestRule.onNodeWithText("Great job on your 'OOP' prep today.").assertIsDisplayed()
 
         // Verify Info Cards labels
         composeTestRule.onNodeWithText("REVIEWED").assertIsDisplayed()
         composeTestRule.onNodeWithText("DURATION").assertIsDisplayed()
 
-        // Verify the "Back to Decks" button is visible (scroll to it as it's at the bottom)
+        // Verify the "Back to Decks" button is visible
         composeTestRule.onNodeWithText("Back to Decks", ignoreCase = true).performScrollTo().assertIsDisplayed()
     }
 
@@ -118,5 +119,21 @@ class FinishSessionScreenTest {
         composeTestRule.runOnIdle {
             assert(shareSummaryCalled)
         }
+    }
+
+    @Test
+    fun finishSessionScreen_isLoading_showsFullLoader() {
+        composeTestRule.setContent {
+            Flashcards2Theme {
+                FinishSessionContent(
+                    deck = testDeck,
+                    isLoading = true,
+                    onBackToDecksClicked = {},
+                    onShareSummary = {}
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithTag(TestTags.FULL_LOADER).assertIsDisplayed()
     }
 }

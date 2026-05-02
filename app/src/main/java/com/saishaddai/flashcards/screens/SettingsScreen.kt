@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,12 +33,19 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimeInput
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -49,6 +57,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -56,6 +66,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.repository.UserSettings
 import com.saishaddai.flashcards.screens.commons.BlueButton
@@ -66,6 +78,8 @@ import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
+import java.util.Calendar
+import java.util.Locale
 
 const val DEFAULT_FLASHCARDS_PER_SESSION = 20
 const val DEFAULT_DAILY_GOAL = 50
@@ -81,7 +95,7 @@ fun SettingsScreen(
         isLoading = isLoading,
         userSettings = userSettings,
         onRestartMasteryClicked = viewModel::onRestartMasteryClicked,
-        onPreferredStudyTimeClicked = viewModel::onPreferredStudyTimeClicked,
+        onPreferredStudyTimeChanged = viewModel::onPreferredStudyTimeChanged,
         onFlashcardsPerSessionChanged = viewModel::onFlashcardsPerSessionChanged,
         onDailyStudyGoalChanged = viewModel::onDailyStudyGoalChanged,
         onQuickStartChanged = viewModel::onQuickStartChanged,
@@ -98,7 +112,7 @@ fun SettingsScreenContent(
     isLoading: Boolean,
     userSettings: UserSettings?,
     onRestartMasteryClicked: () -> Unit,
-    onPreferredStudyTimeClicked: () -> Unit,
+    onPreferredStudyTimeChanged: (Int, Int) -> Unit,
     onFlashcardsPerSessionChanged: (Int) -> Unit = {},
     onDailyStudyGoalChanged: (Int) -> Unit = {},
     onQuickStartChanged: (Boolean) -> Unit = {},
@@ -108,6 +122,7 @@ fun SettingsScreenContent(
     onNotificationSoundChanged: (Boolean) -> Unit = {}
 ) {
     var showRestartDialog by remember { mutableStateOf(false) }
+    var showTimePicker by remember { mutableStateOf(false) }
 
     if (isLoading || userSettings == null) {
         FullLoader(message = null)
@@ -152,6 +167,16 @@ fun SettingsScreenContent(
                 },
                 containerColor = Color(0xFF2C2C4E),
                 shape = RoundedCornerShape(28.dp)
+            )
+        }
+
+        if (showTimePicker) {
+            TimePickerDialogWrapper(
+                onDismiss = { showTimePicker = false },
+                onConfirm = { hour, minute ->
+                    onPreferredStudyTimeChanged(hour, minute)
+                    showTimePicker = false
+                }
             )
         }
 
@@ -261,7 +286,7 @@ fun SettingsScreenContent(
                 title = stringResource(R.string.settings_preferred_study_time),
                 description = stringResource(R.string.settings_preferred_study_time_description),
                 actionLabel = userSettings.preferredStudyTime,
-                onClick = { onPreferredStudyTimeClicked() }
+                onClick = { showTimePicker = true }
             )
 
             SwitchSetting(
@@ -473,6 +498,78 @@ fun SettingsFooter() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TimePickerDialogWrapper(
+    onDismiss: () -> Unit,
+    onConfirm: (Int, Int) -> Unit
+) {
+    val currentTime = Calendar.getInstance()
+    val timePickerState = rememberTimePickerState(
+        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
+        initialMinute = currentTime.get(Calendar.MINUTE),
+        is24Hour = false,
+    )
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+    ) {
+        Surface(
+            shape = RoundedCornerShape(28.dp),
+            tonalElevation = 6.dp,
+            modifier = Modifier
+                .width(IntrinsicSize.Min)
+                .height(IntrinsicSize.Min)
+                .background(
+                    shape = RoundedCornerShape(28.dp),
+                    color = Color(0xFF2C2C4E)
+                ),
+            color = Color(0xFF2C2C4E)
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 20.dp),
+                    text = stringResource(R.string.settings_preferred_study_time),
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+                TimePicker(
+                    state = timePickerState
+                )
+                Row(
+                    modifier = Modifier
+                        .padding(top = 24.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text(
+                            text = stringResource(R.string.settings_restart_dialog_cancel),
+                            color = RoyalBlue,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    TextButton(onClick = { onConfirm(timePickerState.hour, timePickerState.minute) }) {
+                        Text(
+                            text = stringResource(R.string.settings_restart_dialog_confirm),
+                            color = RoyalBlue,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
@@ -491,7 +588,7 @@ fun SettingsScreenPreview() {
                 showSuggestions = true
             ),
             onRestartMasteryClicked = {},
-            onPreferredStudyTimeClicked = {}
+            onPreferredStudyTimeChanged = { _, _ -> }
         )
     }
 }

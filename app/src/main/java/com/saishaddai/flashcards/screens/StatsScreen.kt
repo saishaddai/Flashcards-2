@@ -57,6 +57,7 @@ import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
+import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import com.saishaddai.flashcards.viewmodel.StatsViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -64,6 +65,7 @@ import org.koin.androidx.compose.koinViewModel
 fun StatsScreen(
     decksViewModel: DecksViewModel = koinViewModel(),
     statsViewModel: StatsViewModel = koinViewModel(),
+    settingsViewModel: SettingsViewModel = koinViewModel(),
     onPromoClick: (Deck) -> Unit = {},
 ) {
     val promoDeck = decksViewModel.getRandomDeck()
@@ -74,6 +76,8 @@ fun StatsScreen(
     val studyTime by statsViewModel.studyTime.collectAsState()
     val accuracyRate by statsViewModel.accuracyRate.collectAsState()
     val isLoading by statsViewModel.isLoading.collectAsState()
+    val userSettings by settingsViewModel.userSettings.collectAsState()
+    val showSuggestions = userSettings?.showSuggestions ?: true
 
     StatsContent(
         promoDeck = promoDeck,
@@ -84,6 +88,7 @@ fun StatsScreen(
         studyTime = studyTime,
         accuracyRate = accuracyRate,
         isLoading = isLoading,
+        showSuggestions = showSuggestions,
         onBackClicked = statsViewModel::onBackClicked,
         onShareClicked = statsViewModel::onShareClicked,
         onMoreOptionsClicked = statsViewModel::onMoreOptionsClicked,
@@ -102,6 +107,7 @@ fun StatsContent(
     studyTime: String,
     accuracyRate: String,
     isLoading: Boolean,
+    showSuggestions: Boolean,
     onBackClicked: () -> Unit,
     onShareClicked: () -> Unit,
     onMoreOptionsClicked: () -> Unit,
@@ -165,9 +171,9 @@ fun StatsContent(
             AtAGlanceSection(cardsReviewed, currentStreak, studyTime, accuracyRate)
             Spacer(modifier = Modifier.height(32.dp))
 
-            promoDeck?.let { deck ->
+            if (showSuggestions && promoDeck != null) {
                 PromoWidget(
-                    randomDeck = deck,
+                    randomDeck = promoDeck,
                     onPromoClick = onPromoClick
                 )
                 Spacer(modifier = Modifier.height(24.dp))
@@ -463,6 +469,7 @@ fun StatsScreenPreview() {
             studyTime = "12h 30m",
             accuracyRate = "92%",
             isLoading = false,
+            showSuggestions = true,
             onBackClicked = {},
             onShareClicked = {},
             onMoreOptionsClicked = {},

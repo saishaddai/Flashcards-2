@@ -45,19 +45,24 @@ import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
+import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun InstructionsScreen(
     viewModel: DecksViewModel = koinViewModel(),
+    settingsViewModel: SettingsViewModel = koinViewModel(),
     onPromoClick: (Deck) -> Unit = {},
 ) {
     val decksState by viewModel.decks.collectAsState()
     val promoDeck = remember(decksState) { decksState.randomOrNull() }
+    val userSettings by settingsViewModel.userSettings.collectAsState()
+    val showSuggestions = userSettings?.showSuggestions ?: true
 
     // Use a content-only Composable to avoid Koin dependency in Previews
     InstructionsScreenContent(
         promoDeck = promoDeck,
+        showSuggestions = showSuggestions,
         onPromoClick = onPromoClick
     )
 }
@@ -69,6 +74,7 @@ fun InstructionsScreen(
 @Composable
 fun InstructionsScreenContent(
     promoDeck: Deck?,
+    showSuggestions: Boolean = true,
     onPromoClick: (Deck) -> Unit = {},
 ) {
     Column(
@@ -169,9 +175,9 @@ fun InstructionsScreenContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         // Promo Widget
-        promoDeck?.let { deck ->
+        if (showSuggestions && promoDeck != null) {
             PromoWidget(
-                randomDeck = deck,
+                randomDeck = promoDeck,
                 onPromoClick = onPromoClick
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -253,6 +259,7 @@ fun InstructionsScreenPreview() {
     Flashcards2Theme {
         InstructionsScreenContent(
             promoDeck = Deck(1, "Mock Deck", "This is a mock deck for preview"),
+            showSuggestions = true,
             onPromoClick = {},
         )
     }

@@ -28,7 +28,11 @@ I'm trying to create a new version of Flashcards with everything I learned so fa
 
 - **Kotlin**  
 - **Jetpack Compose**
+- **Jetpack DataStore**
 - **Compose Navigation 3**
+- **Unit Test with Mokito**
+- **Instrumentation Tests with jUnit**
+- **Room**
 - **Android Studio**  
 
 ---

@@ -67,10 +67,6 @@ fun InstructionsScreen(
     )
 }
 
-/**
- * Content-only version of the Instructions Screen.
- * This refactoring allows for easier Previews and testing by separating UI from ViewModel.
- */
 @Composable
 fun InstructionsScreenContent(
     promoDeck: Deck?,

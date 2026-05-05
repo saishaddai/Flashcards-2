@@ -18,7 +18,13 @@ import java.io.IOException
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-class DataStoreSettingsRepository(private val context: Context) : SettingsRepository {
+class DataStoreSettingsRepository(
+    private val context: Context,
+    private val internalDataStore: DataStore<Preferences>? = null
+) : SettingsRepository {
+
+    private val dataStore: DataStore<Preferences>
+        get() = internalDataStore ?: context.dataStore
 
     private object PreferencesKeys {
         val FLASHCARDS_PER_SESSION = intPreferencesKey("flashcards_per_session")
@@ -32,7 +38,7 @@ class DataStoreSettingsRepository(private val context: Context) : SettingsReposi
         val SHOW_SUGGESTIONS = booleanPreferencesKey("show_suggestions")
     }
 
-    override fun getSettings(): Flow<UserSettings> = context.dataStore.data
+    override fun getSettings(): Flow<UserSettings> = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
@@ -55,59 +61,59 @@ class DataStoreSettingsRepository(private val context: Context) : SettingsReposi
         }
 
     override suspend fun restartMasteryExperience() {
-        context.dataStore.edit { it.clear() }
+        dataStore.edit { it.clear() }
     }
 
     override suspend fun saveFlashcardsPerSession(count: Int) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[PreferencesKeys.FLASHCARDS_PER_SESSION] = count
         }
     }
 
     override suspend fun saveDailyStudyGoal(count: Int) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[PreferencesKeys.DAILY_STUDY_GOAL] = count
         }
     }
 
     override suspend fun saveDarkMode(enabled: Boolean) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[PreferencesKeys.DARK_MODE] = enabled
         }
     }
 
     override suspend fun saveStudyReminders(enabled: Boolean) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[PreferencesKeys.STUDY_REMINDERS] = enabled
         }
     }
 
     override suspend fun saveNotificationSound(enabled: Boolean) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[PreferencesKeys.NOTIFICATION_SOUND] = enabled
         }
     }
 
     override suspend fun savePreferredStudyTime(time: String) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[PreferencesKeys.PREFERRED_STUDY_TIME] = time
         }
     }
 
     override suspend fun saveQuickStart(enabled: Boolean) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[PreferencesKeys.QUICK_START] = enabled
         }
     }
 
     override suspend fun saveShowAnswers(enabled: Boolean) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[PreferencesKeys.SHOW_ANSWERS] = enabled
         }
     }
 
     override suspend fun saveShowSuggestions(enabled: Boolean) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[PreferencesKeys.SHOW_SUGGESTIONS] = enabled
         }
     }

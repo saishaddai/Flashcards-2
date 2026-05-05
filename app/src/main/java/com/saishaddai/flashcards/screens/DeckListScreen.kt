@@ -26,8 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -73,14 +72,14 @@ fun DeckListContent(
     onStartSessionClick: (Deck) -> Unit
 ) {
     val selectedDeck = decks.find { it.isSelected }
-    var showEmptyDeckDialog by remember { mutableStateOf(false) }
+    val showEmptyDeckDialog = rememberSaveable { mutableStateOf(false) }
 
     if (isLoading) {
         FullLoader(stringResource(R.string.loading_decks))
     } else {
-        if (showEmptyDeckDialog) {
+        if (showEmptyDeckDialog.value) {
             AlertDialog(
-                onDismissRequest = { showEmptyDeckDialog = false },
+                onDismissRequest = { showEmptyDeckDialog.value = false },
                 title = {
                     Text(
                         text = stringResource(R.string.empty_deck_title),
@@ -95,7 +94,7 @@ fun DeckListContent(
                     )
                 },
                 confirmButton = {
-                    TextButton(onClick = { showEmptyDeckDialog = false }) {
+                    TextButton(onClick = { showEmptyDeckDialog.value = false }) {
                         Text(
                             text = stringResource(R.string.empty_deck_confirm),
                             color = RoyalBlue,
@@ -131,7 +130,7 @@ fun DeckListContent(
                         if (deck.cardCount > 0) {
                             onStartSessionClick(deck)
                         } else {
-                            showEmptyDeckDialog = true
+                            showEmptyDeckDialog.value = true
                         }
                     }
                 }

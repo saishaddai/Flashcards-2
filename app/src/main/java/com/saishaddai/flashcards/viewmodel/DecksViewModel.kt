@@ -22,6 +22,9 @@ class DecksViewModel(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
+    private val _showEmptyDeckDialog = MutableStateFlow(false)
+    val showEmptyDeckDialog: StateFlow<Boolean> = _showEmptyDeckDialog.asStateFlow()
+
     init {
         loadDecks()
     }
@@ -42,5 +45,15 @@ class DecksViewModel(
 
     fun getRandomDeck(): Deck? {
         return _decks.value.randomOrNull()
+    }
+
+    fun onStartSession() {
+        if (_decks.value.isEmpty()) {
+            _showEmptyDeckDialog.value = true
+        }
+    }
+
+    fun dismissEmptyDeckDialog() {
+        _showEmptyDeckDialog.value = false
     }
 }

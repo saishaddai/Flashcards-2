@@ -1,6 +1,7 @@
 package com.saishaddai.flashcards.viewmodel
 
 import android.app.Application
+import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import kotlinx.coroutines.Dispatchers
@@ -74,15 +75,15 @@ class FlashcardViewModelTest {
     }
 
     // A simple fake repository for testing
-    class FakeFlashcardRepository : FlashcardRepository<Flashcard> {
-        override suspend fun getData(id: Int, size: Int): List<Flashcard> {
+    class FakeFlashcardRepository : FlashcardRepository<DeckType, Flashcard> {
+        override suspend fun getData(type: DeckType, size: Int): List<Flashcard> {
             return listOf(
                 Flashcard(1, 1, "Q1", "A1"),
                 Flashcard(1, 2, "Q2", "A2")
             )
         }
 
-        override suspend fun getDataCount(id: Int): Int {
+        override suspend fun getDataCount(type: DeckType): Int {
             return 2
         }
     }

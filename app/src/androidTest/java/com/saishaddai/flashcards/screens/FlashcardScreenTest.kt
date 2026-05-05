@@ -1,10 +1,11 @@
 package com.saishaddai.flashcards.screens
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.model.Flashcard as FlashcardModel
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import androidx.compose.ui.test.onNodeWithTag
 import com.saishaddai.flashcards.utils.TestTags
@@ -137,5 +138,84 @@ class FlashcardScreenTest {
         }
 
         composeTestRule.onNodeWithTag(TestTags.FULL_LOADER).assertIsDisplayed()
+    }
+
+    @Test
+    fun flashcardScreen_confirmCancelSession_callsCallback() {
+        var cancelClicked = false
+        composeTestRule.setContent {
+            Flashcards2Theme {
+                FlashcardContent(
+                    deck = testDeck,
+                    flashcards = listOf(
+                        FlashcardModel(1, 1, "Q1", "A1"),
+                        FlashcardModel(1, 1, "Q2", "A2")
+                    ),
+                    showAnswer = false,
+                    isFinished = false,
+                    isLoading = false,
+                    onShowResponseClicked = {},
+                    onPageChanged = {},
+                    onFinishSession = {},
+                    onCancelSessionClick = { cancelClicked = true },
+                    onFinishedSessionClick = {}
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithText("CANCEL SESSION").performClick()
+        composeTestRule.onNodeWithText("Yes, Cancel").performClick()
+
+        assert(cancelClicked)
+    }
+
+    @Test
+    fun flashcardScreen_lastPage_showsFinishButton() {
+        var finishClicked = false
+        composeTestRule.setContent {
+            Flashcards2Theme {
+                FlashcardContent(
+                    deck = testDeck,
+                    flashcards = listOf(FlashcardModel(1, 1, "Q", "A")),
+                    showAnswer = true,
+                    isFinished = false,
+                    isLoading = false,
+                    onShowResponseClicked = {},
+                    onPageChanged = {},
+                    onFinishSession = { finishClicked = true },
+                    onCancelSessionClick = {},
+                    onFinishedSessionClick = {}
+                )
+            }
+        }
+
+        // On the last page, "FINISH SESSION" should be visible
+        composeTestRule.onNodeWithText("FINISH SESSION").assertIsDisplayed()
+        composeTestRule.onNodeWithText("FINISH SESSION").performClick()
+        
+        assert(finishClicked)
+    }
+
+    @Test
+    fun flashcardScreen_isFinished_callsFinishedCallback() {
+        var finishedSessionCalled = false
+        composeTestRule.setContent {
+            Flashcards2Theme {
+                FlashcardContent(
+                    deck = testDeck,
+                    flashcards = emptyList(),
+                    showAnswer = false,
+                    isFinished = true,
+                    isLoading = false,
+                    onShowResponseClicked = {},
+                    onPageChanged = {},
+                    onFinishSession = {},
+                    onCancelSessionClick = {},
+                    onFinishedSessionClick = { finishedSessionCalled = true }
+                )
+            }
+        }
+
+        assert(finishedSessionCalled)
     }
 }

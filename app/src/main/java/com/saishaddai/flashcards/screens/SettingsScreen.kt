@@ -33,8 +33,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
@@ -42,9 +40,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -52,13 +48,11 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -79,7 +73,6 @@ import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.util.Calendar
-import java.util.Locale
 
 const val DEFAULT_FLASHCARDS_PER_SESSION = 20
 const val DEFAULT_DAILY_GOAL = 50
@@ -121,61 +114,28 @@ fun SettingsScreenContent(
     onStudyRemindersChanged: (Boolean) -> Unit = {},
     onNotificationSoundChanged: (Boolean) -> Unit = {}
 ) {
-    var showRestartDialog by remember { mutableStateOf(false) }
-    var showTimePicker by remember { mutableStateOf(false) }
+    val showRestartDialog = rememberSaveable { mutableStateOf(false) }
+    val showTimePicker = rememberSaveable { mutableStateOf(false) }
 
     if (isLoading || userSettings == null) {
         FullLoader(message = null)
     } else {
-        if (showRestartDialog) {
-            AlertDialog(
-                onDismissRequest = { showRestartDialog = false },
-                modifier = Modifier.testTag("restart_dialog"),
-                title = {
-                    Text(
-                        text = stringResource(R.string.settings_system_restart),
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                },
-                text = {
-                    Text(
-                        text = stringResource(R.string.settings_system_restart_description),
-                        color = Color(0xFFB0B0B0)
-                    )
-                },
-                confirmButton = {
-                    TextButton(onClick = {
-                        onRestartMasteryClicked()
-                        showRestartDialog = false
-                    }) {
-                        Text(
-                            text = stringResource(R.string.settings_restart_dialog_confirm),
-                            color = Color(0xFFF06292),
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showRestartDialog = false }) {
-                        Text(
-                            text = stringResource(R.string.settings_restart_dialog_cancel),
-                            color = RoyalBlue,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                },
-                containerColor = Color(0xFF2C2C4E),
-                shape = RoundedCornerShape(28.dp)
+        if (showRestartDialog.value) {
+            RestartMasteryDialog(
+                onDismiss = { showRestartDialog.value = false },
+                onConfirm = {
+                    onRestartMasteryClicked()
+                    showRestartDialog.value = false
+                }
             )
         }
 
-        if (showTimePicker) {
+        if (showTimePicker.value) {
             TimePickerDialogWrapper(
-                onDismiss = { showTimePicker = false },
+                onDismiss = { showTimePicker.value = false },
                 onConfirm = { hour, minute ->
                     onPreferredStudyTimeChanged(hour, minute)
-                    showTimePicker = false
+                    showTimePicker.value = false
                 }
             )
         }
@@ -286,7 +246,7 @@ fun SettingsScreenContent(
                 title = stringResource(R.string.settings_preferred_study_time),
                 description = stringResource(R.string.settings_preferred_study_time_description),
                 actionLabel = userSettings.preferredStudyTime,
-                onClick = { showTimePicker = true }
+                onClick = { showTimePicker.value = true }
             )
 
             SwitchSetting(
@@ -302,7 +262,7 @@ fun SettingsScreenContent(
 
             // SYSTEM
             SectionHeader(title = stringResource(R.string.settings_section_system))
-            RestartMasteryButton(onClick = { showRestartDialog = true })
+            RestartMasteryButton(onClick = { showRestartDialog.value = true })
             Text(
                 text = stringResource(R.string.settings_system_restart_description),
                 color = Color(0xFFB0B0B0),
@@ -496,6 +456,50 @@ fun SettingsFooter() {
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = stringResource(R.string.designed_for), color = Color(0xFF4D4D66), fontSize = 12.sp)
     }
+}
+
+@Composable
+fun RestartMasteryDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        modifier = Modifier.testTag("restart_dialog"),
+        title = {
+            Text(
+                text = stringResource(R.string.settings_system_restart),
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(R.string.settings_system_restart_description),
+                color = Color(0xFFB0B0B0)
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(
+                    text = stringResource(R.string.settings_restart_dialog_confirm),
+                    color = Color(0xFFF06292),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(
+                    text = stringResource(R.string.settings_restart_dialog_cancel),
+                    color = RoyalBlue,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        },
+        containerColor = Color(0xFF2C2C4E),
+        shape = RoundedCornerShape(28.dp)
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

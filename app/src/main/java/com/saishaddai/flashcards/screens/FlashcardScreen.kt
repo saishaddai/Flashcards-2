@@ -36,8 +36,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -112,16 +111,16 @@ fun FlashcardContent(
 
     val pagerState = rememberPagerState(pageCount = { flashcards.size })
     val isLastPage = pagerState.currentPage == flashcards.size - 1
-    var showCancelConfirmation by remember { mutableStateOf(false) }
+    val showCancelConfirmation = rememberSaveable { mutableStateOf(false) }
 
     // Hide answer when the user starts swiping to a new page
     LaunchedEffect(pagerState.currentPage) {
         onPageChanged()
     }
 
-    if (showCancelConfirmation) {
+    if (showCancelConfirmation.value) {
         AlertDialog(
-            onDismissRequest = { showCancelConfirmation = false },
+            onDismissRequest = { showCancelConfirmation.value = false },
             title = {
                 Text(
                     text = stringResource(R.string.flashcard_cancel_dialog_title),
@@ -137,7 +136,7 @@ fun FlashcardContent(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    showCancelConfirmation = false
+                    showCancelConfirmation.value = false
                     onCancelSessionClick()
                 }) {
                     Text(
@@ -148,7 +147,7 @@ fun FlashcardContent(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showCancelConfirmation = false }) {
+                TextButton(onClick = { showCancelConfirmation.value = false }) {
                     Text(
                         text = stringResource(R.string.flashcard_cancel_dialog_dismiss),
                         color = RoyalBlue,
@@ -184,7 +183,7 @@ fun FlashcardContent(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        if (isLastPage) onFinishedSessionClick() else showCancelConfirmation = true
+                        if (isLastPage) onFinishedSessionClick() else showCancelConfirmation.value = true
                     }) {
                         Icon(
                             imageVector = if (isLastPage) Icons.Default.Check else Icons.Default.Close,
@@ -252,7 +251,7 @@ fun FlashcardContent(
                 )
             } else {
                 CancelSessionButton(
-                    onClick = { showCancelConfirmation = true },
+                    onClick = { showCancelConfirmation.value = true },
                     modifier = Modifier.fillMaxWidth()
                 )
             }

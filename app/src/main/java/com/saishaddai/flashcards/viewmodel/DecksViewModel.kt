@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class DecksViewModel(
     application: Application,
-    private val repository: DeckRepository<Deck> = JSONDeckRepository(application)
+    private val repository: DeckRepository<Deck>
 ) : AndroidViewModel(application) {
     private val _decks = MutableStateFlow<List<Deck>>(emptyList())
     val decks: StateFlow<List<Deck>> = _decks.asStateFlow()

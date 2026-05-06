@@ -8,7 +8,9 @@ import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.repository.HardcodedStatsRepository
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.StatsRepository
+import com.saishaddai.flashcards.repository.SessionRepository
 import com.saishaddai.flashcards.repository.impl.DataStoreSettingsRepository
+import com.saishaddai.flashcards.repository.impl.HardcodedSessionRepository
 import com.saishaddai.flashcards.repository.impl.JSONDeckRepository
 import com.saishaddai.flashcards.repository.impl.JSONFlashcardRepository
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
@@ -24,7 +26,8 @@ import org.koin.dsl.module
 val appModule = module {
     // Repositories
     single<FlashcardRepository<DeckType, Flashcard>> { JSONFlashcardRepository(androidContext()) }
-    single<DeckRepository<Deck>> { JSONDeckRepository(get()) }
+    single<SessionRepository> { HardcodedSessionRepository() }
+    single<DeckRepository<Deck>> { JSONDeckRepository(get(), get()) }
     single<StatsRepository> { HardcodedStatsRepository() }
     single<SettingsRepository> { DataStoreSettingsRepository(androidContext()) }
 

@@ -3,20 +3,25 @@ package com.saishaddai.flashcards.repository.impl
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.DeckType.*
+import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.model.sessions
 import com.saishaddai.flashcards.repository.DeckRepository
+import com.saishaddai.flashcards.repository.FlashcardRepository
+import com.saishaddai.flashcards.repository.SessionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class JSONDeckRepository(
-    private val context: android.content.Context
+    private val flashcardRepository: FlashcardRepository<DeckType, Flashcard>,
+    private val sessionRepository: SessionRepository
 ) : DeckRepository<Deck> {
 
     override suspend fun getData(): List<Deck> = withContext(Dispatchers.IO) {
-        val flashcardRepository = JSONFlashcardRepository(context)
-        decks.onEach {
-            if (it.cardCount == 0) {
-                it.cardCount = flashcardRepository.getDataCount(DeckType.fromId(it.id))
+        val allSessions = sessionRepository.getAllSessions()
+        decks.onEach { deck ->
+            deck.mastery = allSessions.find { it.deckId == deck.id }?.currentXP ?: 0
+            if (deck.cardCount == 0) {
+                deck.cardCount = flashcardRepository.getDataCount(DeckType.fromId(deck.id))
             }
         }
     }

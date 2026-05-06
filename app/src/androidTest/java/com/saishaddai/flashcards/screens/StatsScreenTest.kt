@@ -2,8 +2,7 @@ package com.saishaddai.flashcards.screens
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -12,9 +11,7 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.test.platform.app.InstrumentationRegistry
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
-import com.saishaddai.flashcards.repository.DeckRepository
 import com.saishaddai.flashcards.utils.TestTags
-import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -42,7 +39,8 @@ class StatsScreenTest {
                 onShareClicked = {},
                 onMoreOptionsClicked = {},
                 onViewAllSkillsClicked = {},
-                onPromoClick = {}
+                onPromoClick = {},
+                showSuggestions = true
             )
         }
 
@@ -67,7 +65,8 @@ class StatsScreenTest {
                 onShareClicked = {},
                 onMoreOptionsClicked = {},
                 onViewAllSkillsClicked = {},
-                onPromoClick = {}
+                onPromoClick = {},
+                showSuggestions = true
             )
         }
 
@@ -96,7 +95,8 @@ class StatsScreenTest {
                 onShareClicked = {},
                 onMoreOptionsClicked = {},
                 onViewAllSkillsClicked = {},
-                onPromoClick = { promoClicked = true }
+                onPromoClick = { promoClicked = true },
+                showSuggestions = true
             )
         }
         val startNowText = context.getString(R.string.promo_widget_confirm)

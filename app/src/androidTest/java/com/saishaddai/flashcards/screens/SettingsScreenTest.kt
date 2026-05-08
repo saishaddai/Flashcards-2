@@ -45,8 +45,8 @@ class SettingsScreenTest {
                 studyReminders = true,
                 notificationSound = false,
                 preferredStudyTime = "09:00 PM",
-                quickStart = true,
-                showAnswers = true,
+                quickStart = false,
+                showAnswers = false,
                 showSuggestions = true
             )
         )
@@ -183,6 +183,20 @@ class SettingsScreenTest {
             .assertIsOn()
             .performClick()
             .assertIsOff()
+    }
+
+    @Test
+    fun settingsScreen_toggleShowAnswers_updatesUI() {
+        val fakeRepository = FakeSettingsRepository()
+        val viewModel = SettingsViewModel(fakeRepository)
+
+        composeTestRule.setContent { SettingsScreen(viewModel = viewModel) }
+
+        // Initially it should be off (false by default)
+        composeTestRule.onNodeWithTag(TestTags.SETTINGS_SHOW_ANSWERS + "_switch")
+            .assertIsOff()
+            .performClick()
+            .assertIsOn()
     }
 
     @Test

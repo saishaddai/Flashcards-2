@@ -218,4 +218,27 @@ class FlashcardScreenTest {
 
         assert(finishedSessionCalled)
     }
+
+    @Test
+    fun flashcardScreen_showAnswerTrue_displaysAnswerInitially() {
+        composeTestRule.setContent {
+            Flashcards2Theme {
+                FlashcardContent(
+                    deck = testDeck,
+                    flashcards = listOf(FlashcardModel(1, 1, "Q", "A")),
+                    showAnswer = true,
+                    isFinished = false,
+                    isLoading = false,
+                    onShowResponseClicked = {},
+                    onPageChanged = {},
+                    onFinishSession = {},
+                    onCancelSessionClick = {},
+                    onFinishedSessionClick = {}
+                )
+            }
+        }
+
+        // Now the "ANSWER" label should be displayed immediately
+        composeTestRule.onNodeWithText("ANSWER").assertIsDisplayed()
+    }
 }

@@ -4,8 +4,11 @@ import android.app.Application
 import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.FlashcardRepository
+import com.saishaddai.flashcards.repository.SettingsRepository
+import com.saishaddai.flashcards.repository.UserSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -17,6 +20,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -26,6 +30,9 @@ class FlashcardViewModelTest {
 
     private lateinit var viewModel: FlashcardViewModel
     private lateinit var repository: FakeFlashcardRepository
+    private val settingsRepository: SettingsRepository = mock {
+        on { getSettings() } doReturn flowOf(UserSettings(showAnswers = false))
+    }
     private val application: Application = mock()
     private val deckId = 1
 
@@ -33,7 +40,7 @@ class FlashcardViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         repository = FakeFlashcardRepository()
-        viewModel = FlashcardViewModel(application, deckId, repository)
+        viewModel = FlashcardViewModel(application, deckId, repository, settingsRepository)
     }
 
     @After
@@ -66,11 +73,12 @@ class FlashcardViewModelTest {
     }
 
     @Test
-    fun `onPageChanged resets showAnswer state`() {
+    fun `onPageChanged resets showAnswer state based on settings`() = runTest {
         viewModel.onShowResponseClicked()
         assertTrue(viewModel.showAnswer.value)
 
         viewModel.onPageChanged()
+        advanceUntilIdle()
         assertFalse(viewModel.showAnswer.value)
     }
 

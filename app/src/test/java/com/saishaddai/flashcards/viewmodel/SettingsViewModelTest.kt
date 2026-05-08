@@ -130,8 +130,8 @@ class SettingsViewModelTest {
                 studyReminders = true,
                 notificationSound = false,
                 preferredStudyTime = "09:00 PM",
-                quickStart = true,
-                showAnswers = true,
+                quickStart = false,
+                showAnswers = false,
                 showSuggestions = true
             )
         )

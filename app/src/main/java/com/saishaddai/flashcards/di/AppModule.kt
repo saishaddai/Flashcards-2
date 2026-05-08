@@ -33,7 +33,7 @@ val appModule = module {
 
     // ViewModels
     viewModel { DecksViewModel(androidApplication(), get()) }
-    viewModel { (deckId: Int) -> FlashcardViewModel(androidApplication(), deckId, get()) }
+    viewModel { (deckId: Int) -> FlashcardViewModel(androidApplication(), deckId, get(), get()) }
     viewModel { StatsViewModel(get()) }
     viewModel { FinishSessionViewModel() }
     viewModel { SettingsViewModel(get()) }

@@ -23,7 +23,7 @@ data class UserSettings(
     val studyReminders: Boolean = true,
     val notificationSound: Boolean = false,
     val preferredStudyTime: String = "09:00 PM",
-    val quickStart: Boolean = true,
-    val showAnswers: Boolean = true,
+    val quickStart: Boolean = false,
+    val showAnswers: Boolean = false,
     val showSuggestions: Boolean = true
 )

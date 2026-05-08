@@ -54,8 +54,8 @@ class DataStoreSettingsRepository(
                 studyReminders = preferences[PreferencesKeys.STUDY_REMINDERS] ?: true,
                 notificationSound = preferences[PreferencesKeys.NOTIFICATION_SOUND] ?: false,
                 preferredStudyTime = preferences[PreferencesKeys.PREFERRED_STUDY_TIME] ?: "09:00 PM",
-                quickStart = preferences[PreferencesKeys.QUICK_START] ?: true,
-                showAnswers = preferences[PreferencesKeys.SHOW_ANSWERS] ?: true,
+                quickStart = preferences[PreferencesKeys.QUICK_START] ?: false,
+                showAnswers = preferences[PreferencesKeys.SHOW_ANSWERS] ?: false,
                 showSuggestions = preferences[PreferencesKeys.SHOW_SUGGESTIONS] ?: true
             )
         }

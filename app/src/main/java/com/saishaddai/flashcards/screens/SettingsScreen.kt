@@ -117,6 +117,13 @@ fun SettingsScreenContent(
     val showRestartDialog = rememberSaveable { mutableStateOf(false) }
     val showTimePicker = rememberSaveable { mutableStateOf(false) }
 
+    val localFlashcardsPerSession = remember(userSettings?.flashcardsPerSession) {
+        mutableStateOf(userSettings?.flashcardsPerSession?.toFloat() ?: DEFAULT_FLASHCARDS_PER_SESSION.toFloat())
+    }
+    val localDailyGoal = remember(userSettings?.dailyStudyGoal) {
+        mutableStateOf(userSettings?.dailyStudyGoal?.toFloat() ?: DEFAULT_DAILY_GOAL.toFloat())
+    }
+
     if (isLoading || userSettings == null) {
         FullLoader(message = null)
     } else {
@@ -160,9 +167,10 @@ fun SettingsScreenContent(
             SliderSetting(
                 icon = Icons.Default.School,
                 title = stringResource(R.string.settings_flashcards_per_session),
-                value = userSettings.flashcardsPerSession.toString(),
-                currentValue = userSettings.flashcardsPerSession.toFloat(),
-                onValueChange = { onFlashcardsPerSessionChanged(it.toInt()) },
+                value = localFlashcardsPerSession.value.toInt().toString(),
+                currentValue = localFlashcardsPerSession.value,
+                onValueChange = { localFlashcardsPerSession.value = it },
+                onValueChangeFinished = { onFlashcardsPerSessionChanged(localFlashcardsPerSession.value.toInt()) },
                 range = 5f..50f,
                 minLabel = stringResource(R.string.settings_flashcards_per_session_min),
                 maxLabel = stringResource(R.string.settings_flashcards_per_session_max),
@@ -172,9 +180,10 @@ fun SettingsScreenContent(
             SliderSetting(
                 icon = Icons.Default.Flag,
                 title = stringResource(R.string.settings_daily_goal),
-                value = stringResource(R.string.settings_daily_goal_value, userSettings.dailyStudyGoal),
-                currentValue = userSettings.dailyStudyGoal.toFloat(),
-                onValueChange = { onDailyStudyGoalChanged(it.toInt()) },
+                value = stringResource(R.string.settings_daily_goal_value, localDailyGoal.value.toInt()),
+                currentValue = localDailyGoal.value,
+                onValueChange = { localDailyGoal.value = it },
+                onValueChangeFinished = { onDailyStudyGoalChanged(localDailyGoal.value.toInt()) },
                 range = 10f..100f,
                 minLabel = stringResource(R.string.settings_daily_goal_min),
                 maxLabel = stringResource(R.string.settings_daily_goal_max)
@@ -301,10 +310,11 @@ fun SliderSetting(
     value: String,
     currentValue: Float,
     onValueChange: (Float) -> Unit,
+    modifier: Modifier = Modifier,
+    onValueChangeFinished: () -> Unit = {},
     range: ClosedFloatingPointRange<Float>,
     minLabel: String,
-    maxLabel: String,
-    modifier: Modifier = Modifier
+    maxLabel: String
 ) {
     Column(modifier = modifier.padding(vertical = 8.dp)) {
         Row(
@@ -322,6 +332,7 @@ fun SliderSetting(
         Slider(
             value = currentValue,
             onValueChange = onValueChange,
+            onValueChangeFinished = onValueChangeFinished,
             valueRange = range,
             colors = SliderDefaults.colors(
                 thumbColor = RoyalBlue,

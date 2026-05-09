@@ -1,8 +1,182 @@
 [
   {
     "deckId": 20,
-    "id": "201",
-    "question": "What is a sensor in Android?",
-    "answer": "I dunno"
+    "id": 2001,
+    "question": "What is the Android Sensor Framework?",
+    "answer": "A part of the Android SDK used to access and manage various sensors on a device, such as accelerometers and gyroscopes."
+  },
+  {
+    "deckId": 20,
+    "id": 2002,
+    "question": "Which class is the main entry point to the Android Sensor Framework?",
+    "answer": "SensorManager, which allows you to list sensors, register listeners, and manage sensor-related tasks."
+  },
+  {
+    "deckId": 20,
+    "id": 2003,
+    "question": "What are the three main categories of Android sensors?",
+    "answer": "Motion sensors (accelerometers, gyroscopes), Environmental sensors (barometers, light), and Position sensors (orientation, magnetometers)."
+  },
+  {
+    "deckId": 20,
+    "id": 2004,
+    "question": "What is the difference between hardware-based and software-based (virtual) sensors?",
+    "answer": "Hardware sensors are physical components, while virtual sensors derive data from one or more physical sensors via algorithms (e.g., Gravity sensor)."
+  },
+  {
+    "deckId": 20,
+    "id": 2005,
+    "question": "How do you obtain an instance of a specific sensor in Android?",
+    "answer": "By calling sensorManager.getDefaultSensor(Sensor.TYPE_...) with the desired sensor type constant."
+  },
+  {
+    "deckId": 20,
+    "id": 2006,
+    "question": "What interface must you implement to receive sensor data updates?",
+    "answer": "SensorEventListener, which requires implementing onSensorChanged() and onAccuracyChanged()."
+  },
+  {
+    "deckId": 20,
+    "id": 2007,
+    "question": "What does the 'onSensorChanged()' method provide in its SensorEvent parameter?",
+    "answer": "It provides the raw sensor data (values array), accuracy, timestamp, and the sensor that triggered the event."
+  },
+  {
+    "deckId": 20,
+    "id": 2008,
+    "question": "Why is it critical to unregister sensor listeners when an app is in the background?",
+    "answer": "To prevent battery drain, as keeping sensors active consumes significant power even if the UI is not visible."
+  },
+  {
+    "deckId": 20,
+    "id": 2009,
+    "question": "What are the four common sensor delay constants provided by SensorManager?",
+    "answer": "SENSOR_DELAY_FASTEST, SENSOR_DELAY_GAME, SENSOR_DELAY_UI, and SENSOR_DELAY_NORMAL."
+  },
+  {
+    "deckId": 20,
+    "id": 2010,
+    "question": "What is a 'Wake-up Sensor'?",
+    "answer": "A sensor that can wake the SoC (System-on-Chip) from low-power mode to deliver events, typically used for significant motion or step detection."
+  },
+  {
+    "deckId": 20,
+    "id": 2011,
+    "question": "What does the Accelerometer measure?",
+    "answer": "It measures the acceleration force in m/s² applied to the device on all three physical axes (x, y, z), including gravity."
+  },
+  {
+    "deckId": 20,
+    "id": 2012,
+    "question": "How does the Gyroscope differ from the Accelerometer?",
+    "answer": "The Gyroscope measures the rate of rotation (rad/s) around the x, y, and z axes, rather than linear acceleration."
+  },
+  {
+    "deckId": 20,
+    "id": 2013,
+    "question": "What is 'Sensor Fusion'?",
+    "answer": "The process of combining data from multiple sensors (e.g., accelerometer and gyroscope) to produce more accurate and stable results than a single sensor."
+  },
+  {
+    "deckId": 20,
+    "id": 2014,
+    "question": "What is the purpose of the Proximity Sensor?",
+    "answer": "It measures the distance of an object relative to the screen, commonly used to turn off the display during phone calls."
+  },
+  {
+    "deckId": 20,
+    "id": 2015,
+    "question": "Which sensor provides ambient light levels in lux?",
+    "answer": "The Light Sensor (Sensor.TYPE_LIGHT), often used for automatic screen brightness adjustment."
+  },
+  {
+    "deckId": 20,
+    "id": 2016,
+    "question": "How can you check if a specific sensor is available on a device at runtime?",
+    "answer": "By calling getDefaultSensor() and checking if the returned value is not null."
+  },
+  {
+    "deckId": 20,
+    "id": 2017,
+    "question": "What is the 'Magnetometer' used for?",
+    "answer": "It measures the ambient geomagnetic field, which is essential for implementing a compass and determining device orientation."
+  },
+  {
+    "deckId": 20,
+    "id": 2018,
+    "question": "What coordinate system does Android use for sensor data?",
+    "answer": "A standard 3-axis coordinate system relative to the device's screen in its default orientation (usually Portrait for phones)."
+  },
+  {
+    "deckId": 20,
+    "id": 2019,
+    "question": "What is the 'Step Counter' sensor (TYPE_STEP_COUNTER)?",
+    "answer": "A hardware sensor that tracks the total number of steps taken by the user since the last device reboot."
+  },
+  {
+    "deckId": 20,
+    "id": 2020,
+    "question": "What is the 'Step Detector' sensor (TYPE_STEP_DETECTOR)?",
+    "answer": "A sensor that triggers an event for every single step taken, providing a timestamp but not a total count."
+  },
+  {
+    "deckId": 20,
+    "id": 2021,
+    "question": "Which permission is required to access body sensors like heart rate monitors?",
+    "answer": "android.permission.BODY_SENSORS."
+  },
+  {
+    "deckId": 20,
+    "id": 2022,
+    "question": "What is 'Drift' in sensor data?",
+    "answer": "The accumulation of small errors over time, particularly common in gyroscopes, causing the calculated orientation to slowly deviate from reality."
+  },
+  {
+    "deckId": 20,
+    "id": 2023,
+    "question": "How do you implement a low-pass filter for sensor data?",
+    "answer": "By applying a formula: output = alpha * output + (1 - alpha) * input, to smooth out high-frequency noise."
+  },
+  {
+    "deckId": 20,
+    "id": 2024,
+    "question": "What is the purpose of SensorManager.getRotationMatrix()?",
+    "answer": "It computes the rotation matrix based on accelerometer and geomagnetic sensor data, used to determine device orientation."
+  },
+  {
+    "deckId": 20,
+    "id": 2025,
+    "question": "What is the Significant Motion Sensor?",
+    "answer": "A low-power trigger sensor that detects when the user is moving (walking, biking, etc.) and can wake the device."
+  },
+  {
+    "deckId": 20,
+    "id": 2026,
+    "question": "In Jetpack Compose, where should you ideally manage SensorEventListener registration?",
+    "answer": "Inside a DisposableEffect to ensure proper registration on entry and unregistration on exit or composition disposal."
+  },
+  {
+    "deckId": 20,
+    "id": 2027,
+    "question": "Which Google library helps with activity recognition using sensors?",
+    "answer": "The Google Play Services Activity Recognition API."
+  },
+  {
+    "deckId": 20,
+    "id": 2028,
+    "question": "What is the 'Barometer' sensor used for?",
+    "answer": "Measuring atmospheric pressure, which can be used to calculate altitude changes or aid in indoor navigation."
+  },
+  {
+    "deckId": 20,
+    "id": 2029,
+    "question": "Best practice: Which thread should sensor data be processed on?",
+    "answer": "Sensor events are delivered on the main thread by default. Heavy processing should be moved to a background thread to avoid jank."
+  },
+  {
+    "deckId": 20,
+    "id": 2030,
+    "question": "What does the 'onAccuracyChanged()' method handle?",
+    "answer": "It is called when the precision of a sensor changes (e.g., due to magnetic interference), allowing the app to adjust its logic accordingly."
   }
 ]

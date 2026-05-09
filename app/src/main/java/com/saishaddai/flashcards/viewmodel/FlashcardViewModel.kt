@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class FlashcardViewModel(
@@ -54,8 +55,6 @@ class FlashcardViewModel(
             _isLoading.value = true
             val settings = settingsRepository.getSettings().first()
             Log.d("FlashcardViewModel", "Loaded settings: flashcardsPerSession=${settings.flashcardsPerSession}")
-            _showAnswer.value = settings.showAnswers
-            _flashcardsPerSession.value = settings.flashcardsPerSession
             _flashcards.value = repository.getData(
                 type = DeckType.fromId(deckId),
                 size = settings.flashcardsPerSession

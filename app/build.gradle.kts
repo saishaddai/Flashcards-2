@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.timber)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.vico.compose.m3)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockito.kotlin)

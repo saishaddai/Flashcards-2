@@ -1,7 +1,7 @@
 package com.saishaddai.flashcards.viewmodel
 
 import android.app.Application
-import android.util.Log
+import timber.log.Timber
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.saishaddai.flashcards.model.DeckType
@@ -54,7 +54,7 @@ class FlashcardViewModel(
         viewModelScope.launch {
             _isLoading.value = true
             val settings = settingsRepository.getSettings().first()
-            Log.d("FlashcardViewModel", "Loaded settings: flashcardsPerSession=${settings.flashcardsPerSession}")
+            Timber.d("Loaded settings: flashcardsPerSession=${settings.flashcardsPerSession}")
             _flashcards.value = repository.getData(
                 type = DeckType.fromId(deckId),
                 size = settings.flashcardsPerSession

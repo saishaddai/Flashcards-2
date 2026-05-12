@@ -17,7 +17,7 @@ mockitoKotlin = "6.3.0"
 mockitoAndroid = "5.23.0"
 timber = "5.0.1"
 datastore = "1.2.1"
-vico = "3.1.0"
+vico = "2.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,7 +54,9 @@ mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "
 mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
 vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
+vico-core = { group = "com.patrykandpatrick.vico", name = "core", version.ref = "vico" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

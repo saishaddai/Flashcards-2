@@ -17,4 +17,6 @@ object TestTags {
     const val SETTINGS_STUDY_REMINDERS = "settings_study_reminders"
     const val SETTINGS_NOTIFICATION_SOUND = "settings_notification_sound"
 
+    const val STATS_WEEKLY_ACTIVITY = "stats_weekly_activity"
+
 }

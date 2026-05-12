@@ -36,19 +36,35 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
+import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
+import com.patrykandpatrick.vico.compose.common.fill
+import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
+import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
+import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
+import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.FullLoader
@@ -56,6 +72,7 @@ import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import com.saishaddai.flashcards.viewmodel.StatsViewModel
@@ -100,7 +117,7 @@ fun StatsScreen(
 @Composable
 fun StatsContent(
     promoDeck: Deck?,
-    weeklyActivity: Int,
+    weeklyActivity: List<Int>,
     skillMastery: List<MasteryData>,
     cardsReviewed: String,
     currentStreak: String,
@@ -183,7 +200,14 @@ fun StatsContent(
 }
 
 @Composable
-fun WeeklyActivityCard(activityCount: Int) {
+fun WeeklyActivityCard(activityData: List<Int>) {
+    val modelProducer = remember { CartesianChartModelProducer() }
+    LaunchedEffect(activityData) {
+        modelProducer.runTransaction {
+            columnSeries { series(activityData) }
+        }
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(28.dp),
@@ -210,7 +234,7 @@ fun WeeklyActivityCard(activityCount: Int) {
                 }
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = activityCount.toString(),
+                        text = activityData.sum().toString(),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
                         color = RoyalBlue
@@ -233,32 +257,37 @@ fun WeeklyActivityCard(activityCount: Int) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                val days = listOf("M", "T", "W", "T", "F", "S", "S")
-                days.forEachIndexed { index, day ->
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Box(
-                            modifier = Modifier
-                                .width(12.dp)
-                                .height(if (index == 4) 16.dp else 4.dp)
-                                .clip(RoundedCornerShape(4.dp))
-                                .background(if (index == 4) RoyalBlue else Color(0xFF2C2C4E))
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = day,
-                            fontSize = 12.sp,
-                            color = if (index == 4) RoyalBlue else Color(0xFFB0B0B0),
-                            fontWeight = if (index == 4) FontWeight.Bold else FontWeight.Normal
-                        )
-                    }
-                }
+            ProvideVicoTheme(rememberM3VicoTheme()) {
+                CartesianChartHost(
+                    chart = rememberCartesianChart(
+                        rememberColumnCartesianLayer(
+                            columnProvider = ColumnCartesianLayer.ColumnProvider.series(
+                                rememberLineComponent(
+                                    fill = fill(RoyalBlue),
+                                    thickness = 12.dp,
+                                    shape = CorneredShape.Pill
+                                )
+                            )
+                        ),
+                        bottomAxis = HorizontalAxis.rememberBottom(
+                            valueFormatter = { _, value, _ ->
+                                listOf("M", "T", "W", "T", "F", "S", "S")[value.toInt() % 7]
+                            },
+                            guideline = null,
+                            label = rememberAxisLabelComponent(
+                                color = Color(0xFFB0B0B0),
+                                textSize = 12.sp
+                            )
+                        ),
+                    ),
+                    modelProducer = modelProducer,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp)
+                        .testTag(TestTags.STATS_WEEKLY_ACTIVITY)
+                )
             }
         }
     }
@@ -459,7 +488,7 @@ fun StatsScreenPreview() {
     Flashcards2Theme {
         StatsContent(
             promoDeck = Deck(1, "Kotlin", "Kotlin Fundamentals", isSelected = false),
-            weeklyActivity = 42,
+            weeklyActivity = listOf(10, 20, 15, 30, 25, 40, 35),
             skillMastery = listOf(
                 MasteryData("Language", 85, "Advanced", RoyalBlue),
                 MasteryData("UI/UX", 60, "Intermediate", Color(0xFFF59E0B))

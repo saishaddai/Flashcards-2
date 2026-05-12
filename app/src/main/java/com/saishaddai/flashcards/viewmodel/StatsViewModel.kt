@@ -3,7 +3,7 @@ package com.saishaddai.flashcards.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.saishaddai.flashcards.repository.StatsRepository
-import com.saishaddai.flashcards.repository.HardcodedStatsRepository
+import com.saishaddai.flashcards.repository.impl.HardcodedStatsRepository
 import com.saishaddai.flashcards.screens.MasteryData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,8 +14,8 @@ class StatsViewModel(
     private val repository: StatsRepository = HardcodedStatsRepository()
 ) : ViewModel() {
 
-    private val _weeklyActivity = MutableStateFlow(0)
-    val weeklyActivity: StateFlow<Int> = _weeklyActivity.asStateFlow()
+    private val _weeklyActivity = MutableStateFlow<List<Int>>(emptyList())
+    val weeklyActivity: StateFlow<List<Int>> = _weeklyActivity.asStateFlow()
 
     private val _skillMastery = MutableStateFlow<List<MasteryData>>(emptyList())
     val skillMastery: StateFlow<List<MasteryData>> = _skillMastery.asStateFlow()

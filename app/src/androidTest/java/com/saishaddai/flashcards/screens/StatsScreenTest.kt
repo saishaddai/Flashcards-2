@@ -28,7 +28,7 @@ class StatsScreenTest {
         composeTestRule.setContent {
             StatsContent(
                 promoDeck = null,
-                weeklyActivity = 0,
+                weeklyActivity = emptyList(),
                 skillMastery = emptyList(),
                 cardsReviewed = "0",
                 currentStreak = "0",
@@ -54,7 +54,7 @@ class StatsScreenTest {
         composeTestRule.setContent {
             StatsContent(
                 promoDeck = null,
-                weeklyActivity = 10,
+                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
                 skillMastery = emptyList(),
                 cardsReviewed = "100",
                 currentStreak = "5",
@@ -84,7 +84,7 @@ class StatsScreenTest {
         composeTestRule.setContent {
             StatsContent(
                 promoDeck = mockDeck,
-                weeklyActivity = 42,
+                weeklyActivity = listOf(10, 20, 30, 42, 50, 60, 70),
                 skillMastery = emptyList(),
                 cardsReviewed = "1,234",
                 currentStreak = "7",
@@ -121,5 +121,29 @@ class StatsScreenTest {
         composeTestRule.onNodeWithText(startNowText).assertIsDisplayed().assertIsEnabled().performClick()
 
         assertTrue("Promo click lambda should have been triggered", promoClicked)
+    }
+
+    @Test
+    fun testStatsScreen_weeklyActivityGraph_isDisplayed() {
+        composeTestRule.setContent {
+            StatsContent(
+                promoDeck = null,
+                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
+                skillMastery = emptyList(),
+                cardsReviewed = "100",
+                currentStreak = "5",
+                studyTime = "2h",
+                accuracyRate = "80%",
+                isLoading = false,
+                onBackClicked = {},
+                onShareClicked = {},
+                onMoreOptionsClicked = {},
+                onViewAllSkillsClicked = {},
+                onPromoClick = {},
+                showSuggestions = true
+            )
+        }
+
+        composeTestRule.onNodeWithTag(TestTags.STATS_WEEKLY_ACTIVITY).assertIsDisplayed()
     }
 }

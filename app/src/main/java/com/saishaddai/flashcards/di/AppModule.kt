@@ -5,7 +5,7 @@ import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.DeckRepository
 import com.saishaddai.flashcards.repository.FlashcardRepository
-import com.saishaddai.flashcards.repository.HardcodedStatsRepository
+import com.saishaddai.flashcards.repository.impl.HardcodedStatsRepository
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.StatsRepository
 import com.saishaddai.flashcards.repository.SessionRepository

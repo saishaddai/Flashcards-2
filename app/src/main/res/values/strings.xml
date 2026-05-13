@@ -74,6 +74,12 @@
     <string name="stats_head_title">STATISTICS</string>
     <string name="stats_title">Your Progress…</string>
     <string name="stats_subtitle">Keep up the momentum!</string>
+    <string name="stats_at_glance">At a Glance</string>
+    <string name="stats_flashcards_viewed">Flashcards Viewed</string>
+    <string name="stats_current_streak">Study Goal Streak</string>
+    <string name="stats_study_time">Study Time</string>
+    <string name="stats_mastered_decks">Mastered Decks</string>
+
 
     <!-- Settings Screen -->
     <string name="settings_head_title">PREFERENCES</string>

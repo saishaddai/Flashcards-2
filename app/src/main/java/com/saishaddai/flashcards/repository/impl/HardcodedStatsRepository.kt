@@ -20,8 +20,8 @@ class HardcodedStatsRepository : StatsRepository {
         )
     }
 
-    override fun getCardsReviewed(): Flow<String> = flow { emit("1,240") }
+    override fun getFlashcardsViewed(): Flow<String> = flow { emit("1,240") }
     override fun getCurrentStreak(): Flow<String> = flow { emit("12 Days") }
     override fun getStudyTime(): Flow<String> = flow { emit("14.5h") }
-    override fun getAccuracyRate(): Flow<String> = flow { emit("88%") }
+    override fun getMasteredDecks(): Flow<String> = flow { emit("88%") }
 }

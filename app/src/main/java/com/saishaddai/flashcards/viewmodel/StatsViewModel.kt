@@ -20,8 +20,8 @@ class StatsViewModel(
     private val _skillMastery = MutableStateFlow<List<MasteryData>>(emptyList())
     val skillMastery: StateFlow<List<MasteryData>> = _skillMastery.asStateFlow()
 
-    private val _cardsReviewed = MutableStateFlow("0")
-    val cardsReviewed: StateFlow<String> = _cardsReviewed.asStateFlow()
+    private val _flashcardsViewed = MutableStateFlow("0")
+    val flashcardsViewed: StateFlow<String> = _flashcardsViewed.asStateFlow()
 
     private val _currentStreak = MutableStateFlow("0 Days")
     val currentStreak: StateFlow<String> = _currentStreak.asStateFlow()
@@ -29,14 +29,11 @@ class StatsViewModel(
     private val _studyTime = MutableStateFlow("0h")
     val studyTime: StateFlow<String> = _studyTime.asStateFlow()
 
-    private val _accuracyRate = MutableStateFlow("0%")
-    val accuracyRate: StateFlow<String> = _accuracyRate.asStateFlow()
+    private val _masteredDecks = MutableStateFlow("0%")
+    val masteredDecks: StateFlow<String> = _masteredDecks.asStateFlow()
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
-    private val _navigateToBack = MutableStateFlow(false)
-    val navigateToBack: StateFlow<Boolean> = _navigateToBack.asStateFlow()
 
     init {
         loadStats()
@@ -56,8 +53,8 @@ class StatsViewModel(
             }
         }
         viewModelScope.launch {
-            repository.getCardsReviewed().collect { 
-                _cardsReviewed.value = it
+            repository.getFlashcardsViewed().collect {
+                _flashcardsViewed.value = it
                 checkLoadingFinished()
             }
         }
@@ -74,8 +71,8 @@ class StatsViewModel(
             }
         }
         viewModelScope.launch {
-            repository.getAccuracyRate().collect { 
-                _accuracyRate.value = it
+            repository.getMasteredDecks().collect {
+                _masteredDecks.value = it
                 checkLoadingFinished()
             }
         }
@@ -88,22 +85,6 @@ class StatsViewModel(
         if (_skillMastery.value.isNotEmpty()) {
             _isLoading.value = false
         }
-    }
-
-    fun onBackClicked() {
-        _navigateToBack.value = true
-    }
-
-    fun onNavigationHandled() {
-        _navigateToBack.value = false
-    }
-
-    fun onShareClicked() {
-        // Handle share logic (e.g., via side effect or state)
-    }
-
-    fun onMoreOptionsClicked() {
-        // Handle more options logic
     }
 
     fun onViewAllSkillsClicked() {

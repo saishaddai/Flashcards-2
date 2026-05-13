@@ -19,20 +19,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Style
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -88,10 +84,10 @@ fun StatsScreen(
     val promoDeck = decksViewModel.getRandomDeck()
     val weeklyActivity by statsViewModel.weeklyActivity.collectAsState()
     val skillMastery by statsViewModel.skillMastery.collectAsState()
-    val cardsReviewed by statsViewModel.cardsReviewed.collectAsState()
+    val flashcardsViewed by statsViewModel.flashcardsViewed.collectAsState()
     val currentStreak by statsViewModel.currentStreak.collectAsState()
     val studyTime by statsViewModel.studyTime.collectAsState()
-    val accuracyRate by statsViewModel.accuracyRate.collectAsState()
+    val masteredDecks by statsViewModel.masteredDecks.collectAsState()
     val isLoading by statsViewModel.isLoading.collectAsState()
     val userSettings by settingsViewModel.userSettings.collectAsState()
     val showSuggestions = userSettings?.showSuggestions ?: true
@@ -100,15 +96,12 @@ fun StatsScreen(
         promoDeck = promoDeck,
         weeklyActivity = weeklyActivity,
         skillMastery = skillMastery,
-        cardsReviewed = cardsReviewed,
+        flashcardsViewed = flashcardsViewed,
         currentStreak = currentStreak,
         studyTime = studyTime,
-        accuracyRate = accuracyRate,
+        masteredDecks = masteredDecks,
         isLoading = isLoading,
         showSuggestions = showSuggestions,
-        onBackClicked = statsViewModel::onBackClicked,
-        onShareClicked = statsViewModel::onShareClicked,
-        onMoreOptionsClicked = statsViewModel::onMoreOptionsClicked,
         onViewAllSkillsClicked = statsViewModel::onViewAllSkillsClicked,
         onPromoClick = onPromoClick
     )
@@ -119,15 +112,12 @@ fun StatsContent(
     promoDeck: Deck?,
     weeklyActivity: List<Int>,
     skillMastery: List<MasteryData>,
-    cardsReviewed: String,
+    flashcardsViewed: String,
     currentStreak: String,
     studyTime: String,
-    accuracyRate: String,
+    masteredDecks: String,
     isLoading: Boolean,
     showSuggestions: Boolean,
-    onBackClicked: () -> Unit,
-    onShareClicked: () -> Unit,
-    onMoreOptionsClicked: () -> Unit,
     onViewAllSkillsClicked: () -> Unit,
     onPromoClick: (Deck) -> Unit,
 ) {
@@ -141,39 +131,6 @@ fun StatsContent(
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp)
         ) {
-            // Top Actions Row from Mockup
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = onBackClicked) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.White
-                    )
-                }
-                Row {
-                    IconButton(onClick = onShareClicked) {
-                        Icon(
-                            imageVector = Icons.Default.Share,
-                            contentDescription = "Share",
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(onClick = onMoreOptionsClicked) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = "More",
-                            tint = Color.White
-                        )
-                    }
-                }
-            }
-
             Header(
                 headText = stringResource(R.string.stats_head_title),
                 titleText = stringResource(R.string.stats_title),
@@ -185,7 +142,7 @@ fun StatsContent(
             Spacer(modifier = Modifier.height(32.dp))
             SkillMasterySection(skillMastery, onViewAllSkillsClicked)
             Spacer(modifier = Modifier.height(32.dp))
-            AtAGlanceSection(cardsReviewed, currentStreak, studyTime, accuracyRate)
+            AtAGlanceSection(flashcardsViewed, currentStreak, studyTime, masteredDecks)
             Spacer(modifier = Modifier.height(32.dp))
 
             if (showSuggestions && promoDeck != null) {
@@ -383,14 +340,14 @@ fun SkillCard(data: MasteryData) {
 
 @Composable
 fun AtAGlanceSection(
-    cardsReviewed: String,
+    flashcardsViewed: String,
     currentStreak: String,
     studyTime: String,
-    accuracyRate: String
+    masteredDecks: String
 ) {
     Column {
         Text(
-            text = "At a Glance",
+            text = stringResource(R.string.stats_at_glance),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
@@ -403,8 +360,8 @@ fun AtAGlanceSection(
                 StatCard(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Default.Style,
-                    value = cardsReviewed,
-                    label = "Cards Reviewed",
+                    value = flashcardsViewed,
+                    label = stringResource(R.string.stats_flashcards_viewed),
                     containerColor = Color(0xFF1E293B),
                     iconColor = RoyalBlue
                 )
@@ -412,7 +369,7 @@ fun AtAGlanceSection(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Default.LocalFireDepartment,
                     value = currentStreak,
-                    label = "Current Streak",
+                    label = stringResource(R.string.stats_current_streak),
                     containerColor = Color(0xFF3E2723),
                     iconColor = Color(0xFFF59E0B)
                 )
@@ -422,15 +379,15 @@ fun AtAGlanceSection(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Default.AccessTime,
                     value = studyTime,
-                    label = "Study Time",
+                    label = stringResource(R.string.stats_study_time),
                     containerColor = Color(0xFF2E1065),
                     iconColor = Color(0xFF8B5CF6)
                 )
                 StatCard(
                     modifier = Modifier.weight(1f),
                     icon = Icons.Default.CheckCircle,
-                    value = accuracyRate,
-                    label = "Accuracy Rate",
+                    value = masteredDecks,
+                    label = stringResource(R.string.stats_mastered_decks),
                     containerColor = Color(0xFF064E3B),
                     iconColor = Color(0xFF10B981)
                 )
@@ -493,15 +450,12 @@ fun StatsScreenPreview() {
                 MasteryData("Language", 85, "Advanced", RoyalBlue),
                 MasteryData("UI/UX", 60, "Intermediate", Color(0xFFF59E0B))
             ),
-            cardsReviewed = "1,234",
+            flashcardsViewed = "1,234",
             currentStreak = "7",
             studyTime = "12h 30m",
-            accuracyRate = "92%",
+            masteredDecks = "92%",
             isLoading = false,
             showSuggestions = true,
-            onBackClicked = {},
-            onShareClicked = {},
-            onMoreOptionsClicked = {},
             onViewAllSkillsClicked = {},
             onPromoClick = {}
         )

@@ -18,6 +18,8 @@ mockitoAndroid = "5.23.0"
 timber = "5.0.1"
 datastore = "1.2.1"
 vico = "2.0.0"
+room = "2.6.1"
+ksp = "2.0.21-1.0.27"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,8 +59,12 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
 vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
 vico-core = { group = "com.patrykandpatrick.vico", name = "core", version.ref = "vico" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

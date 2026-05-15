@@ -1,6 +1,13 @@
 package com.saishaddai.flashcards.model
 
-data class SessionSummary(val deckId: Int, val currentXP: Int)
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "session_summaries")
+data class SessionSummary(
+    @PrimaryKey val deckId: Int,
+    val currentXP: Int
+)
 
 val sessions = listOf(
     SessionSummary(1, 89),

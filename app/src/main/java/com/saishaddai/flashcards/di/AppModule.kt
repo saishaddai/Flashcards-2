@@ -1,5 +1,7 @@
 package com.saishaddai.flashcards.di
 
+import androidx.room.Room
+import com.saishaddai.flashcards.data.local.AppDatabase
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.Flashcard
@@ -10,7 +12,7 @@ import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.StatsRepository
 import com.saishaddai.flashcards.repository.SessionRepository
 import com.saishaddai.flashcards.repository.impl.DataStoreSettingsRepository
-import com.saishaddai.flashcards.repository.impl.HardcodedSessionRepository
+import com.saishaddai.flashcards.repository.impl.RoomSessionRepository
 import com.saishaddai.flashcards.repository.impl.JSONDeckRepository
 import com.saishaddai.flashcards.repository.impl.JSONFlashcardRepository
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
@@ -24,9 +26,19 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
+    // Database
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            AppDatabase::class.java,
+            "flashcards_db"
+        ).build()
+    }
+    single { get<AppDatabase>().sessionSummaryDao() }
+
     // Repositories
     single<FlashcardRepository<DeckType, Flashcard>> { JSONFlashcardRepository(androidContext()) }
-    single<SessionRepository> { HardcodedSessionRepository() }
+    single<SessionRepository> { RoomSessionRepository(get()) }
     single<DeckRepository<Deck>> { JSONDeckRepository(get(), get()) }
     single<StatsRepository> { HardcodedStatsRepository() }
     single<SettingsRepository> { DataStoreSettingsRepository(androidContext()) }

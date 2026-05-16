@@ -9,6 +9,7 @@ import com.saishaddai.flashcards.repository.DeckRepository
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.repository.SessionRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class JSONDeckRepository(
@@ -17,7 +18,7 @@ class JSONDeckRepository(
 ) : DeckRepository<Deck> {
 
     override suspend fun getData(): List<Deck> = withContext(Dispatchers.IO) {
-        val allSessions = sessionRepository.getAllSessions()
+        val allSessions = sessionRepository.getAllSessions().first()
         decks.onEach { deck ->
             deck.mastery = allSessions.find { it.deckId == deck.id }?.currentXP ?: 0
             if (deck.cardCount == 0) {

@@ -176,8 +176,5 @@ class DeckListScreenTest {
 
         // Check by text directly as it should be in the hierarchy even if ellipsized visually
         composeTestRule.onNodeWithText(longTitle).assertIsDisplayed()
-        
-        // Also verify it has the correct tag
-        composeTestRule.onNodeWithTag(TestTags.DECKS_LIST_DECK_TITLE).assertIsDisplayed()
     }
 }

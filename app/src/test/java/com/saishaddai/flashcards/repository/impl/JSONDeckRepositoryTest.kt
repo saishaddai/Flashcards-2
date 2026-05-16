@@ -5,6 +5,7 @@ import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.model.sessions
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.repository.SessionRepository
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -21,7 +22,7 @@ class JSONDeckRepositoryTest {
         onBlocking { getDataCount(any()) } doReturn 0
     }
     private val sessionRepository: SessionRepository = mock {
-        onBlocking { getAllSessions() } doReturn sessions
+        on { getAllSessions() } doReturn flowOf(sessions)
     }
 
     @Before

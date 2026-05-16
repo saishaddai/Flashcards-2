@@ -30,9 +30,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,6 +45,7 @@ import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.utils.DeckAssets
+import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.getMasteryLevel
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -201,15 +204,27 @@ fun DeckCard(deck: Deck, onClick: () -> Unit) {
                 text = deck.name,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
-                color = Color.White
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = Color.White,
+                modifier = Modifier.testTag(TestTags.DECKS_LIST_DECK_TITLE)
             )
             Spacer(Modifier.weight(1f))
             Column {
                 if (deck.cardCount >= 0) {
                     Text(
-                        text = stringResource(R.string.decks_card_count, deck.cardCount, deck.mastery),
+                        text = if (deck.cardCount > 99) {
+                            stringResource(R.string.decks_card_count_plus, deck.mastery)
+                        } else {
+                            stringResource(
+                                R.string.decks_card_count,
+                                deck.cardCount,
+                                deck.mastery
+                            )
+                        },
                         fontSize = 12.sp,
-                        color = Color.Gray
+                        color = Color.Gray,
+                        modifier = Modifier.testTag(TestTags.DECKS_LIST_DECK_COUNT)
                     )
                 }
                 Text(

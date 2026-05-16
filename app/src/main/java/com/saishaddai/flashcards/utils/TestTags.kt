@@ -6,10 +6,15 @@ package com.saishaddai.flashcards.utils
  */
 object TestTags {
 
+    //Common composables in different screens
     const val FULL_LOADER = "full_loader"
     const val BLUE_BUTTON = "blue_button"
     const val TRANSPARENT_BUTTON = "transparent_button"
     const val PROMO_CARD = "promo_card"
+
+    //Deck List Screen
+    const val DECKS_LIST_DECK_TITLE = "deck_title"
+    const val DECKS_LIST_DECK_COUNT = "deck_count"
 
     const val SETTINGS_QUICK_START = "settings_quick_start"
     const val SETTINGS_SHOW_ANSWERS = "settings_show_answers"

@@ -2,7 +2,7 @@ package com.saishaddai.flashcards.screens
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -30,14 +30,11 @@ class StatsScreenTest {
                 promoDeck = null,
                 weeklyActivity = emptyList(),
                 skillMastery = emptyList(),
-                cardsReviewed = "0",
+                flashcardsViewed = "0",
                 currentStreak = "0",
                 studyTime = "0",
-                accuracyRate = "0%",
+                masteredDecks = "0",
                 isLoading = true,
-                onBackClicked = {},
-                onShareClicked = {},
-                onMoreOptionsClicked = {},
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
                 showSuggestions = true
@@ -56,14 +53,11 @@ class StatsScreenTest {
                 promoDeck = null,
                 weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
                 skillMastery = emptyList(),
-                cardsReviewed = "100",
+                flashcardsViewed = "100",
                 currentStreak = "5",
                 studyTime = "2h",
-                accuracyRate = "80%",
+                masteredDecks = "10",
                 isLoading = false,
-                onBackClicked = {},
-                onShareClicked = {},
-                onMoreOptionsClicked = {},
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
                 showSuggestions = true
@@ -86,14 +80,11 @@ class StatsScreenTest {
                 promoDeck = mockDeck,
                 weeklyActivity = listOf(10, 20, 30, 42, 50, 60, 70),
                 skillMastery = emptyList(),
-                cardsReviewed = "1,234",
+                flashcardsViewed = "1,234",
                 currentStreak = "7",
                 studyTime = "12h 30m",
-                accuracyRate = "92%",
+                masteredDecks = "5",
                 isLoading = false,
-                onBackClicked = {},
-                onShareClicked = {},
-                onMoreOptionsClicked = {},
                 onViewAllSkillsClicked = {},
                 onPromoClick = { promoClicked = true },
                 showSuggestions = true
@@ -130,14 +121,11 @@ class StatsScreenTest {
                 promoDeck = null,
                 weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
                 skillMastery = emptyList(),
-                cardsReviewed = "100",
+                flashcardsViewed = "100",
                 currentStreak = "5",
                 studyTime = "2h",
-                accuracyRate = "80%",
+                masteredDecks = "10",
                 isLoading = false,
-                onBackClicked = {},
-                onShareClicked = {},
-                onMoreOptionsClicked = {},
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
                 showSuggestions = true

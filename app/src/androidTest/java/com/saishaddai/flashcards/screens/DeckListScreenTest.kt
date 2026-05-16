@@ -2,9 +2,12 @@ package com.saishaddai.flashcards.screens
 
 import android.app.Application
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
@@ -52,7 +55,7 @@ class DeckListScreenTest {
 
         // Wait for loader to disappear
         composeTestRule.waitUntil(5000) {
-            composeTestRule.onAllNodes(hasTestTag(TestTags.FULL_LOADER)).fetchSemanticsNodes().isEmpty()
+            composeTestRule.onAllNodesWithTag(TestTags.FULL_LOADER).fetchSemanticsNodes().isEmpty()
         }
 
         composeTestRule.onNodeWithText(context.getString(R.string.decks_welcome)).assertIsDisplayed()
@@ -126,5 +129,55 @@ class DeckListScreenTest {
         composeTestRule.onNodeWithText(context.getString(R.string.decks_start_session_button)).performClick()
 
         composeTestRule.waitUntil(5000) { onStartSessionClickCalled }
+    }
+
+    @Test
+    fun testDeckListScreen_deckCount_displaysCorrectText() {
+        val mockDecks = listOf(
+            Deck(id = 1, name = "Regular Deck", longName = "Regular", cardCount = 50, mastery = 20),
+            Deck(id = 2, name = "Large Deck", longName = "Large", cardCount = 150, mastery = 80)
+        )
+
+        val fakeRepository = object : DeckRepository<Deck> {
+            override suspend fun getData(): List<Deck> = mockDecks
+        }
+
+        val viewModel = DecksViewModel(application, fakeRepository)
+
+        composeTestRule.setContent {
+            DeckListScreen(viewModel = viewModel, onStartSessionClick = {})
+        }
+
+        // Regular case: 50 Cards • 20%
+        val expectedRegularText = context.getString(R.string.decks_card_count, 50, 20)
+        composeTestRule.onNodeWithText(expectedRegularText).assertIsDisplayed()
+
+        // 99+ case: 99+ Cards • 80%
+        val expectedLargeText = context.getString(R.string.decks_card_count_plus, 80)
+        composeTestRule.onNodeWithText(expectedLargeText).assertIsDisplayed()
+    }
+
+    @Test
+    fun testDeckListScreen_deckTitle_isDisplayedAndHasCorrectText() {
+        val longTitle = "A very long deck title that should definitely be ellipsized"
+        val mockDecks = listOf(
+            Deck(id = 1, name = longTitle, longName = "Long", cardCount = 10)
+        )
+
+        val fakeRepository = object : DeckRepository<Deck> {
+            override suspend fun getData(): List<Deck> = mockDecks
+        }
+
+        val viewModel = DecksViewModel(application, fakeRepository)
+
+        composeTestRule.setContent {
+            DeckListScreen(viewModel = viewModel, onStartSessionClick = {})
+        }
+
+        // Check by text directly as it should be in the hierarchy even if ellipsized visually
+        composeTestRule.onNodeWithText(longTitle).assertIsDisplayed()
+        
+        // Also verify it has the correct tag
+        composeTestRule.onNodeWithTag(TestTags.DECKS_LIST_DECK_TITLE).assertIsDisplayed()
     }
 }

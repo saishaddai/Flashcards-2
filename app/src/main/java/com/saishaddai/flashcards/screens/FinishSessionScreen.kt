@@ -17,6 +17,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.CallMade
+import androidx.compose.material.icons.automirrored.filled.FactCheck
+import androidx.compose.material.icons.automirrored.filled.Grading
 import androidx.compose.material.icons.automirrored.filled.Notes
 import androidx.compose.material.icons.automirrored.filled.StarHalf
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
@@ -28,6 +31,7 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Style
 import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.filled.Watch
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -198,22 +202,22 @@ fun FinishSessionContent(
                 Spacer(modifier = Modifier.height(32.dp))
                 AchievementReached(
                     icon = Icons.AutoMirrored.Filled.TrendingUp,
-                    text = stringResource(R.string.finish_goal_reached),
+                    text = stringResource(R.string.finish_total_experience, 2),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
-                    icon = Icons.AutoMirrored.Filled.Notes,
-                    text = stringResource(R.string.finish_goal_reached),
+                    icon = Icons.Default.Star,
+                    text = stringResource(R.string.finish_current_level, "NOVICE"),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
-                    icon = Icons.AutoMirrored.Filled.StarHalf,
-                    text = stringResource(R.string.finish_goal_reached),
+                    icon = Icons.Default.Timer,
+                    text = stringResource(R.string.finish_weekly_time, 25),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
-                    icon = Icons.AutoMirrored.Filled.VolumeUp,
-                    text = stringResource(R.string.finish_goal_reached),
+                    icon = Icons.AutoMirrored.Filled.FactCheck,
+                    text = stringResource(R.string.finish_daily_goal_streak, 3),
                 )
                 Spacer(modifier = Modifier.height(32.dp))
                 BackToDecksButton(onClick = onBackToDecksClicked)

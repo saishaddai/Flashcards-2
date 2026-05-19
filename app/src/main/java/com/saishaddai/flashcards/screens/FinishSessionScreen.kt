@@ -57,6 +57,7 @@ import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import com.saishaddai.flashcards.viewmodel.FinishSessionViewModel
+import com.saishaddai.flashcards.utils.SessionResult
 import nl.dionsegijn.konfetti.compose.KonfettiView
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
@@ -67,12 +68,20 @@ import java.util.concurrent.TimeUnit
 @Composable
 fun FinishSessionScreen(
     deck: Deck,
+    cardsReviewed: Int,
+    startTime: Long,
+    endTime: Long,
     onFinishSession: () -> Unit,
     onShareSummary: (Deck) -> Unit,
     viewModel: FinishSessionViewModel = koinViewModel()
 ) {
     val navigateToDeckList by viewModel.navigateToDeckList.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val sessionResult by viewModel.sessionResult.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.saveSession(deck, cardsReviewed, startTime, endTime)
+    }
 
     LaunchedEffect(navigateToDeckList) {
         if (navigateToDeckList) {
@@ -83,6 +92,10 @@ fun FinishSessionScreen(
 
     FinishSessionContent(
         deck = deck,
+        cardsReviewed = cardsReviewed,
+        startTime = startTime,
+        endTime = endTime,
+        sessionResult = sessionResult,
         isLoading = isLoading,
         onBackToDecksClicked = { viewModel.onBackToDecksClicked() },
         onShareSummary = onShareSummary
@@ -93,6 +106,10 @@ fun FinishSessionScreen(
 @Composable
 fun FinishSessionContent(
     deck: Deck,
+    cardsReviewed: Int,
+    startTime: Long,
+    endTime: Long,
+    sessionResult: SessionResult?,
     isLoading: Boolean = false,
     onBackToDecksClicked: () -> Unit,
     onShareSummary: (Deck) -> Unit
@@ -182,13 +199,14 @@ fun FinishSessionContent(
                 ) {
                     InfoCard(
                         title = stringResource(R.string.finish_card_label_reviewed),
-                        value = "20",
+                        value = cardsReviewed.toString(),
                         unit = stringResource(R.string.finish_card_unit_cards),
                         icon = Icons.Default.Style
                     )
+                    val durationMins = ((endTime - startTime) / (1000 * 60)).toInt().coerceAtLeast(1)
                     InfoCard(
                         title = stringResource(R.string.finish_card_label_duration),
-                        value = "12",
+                        value = durationMins.toString(),
                         unit = stringResource(R.string.finish_card_unit_mins),
                         icon = Icons.Default.Timer
                     )
@@ -196,12 +214,12 @@ fun FinishSessionContent(
                 Spacer(modifier = Modifier.height(32.dp))
                 AchievementReached(
                     icon = Icons.AutoMirrored.Filled.TrendingUp,
-                    text = stringResource(R.string.finish_total_experience, 2),
+                    text = stringResource(R.string.finish_total_experience, sessionResult?.avanceSesion?.toInt() ?: 0),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
                     icon = Icons.Default.Star,
-                    text = stringResource(R.string.finish_current_level, "NOVICE"),
+                    text = stringResource(R.string.finish_current_level, sessionResult?.titulo ?: ""),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
@@ -324,6 +342,10 @@ fun FinishSessionScreenPreview() {
         val deck = Deck(1, "Preview Text", "preview name long version", isSelected = false)
         FinishSessionContent(
             deck = deck,
+            cardsReviewed = 20,
+            startTime = 0L,
+            endTime = 1000L * 60 * 12,
+            sessionResult = SessionResult(5.0, 50.0, "Mid"),
             isLoading = false,
             onBackToDecksClicked = {},
             onShareSummary = {}

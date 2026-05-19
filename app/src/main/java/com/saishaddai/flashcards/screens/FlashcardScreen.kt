@@ -62,7 +62,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun FlashcardScreen(
     onCancelSessionClick: () -> Unit,
-    onFinishedSessionClick: () -> Unit,
+    onFinishedSessionClick: (Int, Long, Long) -> Unit,
     deck: Deck,
     viewModel: FlashcardViewModel = koinViewModel(parameters = { parametersOf(deck.id) })
 ) {
@@ -81,7 +81,10 @@ fun FlashcardScreen(
         onPageChanged = viewModel::onPageChanged,
         onFinishSession = viewModel::onFinishSession,
         onCancelSessionClick = onCancelSessionClick,
-        onFinishedSessionClick = onFinishedSessionClick
+        onFinishedSessionClick = {
+            val (reviewed, start, end) = viewModel.getSessionSummary()
+            onFinishedSessionClick(reviewed, start, end)
+        }
     )
 }
 
@@ -94,8 +97,8 @@ fun FlashcardContent(
     isFinished: Boolean,
     isLoading: Boolean,
     onShowResponseClicked: () -> Unit,
-    onPageChanged: () -> Unit,
-    onFinishSession: () -> Unit,
+    onPageChanged: (Int) -> Unit,
+    onFinishSession: (Int) -> Unit,
     onCancelSessionClick: () -> Unit,
     onFinishedSessionClick: () -> Unit
 ) {
@@ -115,7 +118,7 @@ fun FlashcardContent(
 
     // Hide answer when the user starts swiping to a new page
     LaunchedEffect(pagerState.currentPage) {
-        onPageChanged()
+        onPageChanged(pagerState.currentPage)
     }
 
     if (showCancelConfirmation.value) {
@@ -247,7 +250,7 @@ fun FlashcardContent(
                 BlueButton(
                     icon = Icons.Default.Check,
                     text = stringResource(R.string.flashcard_button_finish_session),
-                    onClick = onFinishSession
+                    onClick = { onFinishSession(pagerState.currentPage) }
                 )
             } else {
                 CancelSessionButton(

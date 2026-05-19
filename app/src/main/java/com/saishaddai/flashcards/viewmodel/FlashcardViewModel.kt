@@ -36,6 +36,12 @@ class FlashcardViewModel(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
+    private var startTime: Long = System.currentTimeMillis()
+    private var cardsReviewed: Int = 0
+    private var endTime: Long = 0
+
+    fun getSessionSummary() = Triple(cardsReviewed, startTime, endTime)
+
     init {
         observeSettings()
         loadFlashcards()
@@ -67,14 +73,17 @@ class FlashcardViewModel(
         _showAnswer.value = true
     }
 
-    fun onPageChanged() {
+    fun onPageChanged(page: Int) {
+        cardsReviewed = maxOf(cardsReviewed, page + 1)
         viewModelScope.launch {
             val settings = settingsRepository.getSettings().first()
             _showAnswer.value = settings.showAnswers
         }
     }
 
-    fun onFinishSession() {
+    fun onFinishSession(finalPage: Int) {
+        cardsReviewed = maxOf(cardsReviewed, finalPage + 1)
+        endTime = System.currentTimeMillis()
         _isFinished.value = true
     }
 }

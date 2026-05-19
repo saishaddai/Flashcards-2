@@ -7,12 +7,14 @@ import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.DeckRepository
 import com.saishaddai.flashcards.repository.FlashcardRepository
-import com.saishaddai.flashcards.repository.impl.HardcodedStatsRepository
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.StatsRepository
 import com.saishaddai.flashcards.repository.SessionRepository
+import com.saishaddai.flashcards.repository.StudyRepository
 import com.saishaddai.flashcards.repository.impl.DataStoreSettingsRepository
 import com.saishaddai.flashcards.repository.impl.RoomSessionRepository
+import com.saishaddai.flashcards.repository.impl.RoomStatsRepository
+import com.saishaddai.flashcards.repository.impl.RoomStudyRepository
 import com.saishaddai.flashcards.repository.impl.JSONDeckRepository
 import com.saishaddai.flashcards.repository.impl.JSONFlashcardRepository
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
@@ -32,21 +34,23 @@ val appModule = module {
             androidContext(),
             AppDatabase::class.java,
             "flashcards_db"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
     single { get<AppDatabase>().sessionSummaryDao() }
+    single { get<AppDatabase>().studyDao() }
 
     // Repositories
     single<FlashcardRepository<DeckType, Flashcard>> { JSONFlashcardRepository(androidContext()) }
     single<SessionRepository> { RoomSessionRepository(get()) }
     single<DeckRepository<Deck>> { JSONDeckRepository(get(), get()) }
-    single<StatsRepository> { HardcodedStatsRepository() }
+    single<StatsRepository> { RoomStatsRepository(get()) }
     single<SettingsRepository> { DataStoreSettingsRepository(androidContext()) }
+    single<StudyRepository> { RoomStudyRepository(get(), get()) }
 
     // ViewModels
     viewModel { DecksViewModel(androidApplication(), get()) }
     viewModel { (deckId: Int) -> FlashcardViewModel(androidApplication(), deckId, get(), get()) }
     viewModel { StatsViewModel(get()) }
-    viewModel { FinishSessionViewModel() }
+    viewModel { FinishSessionViewModel(get()) }
     viewModel { SettingsViewModel(get()) }
 }

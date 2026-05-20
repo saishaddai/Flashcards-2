@@ -29,7 +29,7 @@ class FlashcardScreenTest {
             Flashcards2Theme {
                 FlashcardScreen(
                     onCancelSessionClick = {},
-                    onFinishedSessionClick = {},
+                    onFinishedSessionClick = { _, _, _ -> },
                     deck = testDeck
                 )
             }
@@ -55,7 +55,7 @@ class FlashcardScreenTest {
             Flashcards2Theme {
                 FlashcardScreen(
                     onCancelSessionClick = {},
-                    onFinishedSessionClick = {},
+                    onFinishedSessionClick = { _, _, _ -> },
                     deck = testDeck
                 )
             }
@@ -74,7 +74,7 @@ class FlashcardScreenTest {
             Flashcards2Theme {
                 FlashcardScreen(
                     onCancelSessionClick = {},
-                    onFinishedSessionClick = {},
+                    onFinishedSessionClick = { _, _, _ -> },
                     deck = testDeck
                 )
             }
@@ -96,7 +96,7 @@ class FlashcardScreenTest {
             Flashcards2Theme {
                 FlashcardScreen(
                     onCancelSessionClick = {},
-                    onFinishedSessionClick = {},
+                    onFinishedSessionClick = { _, _, _ -> },
                     deck = testDeck
                 )
             }
@@ -129,8 +129,8 @@ class FlashcardScreenTest {
                     isFinished = false,
                     isLoading = true,
                     onShowResponseClicked = {},
-                    onPageChanged = {},
-                    onFinishSession = {},
+                    onPageChanged = { _ -> },
+                    onFinishSession = { _ -> },
                     onCancelSessionClick = {},
                     onFinishedSessionClick = {}
                 )
@@ -155,8 +155,8 @@ class FlashcardScreenTest {
                     isFinished = false,
                     isLoading = false,
                     onShowResponseClicked = {},
-                    onPageChanged = {},
-                    onFinishSession = {},
+                    onPageChanged = { _ -> },
+                    onFinishSession = { _ -> },
                     onCancelSessionClick = { cancelClicked = true },
                     onFinishedSessionClick = {}
                 )
@@ -181,7 +181,7 @@ class FlashcardScreenTest {
                     isFinished = false,
                     isLoading = false,
                     onShowResponseClicked = {},
-                    onPageChanged = {},
+                    onPageChanged = { _ -> },
                     onFinishSession = { finishClicked = true },
                     onCancelSessionClick = {},
                     onFinishedSessionClick = {}
@@ -208,8 +208,8 @@ class FlashcardScreenTest {
                     isFinished = true,
                     isLoading = false,
                     onShowResponseClicked = {},
-                    onPageChanged = {},
-                    onFinishSession = {},
+                    onPageChanged = { _ -> },
+                    onFinishSession = { _ -> },
                     onCancelSessionClick = {},
                     onFinishedSessionClick = { finishedSessionCalled = true }
                 )
@@ -230,8 +230,8 @@ class FlashcardScreenTest {
                     isFinished = false,
                     isLoading = false,
                     onShowResponseClicked = {},
-                    onPageChanged = {},
-                    onFinishSession = {},
+                    onPageChanged = { _ -> },
+                    onFinishSession = { _ -> },
                     onCancelSessionClick = {},
                     onFinishedSessionClick = {}
                 )

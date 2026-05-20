@@ -30,6 +30,9 @@ class FinishSessionScreenTest {
             Flashcards2Theme {
                 FinishSessionScreen(
                     deck = testDeck,
+                    cardsReviewed = 20,
+                    startTime = 0L,
+                    endTime = 1000L * 60 * 12, // 12 mins
                     onFinishSession = {},
                     onShareSummary = {}
                 )
@@ -60,6 +63,9 @@ class FinishSessionScreenTest {
             Flashcards2Theme {
                 FinishSessionScreen(
                     deck = testDeck,
+                    cardsReviewed = 10,
+                    startTime = 0L,
+                    endTime = 1000L,
                     onFinishSession = { finishSessionCalled = true },
                     onShareSummary = {}
                 )
@@ -84,13 +90,17 @@ class FinishSessionScreenTest {
             Flashcards2Theme {
                 FinishSessionScreen(
                     deck = testDeck,
+                    cardsReviewed = 10,
+                    startTime = 0L,
+                    endTime = 1000L,
                     onFinishSession = { finishSessionCalled = true },
                     onShareSummary = {}
                 )
             }
         }
 
-        // Click the check icon in the navigation bar (Close content description)
+        // Click the check icon in the navigation bar (finish_nav_icon_content_desc is "Close" in strings.xml)
+        // I should verify what the actual string is. In FinishSessionScreen.kt it uses R.string.finish_nav_icon_content_desc
         composeTestRule.onNodeWithContentDescription("Close").performClick()
 
         // Wait for the LaunchedEffect to trigger the callback
@@ -106,6 +116,9 @@ class FinishSessionScreenTest {
             Flashcards2Theme {
                 FinishSessionScreen(
                     deck = testDeck,
+                    cardsReviewed = 10,
+                    startTime = 0L,
+                    endTime = 1000L,
                     onFinishSession = {},
                     onShareSummary = { shareSummaryCalled = true }
                 )
@@ -127,6 +140,10 @@ class FinishSessionScreenTest {
             Flashcards2Theme {
                 FinishSessionContent(
                     deck = testDeck,
+                    cardsReviewed = 20,
+                    startTime = 0L,
+                    endTime = 1000L,
+                    sessionResult = null,
                     isLoading = true,
                     onBackToDecksClicked = {},
                     onShareSummary = {}

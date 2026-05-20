@@ -10,7 +10,9 @@ import com.saishaddai.flashcards.repository.StudyRepository
 import com.saishaddai.flashcards.utils.SessionCalculator
 import com.saishaddai.flashcards.utils.SessionResult
 import kotlinx.coroutines.flow.first
-import java.time.LocalDate
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class RoomStudyRepository(
     private val studyDao: StudyDao,
@@ -18,13 +20,15 @@ class RoomStudyRepository(
     private val calculator: SessionCalculator = SessionCalculator()
 ) : StudyRepository {
 
+    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
     override suspend fun completeSession(
         deck: Deck,
         cardsReviewed: Int,
         startTime: Long,
         endTime: Long
     ): SessionResult {
-        val today = LocalDate.now().toString()
+        val today = dateFormatter.format(Calendar.getInstance().time)
         val streak = calculateStreak()
         val currentMastery = studyDao.getDeckMastery(deck.id)
         val progresoAcumulado = currentMastery?.progress ?: 0.0
@@ -79,22 +83,27 @@ class RoomStudyRepository(
         val activityMap = activities.associateBy { it.date }
         
         var streak = 0
-        var currentDate = LocalDate.now()
+        val calendar = Calendar.getInstance()
         
         // Check today
-        if (activityMap[currentDate.toString()]?.isGoalMet == true) {
+        var currentDateStr = dateFormatter.format(calendar.time)
+        if (activityMap[currentDateStr]?.isGoalMet == true) {
             streak++
-            currentDate = currentDate.minusDays(1)
-            while (activityMap[currentDate.toString()]?.isGoalMet == true) {
+            calendar.add(Calendar.DAY_OF_YEAR, -1)
+            currentDateStr = dateFormatter.format(calendar.time)
+            while (activityMap[currentDateStr]?.isGoalMet == true) {
                 streak++
-                currentDate = currentDate.minusDays(1)
+                calendar.add(Calendar.DAY_OF_YEAR, -1)
+                currentDateStr = dateFormatter.format(calendar.time)
             }
         } else {
             // Check from yesterday
-            currentDate = currentDate.minusDays(1)
-            while (activityMap[currentDate.toString()]?.isGoalMet == true) {
+            calendar.add(Calendar.DAY_OF_YEAR, -1)
+            currentDateStr = dateFormatter.format(calendar.time)
+            while (activityMap[currentDateStr]?.isGoalMet == true) {
                 streak++
-                currentDate = currentDate.minusDays(1)
+                calendar.add(Calendar.DAY_OF_YEAR, -1)
+                currentDateStr = dateFormatter.format(calendar.time)
             }
         }
         return streak

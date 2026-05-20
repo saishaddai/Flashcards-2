@@ -2,23 +2,27 @@ package com.saishaddai.flashcards.repository.impl
 
 import androidx.compose.ui.graphics.Color
 import com.saishaddai.flashcards.data.local.StudyDao
-import com.saishaddai.flashcards.model.DailyActivity
 import com.saishaddai.flashcards.repository.StatsRepository
 import com.saishaddai.flashcards.screens.MasteryData
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class RoomStatsRepository(
     private val studyDao: StudyDao
 ) : StatsRepository {
 
+    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
     override fun getWeeklyActivity(): Flow<List<Int>> {
         return studyDao.getRecentActivity().map { activities ->
             val last7Days = (0..6).map { i ->
-                LocalDate.now().minusDays(i.toLong()).toString()
+                val calendar = Calendar.getInstance()
+                calendar.add(Calendar.DAY_OF_YEAR, -i)
+                dateFormatter.format(calendar.time)
             }.reversed()
             
             last7Days.map { date ->
@@ -48,7 +52,6 @@ class RoomStatsRepository(
     }
 
     override fun getFlashcardsViewed(): Flow<String> {
-        // Since we want the total sum, we can use a query or aggregate in flow
         return studyDao.getRecentActivity().map { activities ->
             activities.sumOf { it.cardsReviewed }.toString()
         }
@@ -57,25 +60,27 @@ class RoomStatsRepository(
     override fun getCurrentStreak(): Flow<String> {
         return studyDao.getRecentActivity().map { activities ->
             var streak = 0
-            val today = LocalDate.now()
-            var currentDate = today
-            
-            // If today's goal isn't met yet, we might still be in a streak from yesterday
-            // But usually we check if the goal was met.
+            val calendar = Calendar.getInstance()
             
             val activityMap = activities.associateBy { it.date }
             
-            while (activityMap[currentDate.toString()]?.isGoalMet == true) {
+            // Check today
+            var currentDateStr = dateFormatter.format(calendar.time)
+            while (activityMap[currentDateStr]?.isGoalMet == true) {
                 streak++
-                currentDate = currentDate.minusDays(1)
+                calendar.add(Calendar.DAY_OF_YEAR, -1)
+                currentDateStr = dateFormatter.format(calendar.time)
             }
             
             // If today's goal isn't met, check if yesterday's was met to continue showing the streak
             if (streak == 0) {
-                currentDate = today.minusDays(1)
-                while (activityMap[currentDate.toString()]?.isGoalMet == true) {
+                val yesterday = Calendar.getInstance()
+                yesterday.add(Calendar.DAY_OF_YEAR, -1)
+                var yesterdayDateStr = dateFormatter.format(yesterday.time)
+                while (activityMap[yesterdayDateStr]?.isGoalMet == true) {
                     streak++
-                    currentDate = currentDate.minusDays(1)
+                    yesterday.add(Calendar.DAY_OF_YEAR, -1)
+                    yesterdayDateStr = dateFormatter.format(yesterday.time)
                 }
             }
             

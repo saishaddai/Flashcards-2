@@ -134,4 +134,45 @@ class StatsScreenTest {
 
         composeTestRule.onNodeWithTag(TestTags.STATS_WEEKLY_ACTIVITY).assertIsDisplayed()
     }
+
+    @Test
+    fun testStatsScreen_emptyState_showsDefaultValues() {
+        val weeklyActivityTitle = "Weekly Activity"
+        val skillMasteryTitle = "Skill Mastery"
+        val atAGlanceTitle = context.getString(R.string.stats_at_glance)
+
+        composeTestRule.setContent {
+            StatsContent(
+                promoDeck = null,
+                weeklyActivity = listOf(0, 0, 0, 0, 0, 0, 0),
+                skillMastery = emptyList(),
+                flashcardsViewed = "0",
+                currentStreak = "0 Days",
+                studyTime = "0m",
+                masteredDecks = "0%",
+                isLoading = false,
+                onViewAllSkillsClicked = {},
+                onPromoClick = {},
+                showSuggestions = true
+            )
+        }
+
+        // Verify section titles are displayed
+        composeTestRule.onNodeWithText(weeklyActivityTitle).assertIsDisplayed()
+        composeTestRule.onNodeWithText(skillMasteryTitle).assertIsDisplayed()
+        composeTestRule.onNodeWithText(atAGlanceTitle).assertIsDisplayed()
+
+        // Verify At-A-Glance default values
+        composeTestRule.onNodeWithText("0").assertIsDisplayed()
+        composeTestRule.onNodeWithText("0 Days").assertIsDisplayed()
+        composeTestRule.onNodeWithText("0m").assertIsDisplayed()
+        composeTestRule.onNodeWithText("0%").assertIsDisplayed()
+
+        // Verify Weekly Activity graph is still shown
+        composeTestRule.onNodeWithTag(TestTags.STATS_WEEKLY_ACTIVITY).assertIsDisplayed()
+
+        // Verify PromoWidget is not shown when promoDeck is null
+        val startNowText = context.getString(R.string.promo_widget_confirm)
+        composeTestRule.onNodeWithText(startNowText).assertDoesNotExist()
+    }
 }

@@ -3,7 +3,6 @@ package com.saishaddai.flashcards
 import android.app.Application
 import com.saishaddai.flashcards.di.appModule
 import com.saishaddai.flashcards.logging.ReleaseTree
-import nl.dionsegijn.konfetti.compose.BuildConfig
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

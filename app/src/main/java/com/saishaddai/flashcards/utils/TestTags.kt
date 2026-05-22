@@ -23,5 +23,8 @@ object TestTags {
     const val SETTINGS_NOTIFICATION_SOUND = "settings_notification_sound"
 
     const val STATS_WEEKLY_ACTIVITY = "stats_weekly_activity"
+    const val STATS_WEEKLY_ACTIVITY_DESCRIPTION = "stats_weekly_activity_description"
+    const val STATS_SKILL_MASTERY_DESCRIPTION = "stats_skill_mastery_description"
+
 
 }

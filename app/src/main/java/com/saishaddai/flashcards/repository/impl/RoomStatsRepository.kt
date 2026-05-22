@@ -19,13 +19,17 @@ class RoomStatsRepository(
 
     override fun getWeeklyActivity(): Flow<List<Int>> {
         return studyDao.getRecentActivity().map { activities ->
-            val last7Days = (0..6).map { i ->
-                val calendar = Calendar.getInstance()
-                calendar.add(Calendar.DAY_OF_YEAR, -i)
-                dateFormatter.format(calendar.time)
-            }.reversed()
+            val calendar = Calendar.getInstance()
+            calendar.firstDayOfWeek = Calendar.MONDAY
+            calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
             
-            last7Days.map { date ->
+            val currentWeekDays = (0..6).map { _ ->
+                val date = dateFormatter.format(calendar.time)
+                calendar.add(Calendar.DAY_OF_YEAR, 1)
+                date
+            }
+            
+            currentWeekDays.map { date ->
                 activities.find { it.date == date }?.cardsReviewed ?: 0
             }
         }

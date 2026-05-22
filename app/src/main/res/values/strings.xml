@@ -86,6 +86,8 @@
     <string name="stats_current_streak">Study Goal Streak</string>
     <string name="stats_study_time">Study Time</string>
     <string name="stats_mastered_decks">Mastered Decks</string>
+    <string name="stats_title_weekly_activity">Weekly Activity</string>
+    <string name="stats_cards_reviewed">Cards Reviewed</string>
 
 
     <!-- Settings Screen -->

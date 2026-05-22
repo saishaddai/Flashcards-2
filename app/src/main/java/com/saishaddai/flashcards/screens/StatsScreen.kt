@@ -72,6 +72,9 @@ import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import com.saishaddai.flashcards.viewmodel.StatsViewModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -158,6 +161,8 @@ fun StatsContent(
 
 @Composable
 fun WeeklyActivityCard(activityData: List<Int>) {
+    val dateRange = remember { getWeeklyDateRange() }
+
     val modelProducer = remember { CartesianChartModelProducer() }
     LaunchedEffect(activityData) {
         modelProducer.runTransaction {
@@ -165,86 +170,108 @@ fun WeeklyActivityCard(activityData: List<Int>) {
         }
     }
 
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF161D31))
-    ) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = "Weekly Activity",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                    Text(
-                        text = "Oct 23 - Oct 29",
-                        fontSize = 14.sp,
-                        color = Color(0xFFB0B0B0)
-                    )
-                }
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = activityData.sum().toString(),
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = RoyalBlue
-                    )
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.TrendingUp,
-                            contentDescription = null,
-                            tint = Color(0xFF10B981),
-                            modifier = Modifier.size(14.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
+    Column {
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(R.string.stats_title_weekly_activity),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = null,
+                tint = Color(0xFFB0B0B0),
+                modifier = Modifier
+                    .size(18.dp)
+                    .testTag(TestTags.STATS_WEEKLY_ACTIVITY_DESCRIPTION)
+            )
+        }
+        Text(
+            text = dateRange,
+            fontSize = 14.sp,
+            color = Color(0xFFB0B0B0)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(28.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF161D31))
+        ) {
+            Column(modifier = Modifier.padding(24.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
                         Text(
-                            text = "+12%",
+                            text = activityData.sum().toString(),
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = RoyalBlue
+                        )
+                        Text(
+                            text = stringResource(R.string.stats_cards_reviewed),
                             fontSize = 12.sp,
-                            color = Color(0xFF10B981),
-                            fontWeight = FontWeight.Bold
+                            color = Color(0xFFB0B0B0)
                         )
                     }
+                    Column(horizontalAlignment = Alignment.End) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.TrendingUp,
+                                contentDescription = null,
+                                tint = Color(0xFF10B981),
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "+12%",
+                                fontSize = 28.sp,
+                                color = Color(0xFF10B981),
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            ProvideVicoTheme(rememberM3VicoTheme()) {
-                CartesianChartHost(
-                    chart = rememberCartesianChart(
-                        rememberColumnCartesianLayer(
-                            columnProvider = ColumnCartesianLayer.ColumnProvider.series(
-                                rememberLineComponent(
-                                    fill = fill(RoyalBlue),
-                                    thickness = 12.dp,
-                                    shape = CorneredShape.Pill
+                ProvideVicoTheme(rememberM3VicoTheme()) {
+                    CartesianChartHost(
+                        chart = rememberCartesianChart(
+                            rememberColumnCartesianLayer(
+                                columnProvider = ColumnCartesianLayer.ColumnProvider.series(
+                                    rememberLineComponent(
+                                        fill = fill(RoyalBlue),
+                                        thickness = 12.dp,
+                                        shape = CorneredShape.Pill
+                                    )
                                 )
-                            )
+                            ),
+                            bottomAxis = HorizontalAxis.rememberBottom(
+                                valueFormatter = { _, value, _ ->
+                                    listOf("M", "T", "W", "T", "F", "S", "S")[value.toInt() % 7]
+                                },
+                                guideline = null,
+                                label = rememberAxisLabelComponent(
+                                    color = Color(0xFFB0B0B0),
+                                    textSize = 12.sp
+                                )
+                            ),
                         ),
-                        bottomAxis = HorizontalAxis.rememberBottom(
-                            valueFormatter = { _, value, _ ->
-                                listOf("M", "T", "W", "T", "F", "S", "S")[value.toInt() % 7]
-                            },
-                            guideline = null,
-                            label = rememberAxisLabelComponent(
-                                color = Color(0xFFB0B0B0),
-                                textSize = 12.sp
-                            )
-                        ),
-                    ),
-                    modelProducer = modelProducer,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
-                        .testTag(TestTags.STATS_WEEKLY_ACTIVITY)
-                )
+                        modelProducer = modelProducer,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp)
+                            .testTag(TestTags.STATS_WEEKLY_ACTIVITY)
+                    )
+                }
             }
         }
     }
@@ -270,7 +297,9 @@ fun SkillMasterySection(masteryList: List<MasteryData>, onViewAllClick: () -> Un
                     imageVector = Icons.Default.Info,
                     contentDescription = null,
                     tint = Color(0xFFB0B0B0),
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier
+                        .size(18.dp)
+                        .testTag(TestTags.STATS_SKILL_MASTERY_DESCRIPTION)
                 )
             }
             TextButton(onClick = onViewAllClick) {
@@ -437,6 +466,17 @@ fun StatCard(
             }
         }
     }
+}
+
+private fun getWeeklyDateRange(): String {
+    val calendar = Calendar.getInstance()
+    calendar.firstDayOfWeek = Calendar.MONDAY
+    calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+    val startDate = calendar.time
+    calendar.add(Calendar.DAY_OF_WEEK, 6)
+    val endDate = calendar.time
+    val sdf = SimpleDateFormat("MMM d", Locale.getDefault())
+    return "${sdf.format(startDate)} - ${sdf.format(endDate)}"
 }
 
 @Preview(showBackground = true)

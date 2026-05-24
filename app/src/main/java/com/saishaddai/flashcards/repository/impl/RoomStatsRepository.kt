@@ -109,4 +109,40 @@ class RoomStatsRepository(
             "$percentage%"
         }
     }
+
+    override fun getWeeklyComparison(): Flow<Int> {
+        return studyDao.getRecentActivity().map { activities ->
+            val calendar = Calendar.getInstance()
+            calendar.firstDayOfWeek = Calendar.MONDAY
+            
+            // Current week (Monday to Sunday)
+            val currentWeekCalendar = calendar.clone() as Calendar
+            currentWeekCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+            val currentWeekDates = (0..6).map {
+                val date = dateFormatter.format(currentWeekCalendar.time)
+                currentWeekCalendar.add(Calendar.DAY_OF_YEAR, 1)
+                date
+            }
+            
+            // Previous week (Monday to Sunday)
+            val previousWeekCalendar = calendar.clone() as Calendar
+            previousWeekCalendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+            previousWeekCalendar.add(Calendar.DAY_OF_YEAR, -7)
+            val previousWeekDates = (0..6).map {
+                val date = dateFormatter.format(previousWeekCalendar.time)
+                previousWeekCalendar.add(Calendar.DAY_OF_YEAR, 1)
+                date
+            }
+            
+            val activityMap = activities.associateBy { it.date }
+            val currentWeekTotal = currentWeekDates.sumOf { activityMap[it]?.cardsReviewed ?: 0 }
+            val previousWeekTotal = previousWeekDates.sumOf { activityMap[it]?.cardsReviewed ?: 0 }
+            
+            if (previousWeekTotal == 0) {
+                if (currentWeekTotal > 0) 100 else 0
+            } else {
+                ((currentWeekTotal - previousWeekTotal).toDouble() / previousWeekTotal * 100).toInt()
+            }
+        }
+    }
 }

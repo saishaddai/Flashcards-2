@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.automirrored.filled.TrendingDown
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
@@ -91,6 +92,7 @@ fun StatsScreen(
     val currentStreak by statsViewModel.currentStreak.collectAsState()
     val studyTime by statsViewModel.studyTime.collectAsState()
     val masteredDecks by statsViewModel.masteredDecks.collectAsState()
+    val weeklyComparison by statsViewModel.weeklyComparison.collectAsState()
     val isLoading by statsViewModel.isLoading.collectAsState()
     val userSettings by settingsViewModel.userSettings.collectAsState()
     val showSuggestions = userSettings?.showSuggestions ?: true
@@ -103,6 +105,7 @@ fun StatsScreen(
         currentStreak = currentStreak,
         studyTime = studyTime,
         masteredDecks = masteredDecks,
+        weeklyComparison = weeklyComparison,
         isLoading = isLoading,
         showSuggestions = showSuggestions,
         onViewAllSkillsClicked = statsViewModel::onViewAllSkillsClicked,
@@ -119,6 +122,7 @@ fun StatsContent(
     currentStreak: String,
     studyTime: String,
     masteredDecks: String,
+    weeklyComparison: Int,
     isLoading: Boolean,
     showSuggestions: Boolean,
     onViewAllSkillsClicked: () -> Unit,
@@ -141,7 +145,7 @@ fun StatsContent(
             )
 
             Spacer(modifier = Modifier.height(24.dp))
-            WeeklyActivityCard(weeklyActivity)
+            WeeklyActivityCard(weeklyActivity, weeklyComparison)
             Spacer(modifier = Modifier.height(32.dp))
             SkillMasterySection(skillMastery, onViewAllSkillsClicked)
             Spacer(modifier = Modifier.height(32.dp))
@@ -160,7 +164,7 @@ fun StatsContent(
 }
 
 @Composable
-fun WeeklyActivityCard(activityData: List<Int>) {
+fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int) {
     val dateRange = remember { getWeeklyDateRange() }
 
     val modelProducer = remember { CartesianChartModelProducer() }
@@ -221,20 +225,41 @@ fun WeeklyActivityCard(activityData: List<Int>) {
                             color = Color(0xFFB0B0B0)
                         )
                     }
-                    Column(horizontalAlignment = Alignment.End) {
+                    Column(horizontalAlignment = Alignment.End,
+                        modifier = Modifier.testTag(TestTags.STATS_PROGRESS_COMPARE),) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.TrendingUp,
-                                contentDescription = null,
-                                tint = Color(0xFF10B981),
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
+                            val comparisonColor = when {
+                                weeklyComparison > 0 -> Color(0xFF10B981)
+                                weeklyComparison < 0 -> Color(0xFFEF4444)
+                                else -> Color.White
+                            }
+                            val comparisonIcon = when {
+                                weeklyComparison > 0 -> Icons.AutoMirrored.Filled.TrendingUp
+                                weeklyComparison < 0 -> Icons.AutoMirrored.Filled.TrendingDown
+                                else -> null
+                            }
+                            val comparisonText = when {
+                                weeklyComparison > 0 -> "+$weeklyComparison%"
+                                weeklyComparison < 0 -> "$weeklyComparison%"
+                                else -> "0%"
+                            }
+
+                            if (comparisonIcon != null) {
+                                Icon(
+                                    imageVector = comparisonIcon,
+                                    contentDescription = null,
+                                    tint = comparisonColor,
+                                    modifier = Modifier.size(24.dp)
+                                        .testTag(TestTags.STATS_PROGRESS_ICON)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                            }
                             Text(
-                                text = "+12%",
+                                text = comparisonText,
                                 fontSize = 28.sp,
-                                color = Color(0xFF10B981),
-                                fontWeight = FontWeight.Bold
+                                color = comparisonColor,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.testTag(TestTags.STATS_PROGRESS_NUMBER)
                             )
                         }
                     }
@@ -494,6 +519,7 @@ fun StatsScreenPreview() {
             currentStreak = "7",
             studyTime = "12h 30m",
             masteredDecks = "92%",
+            weeklyComparison = 12,
             isLoading = false,
             showSuggestions = true,
             onViewAllSkillsClicked = {},

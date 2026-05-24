@@ -31,6 +31,9 @@ class StatsViewModel(
     private val _masteredDecks = MutableStateFlow("0%")
     val masteredDecks: StateFlow<String> = _masteredDecks.asStateFlow()
 
+    private val _weeklyComparison = MutableStateFlow(0)
+    val weeklyComparison: StateFlow<Int> = _weeklyComparison.asStateFlow()
+
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
@@ -40,6 +43,7 @@ class StatsViewModel(
     private var currentStreakLoaded = false
     private var studyTimeLoaded = false
     private var masteredDecksLoaded = false
+    private var weeklyComparisonLoaded = false
 
     init {
         loadStats()
@@ -88,11 +92,18 @@ class StatsViewModel(
                 checkLoadingFinished()
             }
         }
+        viewModelScope.launch {
+            repository.getWeeklyComparison().collect {
+                _weeklyComparison.value = it
+                weeklyComparisonLoaded = true
+                checkLoadingFinished()
+            }
+        }
     }
 
     private fun checkLoadingFinished() {
         if (weeklyActivityLoaded && skillMasteryLoaded && flashcardsViewedLoaded && 
-            currentStreakLoaded && studyTimeLoaded && masteredDecksLoaded) {
+            currentStreakLoaded && studyTimeLoaded && masteredDecksLoaded && weeklyComparisonLoaded) {
             _isLoading.value = false
         }
     }

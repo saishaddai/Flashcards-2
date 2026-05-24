@@ -223,7 +223,8 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int) {
                             text = activityData.sum().toString(),
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
-                            color = RoyalBlue
+                            color = RoyalBlue,
+                            modifier = Modifier.testTag(TestTags.STATS_WEEKLY_ACTIVITY_TOTAL)
                         )
                         Text(
                             text = stringResource(R.string.stats_cards_reviewed),
@@ -411,7 +412,8 @@ fun AtAGlanceSection(
                     value = flashcardsViewed,
                     label = stringResource(R.string.stats_flashcards_viewed),
                     containerColor = Color(0xFF1E293B),
-                    iconColor = RoyalBlue
+                    iconColor = RoyalBlue,
+                    testTag = TestTags.STATS_FLASHCARDS_VIEWED
                 )
                 StatCard(
                     modifier = Modifier.weight(1f),
@@ -419,7 +421,8 @@ fun AtAGlanceSection(
                     value = currentStreak,
                     label = stringResource(R.string.stats_current_streak),
                     containerColor = Color(0xFF3E2723),
-                    iconColor = Color(0xFFF59E0B)
+                    iconColor = Color(0xFFF59E0B),
+                    testTag = TestTags.STATS_CURRENT_STREAK
                 )
             }
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -429,7 +432,8 @@ fun AtAGlanceSection(
                     value = studyTime,
                     label = stringResource(R.string.stats_study_time),
                     containerColor = Color(0xFF2E1065),
-                    iconColor = Color(0xFF8B5CF6)
+                    iconColor = Color(0xFF8B5CF6),
+                    testTag = TestTags.STATS_STUDY_TIME
                 )
                 StatCard(
                     modifier = Modifier.weight(1f),
@@ -437,7 +441,8 @@ fun AtAGlanceSection(
                     value = masteredDecks,
                     label = stringResource(R.string.stats_mastered_decks),
                     containerColor = Color(0xFF064E3B),
-                    iconColor = Color(0xFF10B981)
+                    iconColor = Color(0xFF10B981),
+                    testTag = TestTags.STATS_MASTERED_DECKS
                 )
             }
         }
@@ -451,10 +456,12 @@ fun StatCard(
     value: String,
     label: String,
     containerColor: Color,
-    iconColor: Color
+    iconColor: Color,
+    testTag: String = ""
 ) {
     Card(
-        modifier = modifier.height(110.dp),
+        modifier = modifier.height(110.dp)
+            .testTag(testTag),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = containerColor)
     ) {

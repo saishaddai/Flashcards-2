@@ -1,7 +1,11 @@
 package com.saishaddai.flashcards.screens
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
@@ -23,6 +27,9 @@ class StatsScreenTest {
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
 
+    private fun hasColor(color: Color): SemanticsMatcher =
+        SemanticsMatcher.expectValue(ColorKey, color)
+
     @Test
     fun testStatsScreen_isLoading_showsFullLoader() {
         composeTestRule.setContent {
@@ -34,6 +41,7 @@ class StatsScreenTest {
                 currentStreak = "0",
                 studyTime = "0",
                 masteredDecks = "0",
+                weeklyComparison = 0,
                 isLoading = true,
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
@@ -57,6 +65,7 @@ class StatsScreenTest {
                 currentStreak = "5",
                 studyTime = "2h",
                 masteredDecks = "10",
+                weeklyComparison = 0,
                 isLoading = false,
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
@@ -66,6 +75,97 @@ class StatsScreenTest {
 
         composeTestRule.onNodeWithTag(TestTags.FULL_LOADER).assertDoesNotExist()
         composeTestRule.onNodeWithText(statsTitle).assertIsDisplayed()
+    }
+
+    @Test
+    fun testStatsScreen_weeklyComparison_positiveGrowth() {
+        composeTestRule.setContent {
+            StatsContent(
+                promoDeck = null,
+                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
+                skillMastery = emptyList(),
+                flashcardsViewed = "100",
+                currentStreak = "5",
+                studyTime = "2h",
+                masteredDecks = "10",
+                weeklyComparison = 15,
+                isLoading = false,
+                onViewAllSkillsClicked = {},
+                onPromoClick = {},
+                showSuggestions = true
+            )
+        }
+
+        // Check number text and color (Green: 0xFF10B981)
+        composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_NUMBER)
+            .assertIsDisplayed()
+            .assert(hasText("+15%"))
+            .assert(hasColor(Color(0xFF10B981)))
+
+        // Check icon presence and color
+        composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_ICON)
+            .assertIsDisplayed()
+            .assert(hasColor(Color(0xFF10B981)))
+    }
+
+    @Test
+    fun testStatsScreen_weeklyComparison_negativeGrowth() {
+        composeTestRule.setContent {
+            StatsContent(
+                promoDeck = null,
+                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
+                skillMastery = emptyList(),
+                flashcardsViewed = "100",
+                currentStreak = "5",
+                studyTime = "2h",
+                masteredDecks = "10",
+                weeklyComparison = -8,
+                isLoading = false,
+                onViewAllSkillsClicked = {},
+                onPromoClick = {},
+                showSuggestions = true
+            )
+        }
+
+        // Check number text and color (Red: 0xFFEF4444)
+        composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_NUMBER)
+            .assertIsDisplayed()
+            .assert(hasText("-8%"))
+            .assert(hasColor(Color(0xFFEF4444)))
+
+        // Check icon presence and color
+        composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_ICON)
+            .assertIsDisplayed()
+            .assert(hasColor(Color(0xFFEF4444)))
+    }
+
+    @Test
+    fun testStatsScreen_weeklyComparison_zeroGrowth() {
+        composeTestRule.setContent {
+            StatsContent(
+                promoDeck = null,
+                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
+                skillMastery = emptyList(),
+                flashcardsViewed = "100",
+                currentStreak = "5",
+                studyTime = "2h",
+                masteredDecks = "10",
+                weeklyComparison = 0,
+                isLoading = false,
+                onViewAllSkillsClicked = {},
+                onPromoClick = {},
+                showSuggestions = true
+            )
+        }
+
+        // Check number text and color (White)
+        composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_NUMBER)
+            .assertIsDisplayed()
+            .assert(hasText("0%"))
+            .assert(hasColor(Color.White))
+
+        // Check icon absence
+        composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_ICON).assertDoesNotExist()
     }
 
     @Test
@@ -84,6 +184,7 @@ class StatsScreenTest {
                 currentStreak = "7",
                 studyTime = "12h 30m",
                 masteredDecks = "5",
+                weeklyComparison = 12,
                 isLoading = false,
                 onViewAllSkillsClicked = {},
                 onPromoClick = { promoClicked = true },
@@ -125,6 +226,7 @@ class StatsScreenTest {
                 currentStreak = "5",
                 studyTime = "2h",
                 masteredDecks = "10",
+                weeklyComparison = 0,
                 isLoading = false,
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
@@ -137,7 +239,7 @@ class StatsScreenTest {
 
     @Test
     fun testStatsScreen_emptyState_showsDefaultValues() {
-        val weeklyActivityTitle = "Weekly Activity"
+        val weeklyActivityTitle = context.getString(R.string.stats_title_weekly_activity)
         val skillMasteryTitle = "Skill Mastery"
         val atAGlanceTitle = context.getString(R.string.stats_at_glance)
 
@@ -150,6 +252,7 @@ class StatsScreenTest {
                 currentStreak = "0 Days",
                 studyTime = "0m",
                 masteredDecks = "0%",
+                weeklyComparison = 0,
                 isLoading = false,
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
@@ -163,10 +266,11 @@ class StatsScreenTest {
         composeTestRule.onNodeWithText(atAGlanceTitle).assertIsDisplayed()
 
         // Verify At-A-Glance default values
-        composeTestRule.onNodeWithText("0").assertIsDisplayed()
+        // We use onAllNodesWithText and check existence because there are multiple "0" and "0%" nodes
+        composeTestRule.onAllNodesWithText("0").fetchSemanticsNodes().isNotEmpty()
         composeTestRule.onNodeWithText("0 Days").assertIsDisplayed()
         composeTestRule.onNodeWithText("0m").assertIsDisplayed()
-        composeTestRule.onNodeWithText("0%").assertIsDisplayed()
+        composeTestRule.onAllNodesWithText("0%").fetchSemanticsNodes().isNotEmpty()
 
         // Verify Weekly Activity graph is still shown
         composeTestRule.onNodeWithTag(TestTags.STATS_WEEKLY_ACTIVITY).assertIsDisplayed()

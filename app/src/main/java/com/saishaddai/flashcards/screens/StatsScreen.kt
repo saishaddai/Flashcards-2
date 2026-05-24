@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.automirrored.filled.TrendingDown
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
@@ -43,6 +44,9 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.SemanticsPropertyKey
+import androidx.compose.ui.semantics.SemanticsPropertyReceiver
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -77,6 +81,9 @@ import java.util.Calendar
 import java.util.Locale
 import org.koin.androidx.compose.koinViewModel
 
+val ColorKey = SemanticsPropertyKey<Color>("Color")
+var SemanticsPropertyReceiver.colorProperty by ColorKey
+
 @Composable
 fun StatsScreen(
     decksViewModel: DecksViewModel = koinViewModel(),
@@ -91,6 +98,7 @@ fun StatsScreen(
     val currentStreak by statsViewModel.currentStreak.collectAsState()
     val studyTime by statsViewModel.studyTime.collectAsState()
     val masteredDecks by statsViewModel.masteredDecks.collectAsState()
+    val weeklyComparison by statsViewModel.weeklyComparison.collectAsState()
     val isLoading by statsViewModel.isLoading.collectAsState()
     val userSettings by settingsViewModel.userSettings.collectAsState()
     val showSuggestions = userSettings?.showSuggestions ?: true
@@ -103,6 +111,7 @@ fun StatsScreen(
         currentStreak = currentStreak,
         studyTime = studyTime,
         masteredDecks = masteredDecks,
+        weeklyComparison = weeklyComparison,
         isLoading = isLoading,
         showSuggestions = showSuggestions,
         onViewAllSkillsClicked = statsViewModel::onViewAllSkillsClicked,
@@ -119,6 +128,7 @@ fun StatsContent(
     currentStreak: String,
     studyTime: String,
     masteredDecks: String,
+    weeklyComparison: Int,
     isLoading: Boolean,
     showSuggestions: Boolean,
     onViewAllSkillsClicked: () -> Unit,
@@ -141,7 +151,7 @@ fun StatsContent(
             )
 
             Spacer(modifier = Modifier.height(24.dp))
-            WeeklyActivityCard(weeklyActivity)
+            WeeklyActivityCard(weeklyActivity, weeklyComparison)
             Spacer(modifier = Modifier.height(32.dp))
             SkillMasterySection(skillMastery, onViewAllSkillsClicked)
             Spacer(modifier = Modifier.height(32.dp))
@@ -160,7 +170,7 @@ fun StatsContent(
 }
 
 @Composable
-fun WeeklyActivityCard(activityData: List<Int>) {
+fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int) {
     val dateRange = remember { getWeeklyDateRange() }
 
     val modelProducer = remember { CartesianChartModelProducer() }
@@ -213,7 +223,8 @@ fun WeeklyActivityCard(activityData: List<Int>) {
                             text = activityData.sum().toString(),
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
-                            color = RoyalBlue
+                            color = RoyalBlue,
+                            modifier = Modifier.testTag(TestTags.STATS_WEEKLY_ACTIVITY_TOTAL)
                         )
                         Text(
                             text = stringResource(R.string.stats_cards_reviewed),
@@ -221,20 +232,29 @@ fun WeeklyActivityCard(activityData: List<Int>) {
                             color = Color(0xFFB0B0B0)
                         )
                     }
-                    Column(horizontalAlignment = Alignment.End) {
+                    Column(horizontalAlignment = Alignment.End,
+                        modifier = Modifier.testTag(TestTags.STATS_PROGRESS_COMPARE),) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.TrendingUp,
-                                contentDescription = null,
-                                tint = Color(0xFF10B981),
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
+                            val comparisonData = getComparisonData(weeklyComparison)
+
+                            if (comparisonData.icon != null) {
+                                Icon(
+                                    imageVector = comparisonData.icon,
+                                    contentDescription = null,
+                                    tint = comparisonData.color,
+                                    modifier = Modifier.size(24.dp)
+                                        .testTag(TestTags.STATS_PROGRESS_ICON)
+                                        .semantics { colorProperty = comparisonData.color }
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                            }
                             Text(
-                                text = "+12%",
+                                text = comparisonData.text,
                                 fontSize = 28.sp,
-                                color = Color(0xFF10B981),
-                                fontWeight = FontWeight.Bold
+                                color = comparisonData.color,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.testTag(TestTags.STATS_PROGRESS_NUMBER)
+                                    .semantics { colorProperty = comparisonData.color }
                             )
                         }
                     }
@@ -392,7 +412,8 @@ fun AtAGlanceSection(
                     value = flashcardsViewed,
                     label = stringResource(R.string.stats_flashcards_viewed),
                     containerColor = Color(0xFF1E293B),
-                    iconColor = RoyalBlue
+                    iconColor = RoyalBlue,
+                    testTag = TestTags.STATS_FLASHCARDS_VIEWED
                 )
                 StatCard(
                     modifier = Modifier.weight(1f),
@@ -400,7 +421,8 @@ fun AtAGlanceSection(
                     value = currentStreak,
                     label = stringResource(R.string.stats_current_streak),
                     containerColor = Color(0xFF3E2723),
-                    iconColor = Color(0xFFF59E0B)
+                    iconColor = Color(0xFFF59E0B),
+                    testTag = TestTags.STATS_CURRENT_STREAK
                 )
             }
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -410,7 +432,8 @@ fun AtAGlanceSection(
                     value = studyTime,
                     label = stringResource(R.string.stats_study_time),
                     containerColor = Color(0xFF2E1065),
-                    iconColor = Color(0xFF8B5CF6)
+                    iconColor = Color(0xFF8B5CF6),
+                    testTag = TestTags.STATS_STUDY_TIME
                 )
                 StatCard(
                     modifier = Modifier.weight(1f),
@@ -418,7 +441,8 @@ fun AtAGlanceSection(
                     value = masteredDecks,
                     label = stringResource(R.string.stats_mastered_decks),
                     containerColor = Color(0xFF064E3B),
-                    iconColor = Color(0xFF10B981)
+                    iconColor = Color(0xFF10B981),
+                    testTag = TestTags.STATS_MASTERED_DECKS
                 )
             }
         }
@@ -432,10 +456,12 @@ fun StatCard(
     value: String,
     label: String,
     containerColor: Color,
-    iconColor: Color
+    iconColor: Color,
+    testTag: String = ""
 ) {
     Card(
-        modifier = modifier.height(110.dp),
+        modifier = modifier.height(110.dp)
+            .testTag(testTag),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = containerColor)
     ) {
@@ -479,6 +505,27 @@ private fun getWeeklyDateRange(): String {
     return "${sdf.format(startDate)} - ${sdf.format(endDate)}"
 }
 
+private data class ComparisonData(val color: Color, val icon: ImageVector?, val text: String)
+
+private fun getComparisonData(weeklyComparison: Int): ComparisonData {
+    val color = when {
+        weeklyComparison > 0 -> Color(0xFF10B981)
+        weeklyComparison < 0 -> Color(0xFFEF4444)
+        else -> Color.White
+    }
+    val icon = when {
+        weeklyComparison > 0 -> Icons.AutoMirrored.Filled.TrendingUp
+        weeklyComparison < 0 -> Icons.AutoMirrored.Filled.TrendingDown
+        else -> null
+    }
+    val text = when {
+        weeklyComparison > 0 -> "+$weeklyComparison%"
+        weeklyComparison < 0 -> "$weeklyComparison%"
+        else -> "0%"
+    }
+    return ComparisonData(color, icon, text)
+}
+
 @Preview(showBackground = true)
 @Composable
 fun StatsScreenPreview() {
@@ -494,6 +541,7 @@ fun StatsScreenPreview() {
             currentStreak = "7",
             studyTime = "12h 30m",
             masteredDecks = "92%",
+            weeklyComparison = 12,
             isLoading = false,
             showSuggestions = true,
             onViewAllSkillsClicked = {},

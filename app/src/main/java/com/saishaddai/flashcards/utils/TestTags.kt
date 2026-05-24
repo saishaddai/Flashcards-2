@@ -25,6 +25,14 @@ object TestTags {
     const val STATS_WEEKLY_ACTIVITY = "stats_weekly_activity"
     const val STATS_WEEKLY_ACTIVITY_DESCRIPTION = "stats_weekly_activity_description"
     const val STATS_SKILL_MASTERY_DESCRIPTION = "stats_skill_mastery_description"
+    const val STATS_PROGRESS_COMPARE = "stats_progress_compare"
+    const val STATS_PROGRESS_ICON = "stats_progress_icon"
+    const val STATS_PROGRESS_NUMBER = "stats_progress_number"
+    const val STATS_WEEKLY_ACTIVITY_TOTAL = "stats_weekly_activity_total"
+    const val STATS_FLASHCARDS_VIEWED = "stats_flashcards_viewed"
+    const val STATS_CURRENT_STREAK = "stats_current_streak"
+    const val STATS_STUDY_TIME = "stats_study_time"
+    const val STATS_MASTERED_DECKS = "stats_mastered_decks"
 
 
 }

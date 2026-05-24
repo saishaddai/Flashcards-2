@@ -10,4 +10,5 @@ interface StatsRepository {
     fun getCurrentStreak(): Flow<String>
     fun getStudyTime(): Flow<String>
     fun getMasteredDecks(): Flow<String>
+    fun getWeeklyComparison(): Flow<Int>
 }

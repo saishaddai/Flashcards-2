@@ -44,6 +44,9 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.SemanticsPropertyKey
+import androidx.compose.ui.semantics.SemanticsPropertyReceiver
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -77,6 +80,9 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import org.koin.androidx.compose.koinViewModel
+
+val ColorKey = SemanticsPropertyKey<Color>("Color")
+var SemanticsPropertyReceiver.colorProperty by ColorKey
 
 @Composable
 fun StatsScreen(
@@ -228,38 +234,26 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int) {
                     Column(horizontalAlignment = Alignment.End,
                         modifier = Modifier.testTag(TestTags.STATS_PROGRESS_COMPARE),) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            val comparisonColor = when {
-                                weeklyComparison > 0 -> Color(0xFF10B981)
-                                weeklyComparison < 0 -> Color(0xFFEF4444)
-                                else -> Color.White
-                            }
-                            val comparisonIcon = when {
-                                weeklyComparison > 0 -> Icons.AutoMirrored.Filled.TrendingUp
-                                weeklyComparison < 0 -> Icons.AutoMirrored.Filled.TrendingDown
-                                else -> null
-                            }
-                            val comparisonText = when {
-                                weeklyComparison > 0 -> "+$weeklyComparison%"
-                                weeklyComparison < 0 -> "$weeklyComparison%"
-                                else -> "0%"
-                            }
+                            val comparisonData = getComparisonData(weeklyComparison)
 
-                            if (comparisonIcon != null) {
+                            if (comparisonData.icon != null) {
                                 Icon(
-                                    imageVector = comparisonIcon,
+                                    imageVector = comparisonData.icon,
                                     contentDescription = null,
-                                    tint = comparisonColor,
+                                    tint = comparisonData.color,
                                     modifier = Modifier.size(24.dp)
                                         .testTag(TestTags.STATS_PROGRESS_ICON)
+                                        .semantics { colorProperty = comparisonData.color }
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                             }
                             Text(
-                                text = comparisonText,
+                                text = comparisonData.text,
                                 fontSize = 28.sp,
-                                color = comparisonColor,
+                                color = comparisonData.color,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.testTag(TestTags.STATS_PROGRESS_NUMBER)
+                                    .semantics { colorProperty = comparisonData.color }
                             )
                         }
                     }
@@ -502,6 +496,27 @@ private fun getWeeklyDateRange(): String {
     val endDate = calendar.time
     val sdf = SimpleDateFormat("MMM d", Locale.getDefault())
     return "${sdf.format(startDate)} - ${sdf.format(endDate)}"
+}
+
+private data class ComparisonData(val color: Color, val icon: ImageVector?, val text: String)
+
+private fun getComparisonData(weeklyComparison: Int): ComparisonData {
+    val color = when {
+        weeklyComparison > 0 -> Color(0xFF10B981)
+        weeklyComparison < 0 -> Color(0xFFEF4444)
+        else -> Color.White
+    }
+    val icon = when {
+        weeklyComparison > 0 -> Icons.AutoMirrored.Filled.TrendingUp
+        weeklyComparison < 0 -> Icons.AutoMirrored.Filled.TrendingDown
+        else -> null
+    }
+    val text = when {
+        weeklyComparison > 0 -> "+$weeklyComparison%"
+        weeklyComparison < 0 -> "$weeklyComparison%"
+        else -> "0%"
+    }
+    return ComparisonData(color, icon, text)
 }
 
 @Preview(showBackground = true)

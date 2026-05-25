@@ -7,6 +7,8 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.doubleClick
 import androidx.test.platform.app.InstrumentationRegistry
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
@@ -173,5 +175,31 @@ class DeckListScreenTest {
 
         // Check by text directly as it should be in the hierarchy even if ellipsized visually
         composeTestRule.onNodeWithText(longTitle).assertIsDisplayed()
+    }
+
+    @Test
+    fun testDeckListScreen_doubleClickMockDeck_showsConfirmationDialog() {
+        val mockDecks = listOf(
+            Deck(id = 1, name = "Double Click Deck", longName = "Double Click", cardCount = 10)
+        )
+
+        val fakeRepository = object : DeckRepository<Deck> {
+            override suspend fun getData(): List<Deck> = mockDecks
+        }
+
+        val viewModel = DecksViewModel(application, fakeRepository)
+
+        composeTestRule.setContent {
+            DeckListScreen(viewModel = viewModel, onStartSessionClick = {})
+        }
+
+        // Double click the deck title
+        composeTestRule.onNodeWithText("Double Click Deck").performTouchInput {
+            doubleClick()
+        }
+
+        // Verify the confirmation dialog is displayed
+        composeTestRule.onNodeWithText(context.getString(R.string.flashcard_start_dialog_title)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.flashcard_start_dialog_confirm)).assertIsDisplayed()
     }
 }

@@ -28,6 +28,10 @@
     <string name="flashcard_button_show_response">Show Response</string>
     <string name="flashcard_button_cancel_session">CANCEL SESSION</string>
     <string name="flashcard_button_finish_session">FINISH SESSION</string>
+    <string name="flashcard_start_dialog_title">Start Session?</string>
+    <string name="flashcard_start_dialog_message">Do you want to start a study session for \'%s\'?</string>
+    <string name="flashcard_start_dialog_confirm">Start Now</string>
+    <string name="flashcard_start_dialog_dismiss">Cancel</string>
     <string name="flashcard_cancel_dialog_title">Cancel Session?</string>
     <string name="flashcard_cancel_dialog_message">Are you sure you want to cancel the session? Your progress will not be saved.</string>
     <string name="flashcard_cancel_dialog_confirm">Yes, Cancel</string>

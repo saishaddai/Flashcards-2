@@ -1,6 +1,8 @@
 package com.saishaddai.flashcards.screens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -76,39 +78,21 @@ fun DeckListContent(
 ) {
     val selectedDeck = decks.find { it.isSelected }
     val showEmptyDeckDialog = rememberSaveable { mutableStateOf(false) }
+    val deckToQuickStart = rememberSaveable { mutableStateOf<Deck?>(null) }
 
     if (isLoading) {
         FullLoader(stringResource(R.string.loading_decks))
     } else {
-        if (showEmptyDeckDialog.value) {
-            AlertDialog(
-                onDismissRequest = { showEmptyDeckDialog.value = false },
-                title = {
-                    Text(
-                        text = stringResource(R.string.empty_deck_title),
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                },
-                text = {
-                    Text(
-                        text = stringResource(R.string.empty_deck_message),
-                        color = Color(0xFFB0B0B0)
-                    )
-                },
-                confirmButton = {
-                    TextButton(onClick = { showEmptyDeckDialog.value = false }) {
-                        Text(
-                            text = stringResource(R.string.empty_deck_confirm),
-                            color = RoyalBlue,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                },
-                containerColor = Color(0xFF2C2C4E),
-                shape = RoundedCornerShape(28.dp)
-            )
-        }
+        DeckListDialogs(
+            emptyDeckDialogVisible = showEmptyDeckDialog.value,
+            onDismissEmptyDeckDialog = { showEmptyDeckDialog.value = false },
+            quickStartDeck = deckToQuickStart.value,
+            onDismissQuickStartDialog = { deckToQuickStart.value = null },
+            onConfirmQuickStart = { deck ->
+                deckToQuickStart.value = null
+                onStartSessionClick(deck)
+            }
+        )
 
         Column(
             modifier = Modifier
@@ -122,6 +106,14 @@ fun DeckListContent(
             DeckGrid(
                 decks = decks,
                 onDeckSelected = onDeckSelected,
+                onDeckDoubleClicked = { deck ->
+                    onDeckSelected(deck)
+                    if (deck.cardCount > 0) {
+                        deckToQuickStart.value = deck
+                    } else {
+                        showEmptyDeckDialog.value = true
+                    }
+                },
                 modifier = Modifier.weight(1f)
             )
 
@@ -143,9 +135,88 @@ fun DeckListContent(
 }
 
 @Composable
+private fun DeckListDialogs(
+    emptyDeckDialogVisible: Boolean,
+    onDismissEmptyDeckDialog: () -> Unit,
+    quickStartDeck: Deck?,
+    onDismissQuickStartDialog: () -> Unit,
+    onConfirmQuickStart: (Deck) -> Unit
+) {
+    if (emptyDeckDialogVisible) {
+        AlertDialog(
+            onDismissRequest = onDismissEmptyDeckDialog,
+            title = {
+                Text(
+                    text = stringResource(R.string.empty_deck_title),
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.empty_deck_message),
+                    color = Color(0xFFB0B0B0)
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = onDismissEmptyDeckDialog) {
+                    Text(
+                        text = stringResource(R.string.empty_deck_confirm),
+                        color = RoyalBlue,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            containerColor = Color(0xFF2C2C4E),
+            shape = RoundedCornerShape(28.dp)
+        )
+    }
+
+    quickStartDeck?.let { deck ->
+        AlertDialog(
+            onDismissRequest = onDismissQuickStartDialog,
+            title = {
+                Text(
+                    text = stringResource(R.string.flashcard_start_dialog_title),
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.flashcard_start_dialog_message, deck.name),
+                    color = Color(0xFFB0B0B0)
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { onConfirmQuickStart(deck) }) {
+                    Text(
+                        text = stringResource(R.string.flashcard_start_dialog_confirm),
+                        color = RoyalBlue,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismissQuickStartDialog) {
+                    Text(
+                        text = stringResource(R.string.flashcard_start_dialog_dismiss),
+                        color = RoyalBlue,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            containerColor = Color(0xFF2C2C4E),
+            shape = RoundedCornerShape(28.dp)
+        )
+    }
+}
+
+@Composable
 fun DeckGrid(
     decks: List<Deck>,
     onDeckSelected: (Deck) -> Unit,
+    onDeckDoubleClicked: (Deck) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(
@@ -155,21 +226,26 @@ fun DeckGrid(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(decks) { deck ->
-            DeckCard(deck = deck) {
-                onDeckSelected(deck)
-            }
+            DeckCard(
+                deck = deck,
+                onClick = { onDeckSelected(deck) },
+                onDoubleClick = { onDeckDoubleClicked(deck) }
+            )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun DeckCard(deck: Deck, onClick: () -> Unit) {
+fun DeckCard(deck: Deck, onClick: () -> Unit, onDoubleClick: () -> Unit) {
     Card(
-        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp),
+            .height(150.dp)
+            .combinedClickable(
+                onClick = onClick,
+                onDoubleClick = onDoubleClick
+            ),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF2C2C4E)

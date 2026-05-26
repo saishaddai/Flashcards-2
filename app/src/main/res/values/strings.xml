@@ -16,6 +16,30 @@
     <string name="mastery_level_veteran">Veteran</string>
     <string name="mastery_level_mastered">Master</string>
 
+
+    <!-- Decks descriptions -->
+    <string name="deck_description_oop">Object Oriented Programming concepts, classes, objects, types of relationships between classes\n\nDo you want to start a study session?</string>
+    <string name="deck_description_android">Android Core concepts, best practices, architecture\n\nDo you want to start a study session?</string>
+    <string name="deck_description_kotlin">Core concepts about Kotlin, interoperability with Java, collections, classes hierarchy, syntax, hidden rules and more\n\nDo you want to start a study session?</string>
+    <string name="deck_description_kmp">Kotlin Multiplatform. Includes Compose Multiplatform, architecture, interoperability between Android and iOS.\n\nDo you want to start a study session?</string>
+    <string name="deck_description_security">Security\n\nDo you want to start a study session?</string>
+    <string name="deck_description_compose">Compose\n\nDo you want to start a study session?</string>
+    <string name="deck_description_databases">SQLite and SQLDelight\n\nDo you want to start a study session?</string>
+    <string name="deck_description_di">Hilt, Dagger and Koin\n\nDo you want to start a study session?</string>
+    <string name="deck_description_material3">Material 3 and Material 3 Expressive\n\nDo you want to start a study session?</string>
+    <string name="deck_description_navigation">Navigation 2 and 3\n\nDo you want to start a study session?</string>
+    <string name="deck_description_jetpack">Jetpack as a suite, different questions about all the libraries\n\nDo you want to start a study session?</string>
+    <string name="deck_description_testing">Testing, from unit, instrumentation and more\n\nDo you want to start a study session?</string>
+    <string name="deck_description_gradle">Gradle\n\nDo you want to start a study session?</string>
+    <string name="deck_description_ops">CD/CI concepts integrated to Android Environment\n\nDo you want to start a study session?</string>
+    <string name="deck_description_libraries">Other libraries mostly used in Android Development, such as Timber, Glide, OkHttp, Retrofit, Okio and more\n\nDo you want to start a study session?</string>
+    <string name="deck_description_design_patterns">Most used design Patterns in Android\n\nDo you want to start a study session?</string>
+    <string name="deck_description_coroutines">Coroutines, Dispatchers, Schedulers, suspend functions and more \n\nDo you want to start a study session?</string>
+    <string name="deck_description_firebase">Firebase. The cloud services from Google that includes: Firestore, Crashlytics among others\n\nDo you want to start a study session?</string>
+    <string name="deck_description_graphql">GraphQL\n\nDo you want to start a study session?</string>
+    <string name="deck_description_sensors">Sensors in Android: Accelerometer, Gyroscope and Magnetometer\n\nDo you want to start a study session?</string>
+    <string name="deck_description_generic">No description found for this deck\n\nDo you want to start a study session?</string>
+
     <!-- FlashcardScreen -->
     <string name="flashcard_top_bar_title">FLASHCARD SESSION</string>
     <string name="flashcard_nav_icon_content_desc_close">Close</string>
@@ -28,8 +52,6 @@
     <string name="flashcard_button_show_response">Show Response</string>
     <string name="flashcard_button_cancel_session">CANCEL SESSION</string>
     <string name="flashcard_button_finish_session">FINISH SESSION</string>
-    <string name="flashcard_start_dialog_title">Start Session?</string>
-    <string name="flashcard_start_dialog_message">Do you want to start a study session for \'%s\'?</string>
     <string name="flashcard_start_dialog_confirm">Start Now</string>
     <string name="flashcard_start_dialog_dismiss">Cancel</string>
     <string name="flashcard_cancel_dialog_title">Cancel Session?</string>

@@ -211,11 +211,15 @@ fun FinishSessionContent(
                         icon = Icons.Default.Timer
                     )
                 }
+
+                //XP del Deck (mastery increased)
                 Spacer(modifier = Modifier.height(32.dp))
                 AchievementReached(
                     icon = Icons.AutoMirrored.Filled.TrendingUp,
                     text = stringResource(R.string.finish_total_experience, sessionResult?.avanceSesion?.toInt() ?: 0),
                 )
+
+                //Daily Goal percentage
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
                     icon = Icons.Default.Star,

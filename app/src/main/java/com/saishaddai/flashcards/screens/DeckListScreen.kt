@@ -173,18 +173,19 @@ private fun DeckListDialogs(
     }
 
     quickStartDeck?.let { deck ->
+        val description = stringResource(DeckAssets.getDescriptionForDeck(deck.id))
         AlertDialog(
             onDismissRequest = onDismissQuickStartDialog,
             title = {
                 Text(
-                    text = stringResource(R.string.flashcard_start_dialog_title),
+                    text = deck.name,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             },
             text = {
                 Text(
-                    text = stringResource(R.string.flashcard_start_dialog_message, deck.name),
+                    text = description,
                     color = Color(0xFFB0B0B0)
                 )
             },

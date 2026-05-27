@@ -50,19 +50,24 @@ import com.saishaddai.flashcards.utils.DeckAssets
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.getMasteryLevel
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
+import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DeckListScreen(
     onStartSessionClick: (Deck) -> Unit,
-    viewModel: DecksViewModel = koinViewModel()
+    viewModel: DecksViewModel = koinViewModel(),
+    settingsViewModel: SettingsViewModel = koinViewModel()
 ) {
     val decksState by viewModel.decks.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val userSettings by settingsViewModel.userSettings.collectAsState()
+    val quickStartEnabled = userSettings?.quickStart ?: false
 
     DeckListContent(
         decks = decksState,
         isLoading = isLoading,
+        quickStartEnabled = quickStartEnabled,
         onDeckSelected = viewModel::onDeckSelected,
         onStartSessionClick = onStartSessionClick
     )
@@ -73,6 +78,7 @@ fun DeckListScreen(
 fun DeckListContent(
     decks: List<Deck>,
     isLoading: Boolean,
+    quickStartEnabled: Boolean,
     onDeckSelected: (Deck) -> Unit,
     onStartSessionClick: (Deck) -> Unit
 ) {
@@ -109,7 +115,11 @@ fun DeckListContent(
                 onDeckDoubleClicked = { deck ->
                     onDeckSelected(deck)
                     if (deck.cardCount > 0) {
-                        deckToQuickStart.value = deck
+                        if (quickStartEnabled) {
+                            onStartSessionClick(deck)
+                        } else {
+                            deckToQuickStart.value = deck
+                        }
                     } else {
                         showEmptyDeckDialog.value = true
                     }
@@ -323,6 +333,7 @@ fun DeckListScreenPreview() {
             Deck(2, "Android", "Android Development", mastery = 30, cardCount = 15)
         ),
         isLoading = false,
+        quickStartEnabled = false,
         onDeckSelected = {},
         onStartSessionClick = {}
     )

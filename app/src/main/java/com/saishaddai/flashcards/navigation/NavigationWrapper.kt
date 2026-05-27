@@ -28,6 +28,7 @@ import com.saishaddai.flashcards.screens.SettingsScreen
 import com.saishaddai.flashcards.screens.StatsScreen
 import com.saishaddai.flashcards.utils.navigateBack
 import com.saishaddai.flashcards.utils.navigateTo
+import com.saishaddai.flashcards.utils.resetTo
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -68,7 +69,9 @@ fun NavigationWrapper() {
                         cardsReviewed = route.cardsReviewed,
                         startTime = route.startTime,
                         endTime = route.endTime,
-                        onFinishSession = { backStack.navigateTo(DeckList) },
+                        onFinishSession = {
+                            backStack.resetTo(DeckList)
+                        },
                         onShareSummary = {}
                     )
                 }

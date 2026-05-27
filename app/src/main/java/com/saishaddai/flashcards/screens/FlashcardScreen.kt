@@ -64,7 +64,10 @@ fun FlashcardScreen(
     onCancelSessionClick: () -> Unit,
     onFinishedSessionClick: (Int, Long, Long) -> Unit,
     deck: Deck,
-    viewModel: FlashcardViewModel = koinViewModel(parameters = { parametersOf(deck.id) })
+    viewModel: FlashcardViewModel = koinViewModel(
+        key = deck.id.toString(),
+        parameters = { parametersOf(deck.id) }
+    )
 ) {
     val flashcards by viewModel.flashcards.collectAsState()
     val showAnswer by viewModel.showAnswer.collectAsState()

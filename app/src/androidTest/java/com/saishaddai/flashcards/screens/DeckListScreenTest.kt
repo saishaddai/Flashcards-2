@@ -2,22 +2,26 @@ package com.saishaddai.flashcards.screens
 
 import android.app.Application
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.doubleClick
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
-import androidx.compose.ui.test.doubleClick
 import androidx.test.platform.app.InstrumentationRegistry
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.repository.DeckRepository
+import com.saishaddai.flashcards.repository.UserSettings
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
+import com.saishaddai.flashcards.viewmodel.SettingsViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock
+import org.mockito.kotlin.whenever
 
 class DeckListScreenTest {
 
@@ -26,6 +30,12 @@ class DeckListScreenTest {
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
     private val application: Application = mock()
+
+    private fun createMockSettingsViewModel(quickStart: Boolean = false): SettingsViewModel {
+        val viewModel: SettingsViewModel = mock()
+        whenever(viewModel.userSettings).thenReturn(MutableStateFlow(UserSettings(quickStart = quickStart)))
+        return viewModel
+    }
 
     @Test
     fun testDeckListScreen_initialState_showsLoaderThenDecks() {
@@ -41,10 +51,12 @@ class DeckListScreenTest {
         }
 
         val viewModel = DecksViewModel(application, fakeRepository)
+        val settingsViewModel = createMockSettingsViewModel()
 
         composeTestRule.setContent {
             DeckListScreen(
                 viewModel = viewModel,
+                settingsViewModel = settingsViewModel,
                 onStartSessionClick = {}
             )
         }
@@ -73,10 +85,12 @@ class DeckListScreenTest {
         }
 
         val viewModel = DecksViewModel(application, fakeRepository)
+        val settingsViewModel = createMockSettingsViewModel()
 
         composeTestRule.setContent {
             DeckListScreen(
                 viewModel = viewModel,
+                settingsViewModel = settingsViewModel,
                 onStartSessionClick = {}
             )
         }
@@ -96,9 +110,14 @@ class DeckListScreenTest {
         }
 
         val viewModel = DecksViewModel(application, fakeRepository)
+        val settingsViewModel = createMockSettingsViewModel()
 
         composeTestRule.setContent {
-            DeckListScreen(viewModel = viewModel, onStartSessionClick = {})
+            DeckListScreen(
+                viewModel = viewModel,
+                settingsViewModel = settingsViewModel,
+                onStartSessionClick = {}
+            )
         }
 
         composeTestRule.onNodeWithText(context.getString(R.string.decks_start_session_button)).performClick()
@@ -120,9 +139,14 @@ class DeckListScreenTest {
         }
 
         val viewModel = DecksViewModel(application, fakeRepository)
+        val settingsViewModel = createMockSettingsViewModel()
 
         composeTestRule.setContent {
-            DeckListScreen(viewModel = viewModel, onStartSessionClick = { onStartSessionClickCalled = true })
+            DeckListScreen(
+                viewModel = viewModel,
+                settingsViewModel = settingsViewModel,
+                onStartSessionClick = { onStartSessionClickCalled = true }
+            )
         }
 
         composeTestRule.onNodeWithText(context.getString(R.string.decks_start_session_button)).performClick()
@@ -142,9 +166,14 @@ class DeckListScreenTest {
         }
 
         val viewModel = DecksViewModel(application, fakeRepository)
+        val settingsViewModel = createMockSettingsViewModel()
 
         composeTestRule.setContent {
-            DeckListScreen(viewModel = viewModel, onStartSessionClick = {})
+            DeckListScreen(
+                viewModel = viewModel,
+                settingsViewModel = settingsViewModel,
+                onStartSessionClick = {}
+            )
         }
 
         // Regular case: 50 Cards • 20%
@@ -168,9 +197,14 @@ class DeckListScreenTest {
         }
 
         val viewModel = DecksViewModel(application, fakeRepository)
+        val settingsViewModel = createMockSettingsViewModel()
 
         composeTestRule.setContent {
-            DeckListScreen(viewModel = viewModel, onStartSessionClick = {})
+            DeckListScreen(
+                viewModel = viewModel,
+                settingsViewModel = settingsViewModel,
+                onStartSessionClick = {}
+            )
         }
 
         // Check by text directly as it should be in the hierarchy even if ellipsized visually
@@ -188,9 +222,14 @@ class DeckListScreenTest {
         }
 
         val viewModel = DecksViewModel(application, fakeRepository)
+        val settingsViewModel = createMockSettingsViewModel(quickStart = false)
 
         composeTestRule.setContent {
-            DeckListScreen(viewModel = viewModel, onStartSessionClick = {})
+            DeckListScreen(
+                viewModel = viewModel,
+                settingsViewModel = settingsViewModel,
+                onStartSessionClick = {}
+            )
         }
 
         // Double click the deck title
@@ -201,5 +240,39 @@ class DeckListScreenTest {
         // Verify the confirmation dialog is displayed
         composeTestRule.onNodeWithText(context.getString(R.string.flashcard_start_dialog_title)).assertIsDisplayed()
         composeTestRule.onNodeWithText(context.getString(R.string.flashcard_start_dialog_confirm)).assertIsDisplayed()
+    }
+
+    @Test
+    fun testDeckListScreen_doubleClickMockDeck_quickStartEnabled_skipsDialog() {
+        var onStartSessionClickCalled = false
+        val mockDecks = listOf(
+            Deck(id = 1, name = "Quick Start Deck", longName = "Quick Start", cardCount = 10)
+        )
+
+        val fakeRepository = object : DeckRepository<Deck> {
+            override suspend fun getData(): List<Deck> = mockDecks
+        }
+
+        val viewModel = DecksViewModel(application, fakeRepository)
+        val settingsViewModel = createMockSettingsViewModel(quickStart = true)
+
+        composeTestRule.setContent {
+            DeckListScreen(
+                viewModel = viewModel,
+                settingsViewModel = settingsViewModel,
+                onStartSessionClick = { onStartSessionClickCalled = true }
+            )
+        }
+
+        // Double click the deck title
+        composeTestRule.onNodeWithText("Quick Start Deck").performTouchInput {
+            doubleClick()
+        }
+
+        // Verify the confirmation dialog is NOT displayed
+        composeTestRule.onNodeWithText(context.getString(R.string.flashcard_start_dialog_title)).assertDoesNotExist()
+        
+        // Verify callback was triggered immediately
+        composeTestRule.waitUntil(5000) { onStartSessionClickCalled }
     }
 }

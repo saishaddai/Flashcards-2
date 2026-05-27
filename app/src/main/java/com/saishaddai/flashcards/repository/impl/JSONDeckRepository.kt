@@ -4,7 +4,6 @@ import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.DeckType.*
 import com.saishaddai.flashcards.model.Flashcard
-import com.saishaddai.flashcards.model.sessions
 import com.saishaddai.flashcards.repository.DeckRepository
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.repository.SessionRepository
@@ -19,17 +18,20 @@ class JSONDeckRepository(
 
     override suspend fun getData(): List<Deck> = withContext(Dispatchers.IO) {
         val allSessions = sessionRepository.getAllSessions().first()
-        decks.onEach { deck ->
-            deck.mastery = allSessions.find { it.deckId == deck.id }?.currentXP ?: 0
-            if (deck.cardCount == 0) {
-                deck.cardCount = flashcardRepository.getDataCount(DeckType.fromId(deck.id))
+        decks.map { deck ->
+            val mastery = allSessions.find { it.deckId == deck.id }?.currentXP ?: 0
+            val cardCount = if (deck.cardCount == 0) {
+                flashcardRepository.getDataCount(DeckType.fromId(deck.id))
+            } else {
+                deck.cardCount
             }
+            deck.copy(mastery = mastery, cardCount = cardCount)
         }
     }
 
-    val decks = listOf(
-        Deck(OOP.id, "OOP", "Object-Oriented Programming", isSelected = true),
-        Deck(SENSORS.id, "Sensors", "Android Sensors"),//in this position for testing purposes
+    private val decks = listOf(
+        Deck(OOP.id, "OOP", "Object-Oriented Programming"),
+        Deck(SENSORS.id, "Sensors", "Android Sensors"),
         Deck(ANDROID_CORE.id, "Android Core", "Android Core Technologies"),
         Deck(KOTLIN.id, "Kotlin", "Kotlin Programming Language"),
         Deck(KOTLIN_MP.id, "Kotlin MP", "Kotlin Multiplatform"),
@@ -48,11 +50,5 @@ class JSONDeckRepository(
         Deck(COROUTINES.id, "Coroutines", "Android Coroutines"),
         Deck(FIREBASE.id, "Firebase", "Firebase Integration"),
         Deck(GRAPHQL.id, "GraphQL", "GraphQL Integration")
-
-    ).map {
-        it.apply {
-            mastery = sessions.find { session -> session.deckId == it.id }?.currentXP ?: 0
-        }
-    }
-
+    )
 }

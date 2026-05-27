@@ -7,8 +7,8 @@ data class Deck(
     val id: Int,
     val name: String,
     val longName: String,
-    var mastery: Int = 0,
-    var cardCount: Int = 0,
+    val mastery: Int = 0,
+    val cardCount: Int = 0,
     val isSelected: Boolean = false
 )
 

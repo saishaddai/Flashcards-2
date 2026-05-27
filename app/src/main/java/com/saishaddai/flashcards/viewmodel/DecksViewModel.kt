@@ -32,7 +32,19 @@ class DecksViewModel(
     private fun loadDecks() {
         viewModelScope.launch {
             _isLoading.value = true
-            _decks.value = repository.getData()
+            val loadedDecks = repository.getData()
+            _decks.value = if (loadedDecks.isNotEmpty()) {
+                // Ensure something is selected by default if nothing is
+                if (loadedDecks.none { it.isSelected }) {
+                    loadedDecks.mapIndexed { index, deck ->
+                        deck.copy(isSelected = index == 0)
+                    }
+                } else {
+                    loadedDecks
+                }
+            } else {
+                emptyList()
+            }
             _isLoading.value = false
         }
     }

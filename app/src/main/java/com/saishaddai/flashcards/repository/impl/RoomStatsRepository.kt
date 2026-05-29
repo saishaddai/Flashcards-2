@@ -37,21 +37,46 @@ class RoomStatsRepository(
 
     override fun getSkillMastery(): Flow<List<MasteryData>> {
         return studyDao.getAllDeckMastery().map { masteries ->
-            masteries.map {
+            val result = masteries.map {
                 MasteryData(
                     title = it.deckName,
                     percentage = it.progress.toInt(),
                     level = it.level,
-                    color = when (it.level) {
-                        "Novato" -> Color(0xFFB0B0B0)
-                        "Intermedio" -> Color(0xFFF59E0B)
-                        "Avanzado" -> Color(0xFF10B981)
-                        "Experto" -> RoyalBlue
-                        "Master" -> Color(0xFFFFC700)
-                        else -> RoyalBlue
-                    }
+                    color = getMasteryColor(it.level)
                 )
+            }.toMutableList()
+
+            // Ensure the first two decks are always shown (OOP and Sensors)
+            val defaultDecks = listOf(
+                1 to "OOP",
+                20 to "Sensors"
+            )
+
+            for ((id, name) in defaultDecks) {
+                if (masteries.none { it.deckId == id }) {
+                    result.add(
+                        MasteryData(
+                            title = name,
+                            percentage = 0,
+                            level = "Novato",
+                            color = getMasteryColor("Novato")
+                        )
+                    )
+                }
             }
+
+            result.sortedByDescending { it.percentage }
+        }
+    }
+
+    private fun getMasteryColor(level: String): Color {
+        return when (level) {
+            "Novato" -> Color(0xFFB0B0B0)
+            "Intermedio" -> Color(0xFFF59E0B)
+            "Avanzado" -> Color(0xFF10B981)
+            "Experto" -> RoyalBlue
+            "Master" -> Color(0xFFFFC700)
+            else -> RoyalBlue
         }
     }
 

@@ -1,6 +1,7 @@
 package com.saishaddai.flashcards.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Style
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -102,6 +104,7 @@ fun StatsScreen(
     val isLoading by statsViewModel.isLoading.collectAsState()
     val userSettings by settingsViewModel.userSettings.collectAsState()
     val showSuggestions = userSettings?.showSuggestions ?: true
+    val infoDialogContent by statsViewModel.infoDialogContent.collectAsState()
 
     StatsContent(
         promoDeck = promoDeck,
@@ -114,7 +117,10 @@ fun StatsScreen(
         weeklyComparison = weeklyComparison,
         isLoading = isLoading,
         showSuggestions = showSuggestions,
+        infoDialogContent = infoDialogContent,
         onViewAllSkillsClicked = statsViewModel::onViewAllSkillsClicked,
+        onInfoClick = statsViewModel::onInfoClick,
+        onDismissInfoDialog = statsViewModel::onDismissInfoDialog,
         onPromoClick = onPromoClick
     )
 }
@@ -131,12 +137,23 @@ fun StatsContent(
     weeklyComparison: Int,
     isLoading: Boolean,
     showSuggestions: Boolean,
+    infoDialogContent: Pair<String, String>?,
     onViewAllSkillsClicked: () -> Unit,
+    onInfoClick: (String, String) -> Unit,
+    onDismissInfoDialog: () -> Unit,
     onPromoClick: (Deck) -> Unit,
 ) {
     if (isLoading) {
         FullLoader(message = stringResource(R.string.loading_stats))
     } else {
+        infoDialogContent?.let { (title, desc) ->
+            StatsInfoDialog(
+                title = title,
+                description = desc,
+                onDismiss = onDismissInfoDialog
+            )
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -146,15 +163,27 @@ fun StatsContent(
         ) {
             Header(
                 headText = stringResource(R.string.stats_head_title),
-                titleText = stringResource(R.string.stats_title),
-                subtitleText = stringResource(R.string.stats_subtitle)
+                titleText = stringResource(R.string.stats_title)
             )
 
+            val weeklyActivityTitle = stringResource(R.string.stats_weekly_activity_info_title)
+            val weeklyActivityDesc = stringResource(R.string.stats_weekly_activity_info_desc)
+            val skillMasteryTitle = stringResource(R.string.stats_skill_mastery_info_title)
+            val skillMasteryDesc = stringResource(R.string.stats_skill_mastery_info_desc)
+
             Spacer(modifier = Modifier.height(24.dp))
-            WeeklyActivityCard(weeklyActivity, weeklyComparison)
-            Spacer(modifier = Modifier.height(32.dp))
-            SkillMasterySection(skillMastery, onViewAllSkillsClicked)
-            Spacer(modifier = Modifier.height(32.dp))
+            WeeklyActivityCard(
+                activityData = weeklyActivity,
+                weeklyComparison = weeklyComparison,
+                onInfoClick = { onInfoClick(weeklyActivityTitle, weeklyActivityDesc) }
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            SkillMasterySection(
+                masteryList = skillMastery,
+                onViewAllClick = onViewAllSkillsClicked,
+                onInfoClick = { onInfoClick(skillMasteryTitle, skillMasteryDesc) }
+            )
+            Spacer(modifier = Modifier.height(24.dp))
             AtAGlanceSection(flashcardsViewed, currentStreak, studyTime, masteredDecks)
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -170,7 +199,7 @@ fun StatsContent(
 }
 
 @Composable
-fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int) {
+fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoClick: () -> Unit) {
     val dateRange = remember { getWeeklyDateRange() }
 
     val modelProducer = remember { CartesianChartModelProducer() }
@@ -197,6 +226,7 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int) {
                 modifier = Modifier
                     .size(18.dp)
                     .testTag(TestTags.STATS_WEEKLY_ACTIVITY_DESCRIPTION)
+                    .clickable { onInfoClick() }
             )
         }
         Text(
@@ -298,7 +328,11 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int) {
 }
 
 @Composable
-fun SkillMasterySection(masteryList: List<MasteryData>, onViewAllClick: () -> Unit) {
+fun SkillMasterySection(
+    masteryList: List<MasteryData>,
+    onViewAllClick: () -> Unit,
+    onInfoClick: () -> Unit
+) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -320,6 +354,7 @@ fun SkillMasterySection(masteryList: List<MasteryData>, onViewAllClick: () -> Un
                     modifier = Modifier
                         .size(18.dp)
                         .testTag(TestTags.STATS_SKILL_MASTERY_DESCRIPTION)
+                        .clickable { onInfoClick() }
                 )
             }
             TextButton(onClick = onViewAllClick) {
@@ -526,6 +561,41 @@ private fun getComparisonData(weeklyComparison: Int): ComparisonData {
     return ComparisonData(color, icon, text)
 }
 
+@Composable
+private fun StatsInfoDialog(
+    title: String,
+    description: String,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        },
+        text = {
+            Text(
+                text = description,
+                color = Color(0xFFB0B0B0)
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(
+                    text = stringResource(R.string.stats_info_dialog_confirm),
+                    color = RoyalBlue,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        },
+        containerColor = Color(0xFF2C2C4E),
+        shape = RoundedCornerShape(28.dp)
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun StatsScreenPreview() {
@@ -544,7 +614,10 @@ fun StatsScreenPreview() {
             weeklyComparison = 12,
             isLoading = false,
             showSuggestions = true,
+            infoDialogContent = null,
             onViewAllSkillsClicked = {},
+            onInfoClick = { _, _ -> },
+            onDismissInfoDialog = {},
             onPromoClick = {}
         )
     }

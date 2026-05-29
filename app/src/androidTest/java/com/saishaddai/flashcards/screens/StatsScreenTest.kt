@@ -45,7 +45,7 @@ class StatsScreenTest {
                 isLoading = true,
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
-                showSuggestions = true
+                showSuggestions = true,
             )
         }
 
@@ -69,7 +69,7 @@ class StatsScreenTest {
                 isLoading = false,
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
-                showSuggestions = true
+                showSuggestions = true,
             )
         }
 
@@ -92,7 +92,7 @@ class StatsScreenTest {
                 isLoading = false,
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
-                showSuggestions = true
+                showSuggestions = true,
             )
         }
 
@@ -123,7 +123,7 @@ class StatsScreenTest {
                 isLoading = false,
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
-                showSuggestions = true
+                showSuggestions = true,
             )
         }
 
@@ -154,7 +154,7 @@ class StatsScreenTest {
                 isLoading = false,
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
-                showSuggestions = true
+                showSuggestions = true,
             )
         }
 
@@ -230,7 +230,7 @@ class StatsScreenTest {
                 isLoading = false,
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
-                showSuggestions = true
+                showSuggestions = true,
             )
         }
 
@@ -256,7 +256,7 @@ class StatsScreenTest {
                 isLoading = false,
                 onViewAllSkillsClicked = {},
                 onPromoClick = {},
-                showSuggestions = true
+                showSuggestions = true,
             )
         }
 
@@ -278,5 +278,71 @@ class StatsScreenTest {
         // Verify PromoWidget is not shown when promoDeck is null
         val startNowText = context.getString(R.string.promo_widget_confirm)
         composeTestRule.onNodeWithText(startNowText).assertDoesNotExist()
+    }
+
+    @Test
+    fun testStatsScreen_clickWeeklyActivityInfo_showsDialog() {
+        composeTestRule.setContent {
+            StatsContent(
+                promoDeck = null,
+                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
+                skillMastery = emptyList(),
+                flashcardsViewed = "100",
+                currentStreak = "5",
+                studyTime = "2h",
+                masteredDecks = "10",
+                weeklyComparison = 0,
+                isLoading = false,
+                onViewAllSkillsClicked = {},
+                onPromoClick = {},
+                showSuggestions = true,
+            )
+        }
+
+        // Click the info icon
+        composeTestRule.onNodeWithTag(TestTags.STATS_WEEKLY_ACTIVITY_DESCRIPTION).performClick()
+
+        // Verify dialog title and description
+        val expectedTitle = context.getString(R.string.stats_weekly_activity_info_title)
+        val expectedDesc = context.getString(R.string.stats_weekly_activity_info_desc)
+        composeTestRule.onNodeWithText(expectedTitle).assertIsDisplayed()
+        composeTestRule.onNodeWithText(expectedDesc).assertIsDisplayed()
+
+        // Close dialog
+        composeTestRule.onNodeWithText(context.getString(R.string.stats_info_dialog_confirm)).performClick()
+        composeTestRule.onNodeWithText(expectedTitle).assertDoesNotExist()
+    }
+
+    @Test
+    fun testStatsScreen_clickSkillMasteryInfo_showsDialog() {
+        composeTestRule.setContent {
+            StatsContent(
+                promoDeck = null,
+                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
+                skillMastery = emptyList(),
+                flashcardsViewed = "100",
+                currentStreak = "5",
+                studyTime = "2h",
+                masteredDecks = "10",
+                weeklyComparison = 0,
+                isLoading = false,
+                onViewAllSkillsClicked = {},
+                onPromoClick = {},
+                showSuggestions = true,
+            )
+        }
+
+        // Click the info icon
+        composeTestRule.onNodeWithTag(TestTags.STATS_SKILL_MASTERY_DESCRIPTION).performClick()
+
+        // Verify dialog title and description
+        val expectedTitle = context.getString(R.string.stats_skill_mastery_info_title)
+        val expectedDesc = context.getString(R.string.stats_skill_mastery_info_desc)
+        composeTestRule.onNodeWithText(expectedTitle).assertIsDisplayed()
+        composeTestRule.onNodeWithText(expectedDesc).assertIsDisplayed()
+
+        // Close dialog
+        composeTestRule.onNodeWithText(context.getString(R.string.stats_info_dialog_confirm)).performClick()
+        composeTestRule.onNodeWithText(expectedTitle).assertDoesNotExist()
     }
 }

@@ -37,6 +37,9 @@ class StatsViewModel(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
+    private val _infoDialogContent = MutableStateFlow<Pair<String, String>?>(null)
+    val infoDialogContent: StateFlow<Pair<String, String>?> = _infoDialogContent.asStateFlow()
+
     private var weeklyActivityLoaded = false
     private var skillMasteryLoaded = false
     private var flashcardsViewedLoaded = false
@@ -110,5 +113,13 @@ class StatsViewModel(
 
     fun onViewAllSkillsClicked() {
         // Handle view all skills logic
+    }
+
+    fun onInfoClick(title: String, description: String) {
+        _infoDialogContent.value = title to description
+    }
+
+    fun onDismissInfoDialog() {
+        _infoDialogContent.value = null
     }
 }

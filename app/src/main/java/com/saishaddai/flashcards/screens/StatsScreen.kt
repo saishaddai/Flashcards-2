@@ -38,9 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -106,6 +104,7 @@ fun StatsScreen(
     val isLoading by statsViewModel.isLoading.collectAsState()
     val userSettings by settingsViewModel.userSettings.collectAsState()
     val showSuggestions = userSettings?.showSuggestions ?: true
+    val infoDialogContent by statsViewModel.infoDialogContent.collectAsState()
 
     StatsContent(
         promoDeck = promoDeck,
@@ -118,7 +117,10 @@ fun StatsScreen(
         weeklyComparison = weeklyComparison,
         isLoading = isLoading,
         showSuggestions = showSuggestions,
+        infoDialogContent = infoDialogContent,
         onViewAllSkillsClicked = statsViewModel::onViewAllSkillsClicked,
+        onInfoClick = statsViewModel::onInfoClick,
+        onDismissInfoDialog = statsViewModel::onDismissInfoDialog,
         onPromoClick = onPromoClick
     )
 }
@@ -135,11 +137,12 @@ fun StatsContent(
     weeklyComparison: Int,
     isLoading: Boolean,
     showSuggestions: Boolean,
+    infoDialogContent: Pair<String, String>?,
     onViewAllSkillsClicked: () -> Unit,
+    onInfoClick: (String, String) -> Unit,
+    onDismissInfoDialog: () -> Unit,
     onPromoClick: (Deck) -> Unit,
 ) {
-    var infoDialogContent by remember { mutableStateOf<Pair<String, String>?>(null) }
-
     if (isLoading) {
         FullLoader(message = stringResource(R.string.loading_stats))
     } else {
@@ -147,7 +150,7 @@ fun StatsContent(
             StatsInfoDialog(
                 title = title,
                 description = desc,
-                onDismiss = { infoDialogContent = null }
+                onDismiss = onDismissInfoDialog
             )
         }
 
@@ -160,8 +163,7 @@ fun StatsContent(
         ) {
             Header(
                 headText = stringResource(R.string.stats_head_title),
-                titleText = stringResource(R.string.stats_title),
-                subtitleText = stringResource(R.string.stats_subtitle)
+                titleText = stringResource(R.string.stats_title)
             )
 
             val weeklyActivityTitle = stringResource(R.string.stats_weekly_activity_info_title)
@@ -173,15 +175,15 @@ fun StatsContent(
             WeeklyActivityCard(
                 activityData = weeklyActivity,
                 weeklyComparison = weeklyComparison,
-                onInfoClick = { infoDialogContent = weeklyActivityTitle to weeklyActivityDesc }
+                onInfoClick = { onInfoClick(weeklyActivityTitle, weeklyActivityDesc) }
             )
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             SkillMasterySection(
                 masteryList = skillMastery,
                 onViewAllClick = onViewAllSkillsClicked,
-                onInfoClick = { infoDialogContent = skillMasteryTitle to skillMasteryDesc }
+                onInfoClick = { onInfoClick(skillMasteryTitle, skillMasteryDesc) }
             )
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             AtAGlanceSection(flashcardsViewed, currentStreak, studyTime, masteredDecks)
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -612,7 +614,10 @@ fun StatsScreenPreview() {
             weeklyComparison = 12,
             isLoading = false,
             showSuggestions = true,
+            infoDialogContent = null,
             onViewAllSkillsClicked = {},
+            onInfoClick = { _, _ -> },
+            onDismissInfoDialog = {},
             onPromoClick = {}
         )
     }

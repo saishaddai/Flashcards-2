@@ -114,6 +114,11 @@
     <string name="stats_mastered_decks">Mastered Decks</string>
     <string name="stats_title_weekly_activity">Weekly Activity</string>
     <string name="stats_cards_reviewed">Cards Reviewed</string>
+    <string name="stats_weekly_activity_info_title">Weekly Activity</string>
+    <string name="stats_weekly_activity_info_desc">This chart shows the total number of cards you reviewed each day during the current week. Keep an eye in your daily goal and chain a streak.</string>
+    <string name="stats_skill_mastery_info_title">Skill Mastery</string>
+    <string name="stats_skill_mastery_info_desc">This section tracks your progress in each topic. Your mastery level increases as you review more cards and you keep doing it everyday.</string>
+    <string name="stats_info_dialog_confirm">OK</string>
 
 
     <!-- Settings Screen -->

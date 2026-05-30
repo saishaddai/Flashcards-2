@@ -341,7 +341,7 @@ fun SkillMasterySection(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Skill Mastery",
+                    text = stringResource(R.string.stats_skill_mastery),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -349,7 +349,7 @@ fun SkillMasterySection(
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
                     imageVector = Icons.Default.Info,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.stats_skill_mastery_info_title),
                     tint = Color(0xFFB0B0B0),
                     modifier = Modifier
                         .size(18.dp)
@@ -358,7 +358,7 @@ fun SkillMasterySection(
                 )
             }
             TextButton(onClick = onViewAllClick) {
-                Text(text = "View all", color = RoyalBlue, fontWeight = FontWeight.Bold)
+                Text(text = stringResource(R.string.stats_skill_mastery_view_all), color = RoyalBlue, fontWeight = FontWeight.Bold)
             }
         }
 

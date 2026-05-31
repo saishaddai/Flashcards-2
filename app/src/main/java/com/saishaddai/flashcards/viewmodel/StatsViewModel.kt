@@ -17,7 +17,11 @@ class StatsViewModel(
     val weeklyActivity: StateFlow<List<Int>> = _weeklyActivity.asStateFlow()
 
     private val _skillMastery = MutableStateFlow<List<MasteryData>>(emptyList())
+    private var allSkillMastery: List<MasteryData> = emptyList()
     val skillMastery: StateFlow<List<MasteryData>> = _skillMastery.asStateFlow()
+
+    private val _isSkillsExpanded = MutableStateFlow(false)
+    val isSkillsExpanded: StateFlow<Boolean> = _isSkillsExpanded.asStateFlow()
 
     private val _flashcardsViewed = MutableStateFlow("0")
     val flashcardsViewed: StateFlow<String> = _flashcardsViewed.asStateFlow()
@@ -62,7 +66,8 @@ class StatsViewModel(
         }
         viewModelScope.launch {
             repository.getSkillMastery().collect { 
-                _skillMastery.value = it
+                allSkillMastery = it
+                updateSkillMasteryDisplay()
                 skillMasteryLoaded = true
                 checkLoadingFinished()
             }
@@ -112,7 +117,16 @@ class StatsViewModel(
     }
 
     fun onViewAllSkillsClicked() {
-        // Handle view all skills logic
+        _isSkillsExpanded.value = !_isSkillsExpanded.value
+        updateSkillMasteryDisplay()
+    }
+
+    private fun updateSkillMasteryDisplay() {
+        _skillMastery.value = if (_isSkillsExpanded.value) {
+            allSkillMastery
+        } else {
+            allSkillMastery.take(2)
+        }
     }
 
     fun onInfoClick(title: String, description: String) {

@@ -105,6 +105,7 @@ fun StatsScreen(
     val userSettings by settingsViewModel.userSettings.collectAsState()
     val showSuggestions = userSettings?.showSuggestions ?: true
     val infoDialogContent by statsViewModel.infoDialogContent.collectAsState()
+    val isSkillsExpanded by statsViewModel.isSkillsExpanded.collectAsState()
 
     StatsContent(
         promoDeck = promoDeck,
@@ -118,6 +119,7 @@ fun StatsScreen(
         isLoading = isLoading,
         showSuggestions = showSuggestions,
         infoDialogContent = infoDialogContent,
+        isSkillsExpanded = isSkillsExpanded,
         onViewAllSkillsClicked = statsViewModel::onViewAllSkillsClicked,
         onInfoClick = statsViewModel::onInfoClick,
         onDismissInfoDialog = statsViewModel::onDismissInfoDialog,
@@ -138,6 +140,7 @@ fun StatsContent(
     isLoading: Boolean,
     showSuggestions: Boolean,
     infoDialogContent: Pair<String, String>?,
+    isSkillsExpanded: Boolean,
     onViewAllSkillsClicked: () -> Unit,
     onInfoClick: (String, String) -> Unit,
     onDismissInfoDialog: () -> Unit,
@@ -180,6 +183,7 @@ fun StatsContent(
             Spacer(modifier = Modifier.height(24.dp))
             SkillMasterySection(
                 masteryList = skillMastery,
+                isExpanded = isSkillsExpanded,
                 onViewAllClick = onViewAllSkillsClicked,
                 onInfoClick = { onInfoClick(skillMasteryTitle, skillMasteryDesc) }
             )
@@ -330,6 +334,7 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
 @Composable
 fun SkillMasterySection(
     masteryList: List<MasteryData>,
+    isExpanded: Boolean,
     onViewAllClick: () -> Unit,
     onInfoClick: () -> Unit
 ) {
@@ -357,8 +362,15 @@ fun SkillMasterySection(
                         .clickable { onInfoClick() }
                 )
             }
-            TextButton(onClick = onViewAllClick) {
-                Text(text = stringResource(R.string.stats_skill_mastery_view_all), color = RoyalBlue, fontWeight = FontWeight.Bold)
+            TextButton(
+                onClick = onViewAllClick,
+                modifier = Modifier.testTag(TestTags.STATS_SKILL_MASTERY_VIEW_ALL)) {
+                val buttonText = if (isExpanded) {
+                    stringResource(R.string.stats_skill_mastery_show_less)
+                } else {
+                    stringResource(R.string.stats_skill_mastery_view_all)
+                }
+                Text(text = buttonText, color = RoyalBlue, fontWeight = FontWeight.Bold)
             }
         }
 
@@ -615,6 +627,7 @@ fun StatsScreenPreview() {
             isLoading = false,
             showSuggestions = true,
             infoDialogContent = null,
+            isSkillsExpanded = false,
             onViewAllSkillsClicked = {},
             onInfoClick = { _, _ -> },
             onDismissInfoDialog = {},

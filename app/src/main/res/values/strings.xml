@@ -108,6 +108,7 @@
     <string name="stats_title">Your Progress…</string>
     <string name="stats_skill_mastery">Skill Mastery</string>
     <string name="stats_skill_mastery_view_all">View All</string>
+    <string name="stats_skill_mastery_show_less">Show Less</string>
     <string name="stats_at_glance">At a Glance</string>
     <string name="stats_flashcards_viewed">Flashcards Viewed</string>
     <string name="stats_current_streak">Study Goal Streak</string>

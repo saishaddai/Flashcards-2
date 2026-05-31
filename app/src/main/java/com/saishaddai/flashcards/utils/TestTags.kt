@@ -33,6 +33,7 @@ object TestTags {
     const val STATS_CURRENT_STREAK = "stats_current_streak"
     const val STATS_STUDY_TIME = "stats_study_time"
     const val STATS_MASTERED_DECKS = "stats_mastered_decks"
+    const val STATS_SKILL_MASTERY_VIEW_ALL = "stats_mastered_view_all"
 
 
 }

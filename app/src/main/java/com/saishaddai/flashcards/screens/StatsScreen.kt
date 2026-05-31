@@ -1,10 +1,14 @@
 package com.saishaddai.flashcards.screens
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -105,6 +109,7 @@ fun StatsScreen(
     val userSettings by settingsViewModel.userSettings.collectAsState()
     val showSuggestions = userSettings?.showSuggestions ?: true
     val infoDialogContent by statsViewModel.infoDialogContent.collectAsState()
+    val isSkillsExpanded by statsViewModel.isSkillsExpanded.collectAsState()
 
     StatsContent(
         promoDeck = promoDeck,
@@ -118,6 +123,7 @@ fun StatsScreen(
         isLoading = isLoading,
         showSuggestions = showSuggestions,
         infoDialogContent = infoDialogContent,
+        isSkillsExpanded = isSkillsExpanded,
         onViewAllSkillsClicked = statsViewModel::onViewAllSkillsClicked,
         onInfoClick = statsViewModel::onInfoClick,
         onDismissInfoDialog = statsViewModel::onDismissInfoDialog,
@@ -138,6 +144,7 @@ fun StatsContent(
     isLoading: Boolean,
     showSuggestions: Boolean,
     infoDialogContent: Pair<String, String>?,
+    isSkillsExpanded: Boolean,
     onViewAllSkillsClicked: () -> Unit,
     onInfoClick: (String, String) -> Unit,
     onDismissInfoDialog: () -> Unit,
@@ -180,6 +187,7 @@ fun StatsContent(
             Spacer(modifier = Modifier.height(24.dp))
             SkillMasterySection(
                 masteryList = skillMastery,
+                isExpanded = isSkillsExpanded,
                 onViewAllClick = onViewAllSkillsClicked,
                 onInfoClick = { onInfoClick(skillMasteryTitle, skillMasteryDesc) }
             )
@@ -327,9 +335,11 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SkillMasterySection(
     masteryList: List<MasteryData>,
+    isExpanded: Boolean,
     onViewAllClick: () -> Unit,
     onInfoClick: () -> Unit
 ) {
@@ -357,19 +367,47 @@ fun SkillMasterySection(
                         .clickable { onInfoClick() }
                 )
             }
-            TextButton(onClick = onViewAllClick) {
-                Text(text = stringResource(R.string.stats_skill_mastery_view_all), color = RoyalBlue, fontWeight = FontWeight.Bold)
+            TextButton(
+                onClick = onViewAllClick,
+                modifier = Modifier.testTag(TestTags.STATS_SKILL_MASTERY_VIEW_ALL)) {
+                val buttonText = if (isExpanded) {
+                    stringResource(R.string.stats_skill_mastery_show_less)
+                } else {
+                    stringResource(R.string.stats_skill_mastery_view_all)
+                }
+                Text(text = buttonText, color = RoyalBlue, fontWeight = FontWeight.Bold)
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyRow(
-            contentPadding = PaddingValues(end = 24.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(masteryList) { data ->
-                SkillCard(data)
+        Box(modifier = Modifier.animateContentSize()) {
+            AnimatedContent(
+                targetState = isExpanded,
+                label = "SkillMasteryTransition"
+            ) { expanded ->
+                val displayList = if (expanded) masteryList else masteryList.take(2)
+
+                if (expanded) {
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        displayList.forEach { data ->
+                            SkillCard(data)
+                        }
+                    }
+                } else {
+                    LazyRow(
+                        contentPadding = PaddingValues(end = 24.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(displayList) { data ->
+                            SkillCard(data)
+                        }
+                    }
+                }
             }
         }
     }
@@ -615,6 +653,7 @@ fun StatsScreenPreview() {
             isLoading = false,
             showSuggestions = true,
             infoDialogContent = null,
+            isSkillsExpanded = false,
             onViewAllSkillsClicked = {},
             onInfoClick = { _, _ -> },
             onDismissInfoDialog = {},

@@ -1,10 +1,14 @@
 package com.saishaddai.flashcards.screens
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -331,6 +335,7 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SkillMasterySection(
     masteryList: List<MasteryData>,
@@ -376,12 +381,33 @@ fun SkillMasterySection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyRow(
-            contentPadding = PaddingValues(end = 24.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(masteryList) { data ->
-                SkillCard(data)
+        Box(modifier = Modifier.animateContentSize()) {
+            AnimatedContent(
+                targetState = isExpanded,
+                label = "SkillMasteryTransition"
+            ) { expanded ->
+                val displayList = if (expanded) masteryList else masteryList.take(2)
+
+                if (expanded) {
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        displayList.forEach { data ->
+                            SkillCard(data)
+                        }
+                    }
+                } else {
+                    LazyRow(
+                        contentPadding = PaddingValues(end = 24.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(displayList) { data ->
+                            SkillCard(data)
+                        }
+                    }
+                }
             }
         }
     }

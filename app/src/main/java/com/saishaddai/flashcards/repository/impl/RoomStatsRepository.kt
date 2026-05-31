@@ -2,6 +2,7 @@ package com.saishaddai.flashcards.repository.impl
 
 import androidx.compose.ui.graphics.Color
 import com.saishaddai.flashcards.data.local.StudyDao
+import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.repository.StatsRepository
 import com.saishaddai.flashcards.screens.MasteryData
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
@@ -37,35 +38,50 @@ class RoomStatsRepository(
 
     override fun getSkillMastery(): Flow<List<MasteryData>> {
         return studyDao.getAllDeckMastery().map { masteries ->
-            val result = masteries.map {
-                MasteryData(
-                    title = it.deckName,
-                    percentage = it.progress.toInt(),
-                    level = it.level,
-                    color = getMasteryColor(it.level)
-                )
-            }.toMutableList()
-
-            // Ensure the first two decks are always shown (OOP and Sensors)
-            val defaultDecks = listOf(
-                1 to "OOP",
-                20 to "Sensors"
-            )
-
-            for ((id, name) in defaultDecks) {
-                if (masteries.none { it.deckId == id }) {
-                    result.add(
-                        MasteryData(
-                            title = name,
-                            percentage = 0,
-                            level = "Novato",
-                            color = getMasteryColor("Novato")
-                        )
+            // Use DeckType.values() for better compatibility across Kotlin versions
+            val allDecks = DeckType.values().map { type ->
+                val mastery = masteries.find { it.deckId == type.id }
+                if (mastery != null) {
+                    MasteryData(
+                        title = mastery.deckName,
+                        percentage = mastery.progress.toInt(),
+                        level = mastery.level,
+                        color = getMasteryColor(mastery.level)
+                    )
+                } else {
+                    // Manual mapping for friendly names
+                    val friendlyName = when(type) {
+                        DeckType.OOP -> "OOP"
+                        DeckType.ANDROID_CORE -> "Android Core"
+                        DeckType.KOTLIN -> "Kotlin"
+                        DeckType.KOTLIN_MP -> "Kotlin MP"
+                        DeckType.SECURITY -> "Security"
+                        DeckType.COMPOSE -> "Compose"
+                        DeckType.DATABASES -> "Databases"
+                        DeckType.DI -> "DI"
+                        DeckType.MATERIAL_3 -> "Material 3"
+                        DeckType.NAVIGATION -> "Navigation"
+                        DeckType.JETPACK -> "Jetpack"
+                        DeckType.TESTING -> "Testing"
+                        DeckType.GRADLE -> "Gradle"
+                        DeckType.ANDROID_OPS -> "Android OPS"
+                        DeckType.LIBRARIES -> "Libraries"
+                        DeckType.DESIGN_PATTERNS -> "Design Patterns"
+                        DeckType.COROUTINES -> "Coroutines"
+                        DeckType.FIREBASE -> "Firebase"
+                        DeckType.GRAPHQL -> "GraphQL"
+                        DeckType.SENSORS -> "Sensors"
+                    }
+                    MasteryData(
+                        title = friendlyName,
+                        percentage = 0,
+                        level = "Novato",
+                        color = getMasteryColor("Novato")
                     )
                 }
             }
 
-            result.sortedByDescending { it.percentage }
+            allDecks.sortedByDescending { it.percentage }
         }
     }
 

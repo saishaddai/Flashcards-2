@@ -7,6 +7,9 @@ import com.saishaddai.flashcards.screens.MasteryData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class StatsViewModel(
@@ -16,12 +19,15 @@ class StatsViewModel(
     private val _weeklyActivity = MutableStateFlow<List<Int>>(emptyList())
     val weeklyActivity: StateFlow<List<Int>> = _weeklyActivity.asStateFlow()
 
-    private val _skillMastery = MutableStateFlow<List<MasteryData>>(emptyList())
-    private var allSkillMastery: List<MasteryData> = emptyList()
-    val skillMastery: StateFlow<List<MasteryData>> = _skillMastery.asStateFlow()
-
     private val _isSkillsExpanded = MutableStateFlow(false)
     val isSkillsExpanded: StateFlow<Boolean> = _isSkillsExpanded.asStateFlow()
+
+    val skillMastery: StateFlow<List<MasteryData>> = repository.getSkillMastery()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
     private val _flashcardsViewed = MutableStateFlow("0")
     val flashcardsViewed: StateFlow<String> = _flashcardsViewed.asStateFlow()
@@ -65,11 +71,12 @@ class StatsViewModel(
             }
         }
         viewModelScope.launch {
-            repository.getSkillMastery().collect { 
-                allSkillMastery = it
-                updateSkillMasteryDisplay()
-                skillMasteryLoaded = true
-                checkLoadingFinished()
+            // Observe the public skillMastery instead of the private flow
+            skillMastery.collect { 
+                if (it.isNotEmpty()) {
+                    skillMasteryLoaded = true
+                    checkLoadingFinished()
+                }
             }
         }
         viewModelScope.launch {
@@ -118,15 +125,6 @@ class StatsViewModel(
 
     fun onViewAllSkillsClicked() {
         _isSkillsExpanded.value = !_isSkillsExpanded.value
-        updateSkillMasteryDisplay()
-    }
-
-    private fun updateSkillMasteryDisplay() {
-        _skillMastery.value = if (_isSkillsExpanded.value) {
-            allSkillMastery
-        } else {
-            allSkillMastery.take(2)
-        }
     }
 
     fun onInfoClick(title: String, description: String) {

@@ -1,5 +1,8 @@
 package com.saishaddai.flashcards.screens
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
@@ -38,14 +41,18 @@ class StatsScreenTest {
                 weeklyActivity = emptyList(),
                 skillMastery = emptyList(),
                 flashcardsViewed = "0",
-                currentStreak = "0",
+                currentStreak = "0 Days",
                 studyTime = "0",
                 masteredDecks = "0",
                 weeklyComparison = 0,
                 isLoading = true,
-                onViewAllSkillsClicked = {},
-                onPromoClick = {},
                 showSuggestions = true,
+                infoDialogContent = null,
+                isSkillsExpanded = false,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onPromoClick = { _ -> },
             )
         }
 
@@ -67,9 +74,13 @@ class StatsScreenTest {
                 masteredDecks = "10",
                 weeklyComparison = 0,
                 isLoading = false,
-                onViewAllSkillsClicked = {},
-                onPromoClick = {},
                 showSuggestions = true,
+                infoDialogContent = null,
+                isSkillsExpanded = false,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onPromoClick = { _ -> },
             )
         }
 
@@ -90,9 +101,13 @@ class StatsScreenTest {
                 masteredDecks = "10",
                 weeklyComparison = 15,
                 isLoading = false,
-                onViewAllSkillsClicked = {},
-                onPromoClick = {},
                 showSuggestions = true,
+                infoDialogContent = null,
+                isSkillsExpanded = false,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onPromoClick = { _ -> },
             )
         }
 
@@ -121,9 +136,13 @@ class StatsScreenTest {
                 masteredDecks = "10",
                 weeklyComparison = -8,
                 isLoading = false,
-                onViewAllSkillsClicked = {},
-                onPromoClick = {},
                 showSuggestions = true,
+                infoDialogContent = null,
+                isSkillsExpanded = false,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onPromoClick = { _ -> },
             )
         }
 
@@ -152,9 +171,13 @@ class StatsScreenTest {
                 masteredDecks = "10",
                 weeklyComparison = 0,
                 isLoading = false,
-                onViewAllSkillsClicked = {},
-                onPromoClick = {},
                 showSuggestions = true,
+                infoDialogContent = null,
+                isSkillsExpanded = false,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onPromoClick = { _ -> },
             )
         }
 
@@ -186,9 +209,13 @@ class StatsScreenTest {
                 masteredDecks = "5",
                 weeklyComparison = 12,
                 isLoading = false,
+                showSuggestions = true,
+                infoDialogContent = null,
+                isSkillsExpanded = false,
                 onViewAllSkillsClicked = {},
-                onPromoClick = { promoClicked = true },
-                showSuggestions = true
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onPromoClick = { _ -> promoClicked = true },
             )
         }
         val startNowText = context.getString(R.string.promo_widget_confirm)
@@ -228,9 +255,13 @@ class StatsScreenTest {
                 masteredDecks = "10",
                 weeklyComparison = 0,
                 isLoading = false,
-                onViewAllSkillsClicked = {},
-                onPromoClick = {},
                 showSuggestions = true,
+                infoDialogContent = null,
+                isSkillsExpanded = false,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onPromoClick = { _ -> },
             )
         }
 
@@ -254,9 +285,13 @@ class StatsScreenTest {
                 masteredDecks = "0%",
                 weeklyComparison = 0,
                 isLoading = false,
-                onViewAllSkillsClicked = {},
-                onPromoClick = {},
                 showSuggestions = true,
+                infoDialogContent = null,
+                isSkillsExpanded = false,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onPromoClick = { _ -> },
             )
         }
 
@@ -282,6 +317,7 @@ class StatsScreenTest {
 
     @Test
     fun testStatsScreen_clickWeeklyActivityInfo_showsDialog() {
+        var infoDialogContent by mutableStateOf<Pair<String, String>?>(null)
         composeTestRule.setContent {
             StatsContent(
                 promoDeck = null,
@@ -293,9 +329,13 @@ class StatsScreenTest {
                 masteredDecks = "10",
                 weeklyComparison = 0,
                 isLoading = false,
-                onViewAllSkillsClicked = {},
-                onPromoClick = {},
                 showSuggestions = true,
+                infoDialogContent = infoDialogContent,
+                isSkillsExpanded = false,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { title, desc -> infoDialogContent = title to desc },
+                onDismissInfoDialog = { infoDialogContent = null },
+                onPromoClick = { _ -> },
             )
         }
 
@@ -315,6 +355,7 @@ class StatsScreenTest {
 
     @Test
     fun testStatsScreen_clickSkillMasteryInfo_showsDialog() {
+        var infoDialogContent by mutableStateOf<Pair<String, String>?>(null)
         composeTestRule.setContent {
             StatsContent(
                 promoDeck = null,
@@ -326,9 +367,13 @@ class StatsScreenTest {
                 masteredDecks = "10",
                 weeklyComparison = 0,
                 isLoading = false,
-                onViewAllSkillsClicked = {},
-                onPromoClick = {},
                 showSuggestions = true,
+                infoDialogContent = infoDialogContent,
+                isSkillsExpanded = false,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { title, desc -> infoDialogContent = title to desc },
+                onDismissInfoDialog = { infoDialogContent = null },
+                onPromoClick = { _ -> },
             )
         }
 

@@ -19,7 +19,7 @@ object TestTags {
     const val SETTINGS_QUICK_START = "settings_quick_start"
     const val SETTINGS_SHOW_ANSWERS = "settings_show_answers"
     const val SETTINGS_SHOW_SUGGESTIONS = "settings_show_suggestions"
-    const val SETTINGS_STUDY_REMINDERS = "settings_study_reminders"
+    const val SETTINGS_DAILY_REMINDERS = "settings_daily_reminders"
     const val SETTINGS_STUDY_TIME = "settings_study_time"
     const val SETTINGS_NOTIFICATION_SOUND = "settings_notification_sound"
 

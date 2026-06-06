@@ -188,7 +188,7 @@ private fun DeckListDialogs(
             onDismissRequest = onDismissQuickStartDialog,
             title = {
                 Text(
-                    text = deck.name,
+                    text = stringResource(R.string.flashcard_start_dialog_title),
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )

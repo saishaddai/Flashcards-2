@@ -46,11 +46,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
@@ -118,10 +120,10 @@ fun SettingsScreenContent(
     val showTimePicker = rememberSaveable { mutableStateOf(false) }
 
     val localFlashcardsPerSession = remember(userSettings?.flashcardsPerSession) {
-        mutableStateOf(userSettings?.flashcardsPerSession?.toFloat() ?: DEFAULT_FLASHCARDS_PER_SESSION.toFloat())
+        mutableFloatStateOf(userSettings?.flashcardsPerSession?.toFloat() ?: DEFAULT_FLASHCARDS_PER_SESSION.toFloat())
     }
     val localDailyGoal = remember(userSettings?.dailyStudyGoal) {
-        mutableStateOf(userSettings?.dailyStudyGoal?.toFloat() ?: DEFAULT_DAILY_GOAL.toFloat())
+        mutableFloatStateOf(userSettings?.dailyStudyGoal?.toFloat() ?: DEFAULT_DAILY_GOAL.toFloat())
     }
 
     if (isLoading || userSettings == null) {
@@ -167,10 +169,10 @@ fun SettingsScreenContent(
             SliderSetting(
                 icon = Icons.Default.School,
                 title = stringResource(R.string.settings_flashcards_per_session),
-                value = localFlashcardsPerSession.value.toInt().toString(),
-                currentValue = localFlashcardsPerSession.value,
-                onValueChange = { localFlashcardsPerSession.value = it },
-                onValueChangeFinished = { onFlashcardsPerSessionChanged(localFlashcardsPerSession.value.toInt()) },
+                value = localFlashcardsPerSession.floatValue.toInt().toString(),
+                currentValue = localFlashcardsPerSession.floatValue,
+                onValueChange = { localFlashcardsPerSession.floatValue = it },
+                onValueChangeFinished = { onFlashcardsPerSessionChanged(localFlashcardsPerSession.floatValue.toInt()) },
                 range = 5f..50f,
                 minLabel = stringResource(R.string.settings_flashcards_per_session_min),
                 maxLabel = stringResource(R.string.settings_flashcards_per_session_max),
@@ -180,10 +182,10 @@ fun SettingsScreenContent(
             SliderSetting(
                 icon = Icons.Default.Flag,
                 title = stringResource(R.string.settings_daily_goal),
-                value = stringResource(R.string.settings_daily_goal_value, localDailyGoal.value.toInt()),
-                currentValue = localDailyGoal.value,
-                onValueChange = { localDailyGoal.value = it },
-                onValueChangeFinished = { onDailyStudyGoalChanged(localDailyGoal.value.toInt()) },
+                value = stringResource(R.string.settings_daily_goal_value, localDailyGoal.floatValue.toInt()),
+                currentValue = localDailyGoal.floatValue,
+                onValueChange = { localDailyGoal.floatValue = it },
+                onValueChangeFinished = { onDailyStudyGoalChanged(localDailyGoal.floatValue.toInt()) },
                 range = 10f..100f,
                 minLabel = stringResource(R.string.settings_daily_goal_min),
                 maxLabel = stringResource(R.string.settings_daily_goal_max)
@@ -246,7 +248,7 @@ fun SettingsScreenContent(
                 title = stringResource(R.string.settings_daily_reminders),
                 description = stringResource(R.string.settings_daily_reminders_description),
                 checked = userSettings.studyReminders,
-                testTag = TestTags.SETTINGS_STUDY_REMINDERS,
+                testTag = TestTags.SETTINGS_DAILY_REMINDERS,
                 onCheckedChange = onStudyRemindersChanged
             )
 
@@ -255,6 +257,8 @@ fun SettingsScreenContent(
                 title = stringResource(R.string.settings_preferred_study_time),
                 description = stringResource(R.string.settings_preferred_study_time_description),
                 actionLabel = userSettings.preferredStudyTime,
+                testTag = TestTags.SETTINGS_STUDY_TIME,
+                enabled = userSettings.studyReminders,
                 onClick = { showTimePicker.value = true }
             )
 
@@ -264,6 +268,7 @@ fun SettingsScreenContent(
                 description = stringResource(R.string.settings_notification_sound_description),
                 checked = userSettings.notificationSound,
                 testTag = TestTags.SETTINGS_NOTIFICATION_SOUND,
+                enabled = userSettings.studyReminders,
                 onCheckedChange = onNotificationSoundChanged
             )
 
@@ -357,6 +362,7 @@ fun SwitchSetting(
     description: String,
     checked: Boolean,
     testTag: String,
+    enabled: Boolean = true,
     onCheckedChange: (Boolean) -> Unit
 ) {
     Row(
@@ -367,7 +373,12 @@ fun SwitchSetting(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .weight(1f)
+                .alpha(if (enabled) 1f else 0.5f)
+        ) {
             Icon(imageVector = icon, contentDescription = null, tint = Color(0xFFB0B0B0), modifier = Modifier.size(24.dp))
             Spacer(modifier = Modifier.width(16.dp))
             Column {
@@ -378,12 +389,15 @@ fun SwitchSetting(
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
+            enabled = enabled,
             modifier = Modifier.testTag(testTag + "_switch"),
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
                 checkedTrackColor = RoyalBlue,
                 uncheckedThumbColor = Color.White,
-                uncheckedTrackColor = Color(0xFF2C2C4E)
+                uncheckedTrackColor = Color(0xFF2C2C4E),
+                disabledCheckedTrackColor = RoyalBlue.copy(alpha = 0.5f),
+                disabledUncheckedTrackColor = Color(0xFF2C2C4E).copy(alpha = 0.5f)
             )
         )
     }
@@ -395,16 +409,24 @@ fun ActionSetting(
     title: String,
     description: String,
     actionLabel: String,
+    testTag: String,
+    enabled: Boolean = true,
     onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .padding(vertical = 12.dp)
+            .testTag(testTag),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .weight(1f)
+                .alpha(if (enabled) 1f else 0.5f)
+        ) {
             Icon(imageVector = icon, contentDescription = null, tint = Color(0xFFB0B0B0), modifier = Modifier.size(24.dp))
             Spacer(modifier = Modifier.width(16.dp))
             Column {
@@ -414,11 +436,20 @@ fun ActionSetting(
         }
         Box(
             modifier = Modifier
-                .background(Color(0xFF2C2C4E), RoundedCornerShape(50))
-                .clickable(onClick = onClick)
+                .background(
+                    color = if (enabled) Color(0xFF2C2C4E) else Color(0xFF2C2C4E).copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(50)
+                )
+                .testTag(testTag + "_button")
+                .clickable(enabled = enabled, onClick = onClick)
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            Text(text = actionLabel, color = RoyalBlue, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+            Text(
+                text = actionLabel,
+                color = if (enabled) RoyalBlue else RoyalBlue.copy(alpha = 0.5f),
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
         }
     }
 }

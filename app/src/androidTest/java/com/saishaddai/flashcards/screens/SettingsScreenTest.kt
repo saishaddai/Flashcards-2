@@ -178,11 +178,35 @@ class SettingsScreenTest {
         
         composeTestRule.setContent { SettingsScreen(viewModel = viewModel) }
 
-        // Find the switch by tag
-        composeTestRule.onNodeWithTag(TestTags.SETTINGS_STUDY_REMINDERS + "_switch")
+        // Find the switch by tag (Now using SETTINGS_DAILY_REMINDERS)
+        composeTestRule.onNodeWithTag(TestTags.SETTINGS_DAILY_REMINDERS + "_switch")
             .assertIsOn()
             .performClick()
             .assertIsOff()
+    }
+
+    @Test
+    fun settingsScreen_disablingReminders_disablesDependentSettings() {
+        val fakeRepository = FakeSettingsRepository()
+        val viewModel = SettingsViewModel(fakeRepository)
+
+        composeTestRule.setContent { SettingsScreen(viewModel = viewModel) }
+
+        // 1. Reminders should be ON by default, so dependents should be enabled
+        composeTestRule.onNodeWithTag(TestTags.SETTINGS_DAILY_REMINDERS + "_switch").assertIsOn()
+        composeTestRule.onNodeWithTag(TestTags.SETTINGS_NOTIFICATION_SOUND + "_switch").assertIsEnabled()
+
+        // 2. Turn OFF reminders
+        composeTestRule.onNodeWithTag(TestTags.SETTINGS_DAILY_REMINDERS + "_switch").performClick().assertIsOff()
+
+        // 3. Verify dependents are disabled
+        // For the SwitchSetting, the switch itself should be disabled
+        composeTestRule.onNodeWithTag(TestTags.SETTINGS_NOTIFICATION_SOUND + "_switch").assertIsNotEnabled()
+        
+        // For the ActionSetting with tag SETTINGS_STUDY_TIME
+        // The Box inside ActionSetting is clickable(enabled = enabled).
+        val actionLabel = fakeRepository.settings.value.preferredStudyTime
+        composeTestRule.onNodeWithText(actionLabel).assertIsNotEnabled()
     }
 
     @Test
@@ -220,7 +244,8 @@ class SettingsScreenTest {
         
         composeTestRule.setContent { SettingsScreen(viewModel = viewModel) }
 
-        composeTestRule.onNodeWithText(context.getString(R.string.settings_preferred_study_time))
+        // Click the action button specifically
+        composeTestRule.onNodeWithTag(TestTags.SETTINGS_STUDY_TIME + "_button")
             .performClick()
     }
 }

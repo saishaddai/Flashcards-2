@@ -46,6 +46,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -118,10 +119,10 @@ fun SettingsScreenContent(
     val showTimePicker = rememberSaveable { mutableStateOf(false) }
 
     val localFlashcardsPerSession = remember(userSettings?.flashcardsPerSession) {
-        mutableStateOf(userSettings?.flashcardsPerSession?.toFloat() ?: DEFAULT_FLASHCARDS_PER_SESSION.toFloat())
+        mutableFloatStateOf(userSettings?.flashcardsPerSession?.toFloat() ?: DEFAULT_FLASHCARDS_PER_SESSION.toFloat())
     }
     val localDailyGoal = remember(userSettings?.dailyStudyGoal) {
-        mutableStateOf(userSettings?.dailyStudyGoal?.toFloat() ?: DEFAULT_DAILY_GOAL.toFloat())
+        mutableFloatStateOf(userSettings?.dailyStudyGoal?.toFloat() ?: DEFAULT_DAILY_GOAL.toFloat())
     }
 
     if (isLoading || userSettings == null) {
@@ -167,10 +168,10 @@ fun SettingsScreenContent(
             SliderSetting(
                 icon = Icons.Default.School,
                 title = stringResource(R.string.settings_flashcards_per_session),
-                value = localFlashcardsPerSession.value.toInt().toString(),
-                currentValue = localFlashcardsPerSession.value,
-                onValueChange = { localFlashcardsPerSession.value = it },
-                onValueChangeFinished = { onFlashcardsPerSessionChanged(localFlashcardsPerSession.value.toInt()) },
+                value = localFlashcardsPerSession.floatValue.toInt().toString(),
+                currentValue = localFlashcardsPerSession.floatValue,
+                onValueChange = { localFlashcardsPerSession.floatValue = it },
+                onValueChangeFinished = { onFlashcardsPerSessionChanged(localFlashcardsPerSession.floatValue.toInt()) },
                 range = 5f..50f,
                 minLabel = stringResource(R.string.settings_flashcards_per_session_min),
                 maxLabel = stringResource(R.string.settings_flashcards_per_session_max),
@@ -180,10 +181,10 @@ fun SettingsScreenContent(
             SliderSetting(
                 icon = Icons.Default.Flag,
                 title = stringResource(R.string.settings_daily_goal),
-                value = stringResource(R.string.settings_daily_goal_value, localDailyGoal.value.toInt()),
-                currentValue = localDailyGoal.value,
-                onValueChange = { localDailyGoal.value = it },
-                onValueChangeFinished = { onDailyStudyGoalChanged(localDailyGoal.value.toInt()) },
+                value = stringResource(R.string.settings_daily_goal_value, localDailyGoal.floatValue.toInt()),
+                currentValue = localDailyGoal.floatValue,
+                onValueChange = { localDailyGoal.floatValue = it },
+                onValueChangeFinished = { onDailyStudyGoalChanged(localDailyGoal.floatValue.toInt()) },
                 range = 10f..100f,
                 minLabel = stringResource(R.string.settings_daily_goal_min),
                 maxLabel = stringResource(R.string.settings_daily_goal_max)
@@ -255,6 +256,7 @@ fun SettingsScreenContent(
                 title = stringResource(R.string.settings_preferred_study_time),
                 description = stringResource(R.string.settings_preferred_study_time_description),
                 actionLabel = userSettings.preferredStudyTime,
+                testTag = TestTags.SETTINGS_STUDY_TIME,
                 onClick = { showTimePicker.value = true }
             )
 
@@ -395,12 +397,14 @@ fun ActionSetting(
     title: String,
     description: String,
     actionLabel: String,
+    testTag: String,
     onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .padding(vertical = 12.dp)
+            .testTag(testTag),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

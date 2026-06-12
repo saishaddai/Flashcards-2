@@ -169,5 +169,6 @@
     <string name="loading">Loading…</string>
     <string name="loading_decks">Starting up…</string>
     <string name="loading_stats">Getting Stats…</string>
+    <string name="no_decks_available">No decks available. Please check back later.</string>
 
 </resources>

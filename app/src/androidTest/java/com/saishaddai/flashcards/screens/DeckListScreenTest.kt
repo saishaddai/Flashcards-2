@@ -2,6 +2,8 @@ package com.saishaddai.flashcards.screens
 
 import android.app.Application
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.doubleClick
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -274,5 +276,71 @@ class DeckListScreenTest {
         
         // Verify callback was triggered immediately
         composeTestRule.waitUntil(5000) { onStartSessionClickCalled }
+    }
+
+    @Test
+    fun testDeckListScreen_emptyDecks_showsEmptyStateMessage() {
+        val fakeRepository = object : DeckRepository<Deck> {
+            override suspend fun getData(): List<Deck> = emptyList()
+        }
+
+        val viewModel = DecksViewModel(application, fakeRepository)
+        val settingsViewModel = createMockSettingsViewModel()
+
+        composeTestRule.setContent {
+            DeckListScreen(
+                viewModel = viewModel,
+                settingsViewModel = settingsViewModel,
+                onStartSessionClick = {}
+            )
+        }
+
+        // Verify the empty state message is displayed
+        composeTestRule.onNodeWithTag(TestTags.DECKS_EMPTY_STATE).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.no_decks_available)).assertIsDisplayed()
+    }
+
+    @Test
+    fun testDeckListScreen_selectMultipleDecks_onlyOneRemainsSelected() {
+        val mockDecks = listOf(
+            Deck(id = 1, name = "Mock Deck 1", longName = "Mock Deck 1 Long", cardCount = 10, isSelected = true),
+            Deck(id = 2, name = "Mock Deck 2", longName = "Mock Deck 2 Long", cardCount = 5, isSelected = false)
+        )
+
+        val fakeRepository = object : DeckRepository<Deck> {
+            override suspend fun getData(): List<Deck> = mockDecks
+        }
+
+        val viewModel = DecksViewModel(application, fakeRepository)
+        val settingsViewModel = createMockSettingsViewModel()
+
+        composeTestRule.setContent {
+            DeckListScreen(
+                viewModel = viewModel,
+                settingsViewModel = settingsViewModel,
+                onStartSessionClick = {}
+            )
+        }
+
+        // Initially Mock Deck 1 is selected
+        composeTestRule.onNodeWithText("Mock Deck 1").assertIsSelected()
+        composeTestRule.onNodeWithText("Mock Deck 2").assertIsNotSelected()
+
+        // Click Mock Deck 2
+        composeTestRule.onNodeWithText("Mock Deck 2").performClick()
+
+        // Wait for state change to be reflected in UI
+        composeTestRule.waitUntil(5000) {
+            try {
+                composeTestRule.onNodeWithText("Mock Deck 2").assertIsSelected()
+                true
+            } catch (_: AssertionError) {
+                false
+            }
+        }
+
+        // Now Mock Deck 2 should be selected and Mock Deck 1 should NOT be selected
+        composeTestRule.onNodeWithText("Mock Deck 2").assertIsSelected()
+        composeTestRule.onNodeWithText("Mock Deck 1").assertIsNotSelected()
     }
 }

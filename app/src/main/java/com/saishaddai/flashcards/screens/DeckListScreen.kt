@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -29,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -109,23 +111,39 @@ fun DeckListContent(
                 titleText = stringResource(R.string.decks_learning_today)
             )
 
-            DeckGrid(
-                decks = decks,
-                onDeckSelected = onDeckSelected,
-                onDeckDoubleClicked = { deck ->
-                    onDeckSelected(deck)
-                    if (deck.cardCount > 0) {
-                        if (quickStartEnabled) {
-                            onStartSessionClick(deck)
+            if (decks.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.no_decks_available),
+                        color = Color.Gray,
+                        fontSize = 16.sp,
+                        modifier = Modifier.testTag(TestTags.DECKS_EMPTY_STATE)
+                    )
+                }
+            } else {
+                DeckGrid(
+                    decks = decks,
+                    onDeckSelected = onDeckSelected,
+                    onDeckDoubleClicked = { deck ->
+                        onDeckSelected(deck)
+                        if (deck.cardCount > 0) {
+                            if (quickStartEnabled) {
+                                onStartSessionClick(deck)
+                            } else {
+                                deckToQuickStart.value = deck
+                            }
                         } else {
-                            deckToQuickStart.value = deck
+                            showEmptyDeckDialog.value = true
                         }
-                    } else {
-                        showEmptyDeckDialog.value = true
-                    }
-                },
-                modifier = Modifier.weight(1f)
-            )
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+            }
 
             BlueButton(
                 icon = Icons.Default.Navigation,

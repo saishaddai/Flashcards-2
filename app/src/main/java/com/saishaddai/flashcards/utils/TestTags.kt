@@ -15,6 +15,7 @@ object TestTags {
     //Deck List Screen
     const val DECKS_LIST_DECK_TITLE = "deck_title"
     const val DECKS_LIST_DECK_COUNT = "deck_count"
+    const val DECKS_EMPTY_STATE = "decks_empty_state"
 
     const val SETTINGS_QUICK_START = "settings_quick_start"
     const val SETTINGS_SHOW_ANSWERS = "settings_show_answers"

@@ -275,4 +275,26 @@ class DeckListScreenTest {
         // Verify callback was triggered immediately
         composeTestRule.waitUntil(5000) { onStartSessionClickCalled }
     }
+
+    @Test
+    fun testDeckListScreen_emptyDecks_showsEmptyStateMessage() {
+        val fakeRepository = object : DeckRepository<Deck> {
+            override suspend fun getData(): List<Deck> = emptyList()
+        }
+
+        val viewModel = DecksViewModel(application, fakeRepository)
+        val settingsViewModel = createMockSettingsViewModel()
+
+        composeTestRule.setContent {
+            DeckListScreen(
+                viewModel = viewModel,
+                settingsViewModel = settingsViewModel,
+                onStartSessionClick = {}
+            )
+        }
+
+        // Verify the empty state message is displayed
+        composeTestRule.onNodeWithTag(TestTags.DECKS_EMPTY_STATE).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.no_decks_available)).assertIsDisplayed()
+    }
 }

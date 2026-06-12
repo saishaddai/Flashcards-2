@@ -37,6 +37,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -254,7 +256,7 @@ fun DeckGrid(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(decks) { deck ->
+        items(decks, key = { it.id }) { deck ->
             DeckCard(
                 deck = deck,
                 onClick = { onDeckSelected(deck) },
@@ -271,6 +273,7 @@ fun DeckCard(deck: Deck, onClick: () -> Unit, onDoubleClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(150.dp)
+            .semantics { selected = deck.isSelected }
             .combinedClickable(
                 onClick = onClick,
                 onDoubleClick = onDoubleClick

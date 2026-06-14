@@ -1,5 +1,10 @@
 package com.saishaddai.flashcards.screens
 
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -118,6 +123,14 @@ fun SettingsScreenContent(
 ) {
     val showRestartDialog = rememberSaveable { mutableStateOf(false) }
     val showTimePicker = rememberSaveable { mutableStateOf(false) }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            onStudyRemindersChanged(true)
+        }
+    }
 
     val localFlashcardsPerSession = remember(userSettings?.flashcardsPerSession) {
         mutableFloatStateOf(userSettings?.flashcardsPerSession?.toFloat() ?: DEFAULT_FLASHCARDS_PER_SESSION.toFloat())
@@ -249,7 +262,13 @@ fun SettingsScreenContent(
                 description = stringResource(R.string.settings_daily_reminders_description),
                 checked = userSettings.studyReminders,
                 testTag = TestTags.SETTINGS_DAILY_REMINDERS,
-                onCheckedChange = onStudyRemindersChanged
+                onCheckedChange = { enabled ->
+                    if (enabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        onStudyRemindersChanged(enabled)
+                    }
+                }
             )
 
             ActionSetting(
@@ -259,6 +278,7 @@ fun SettingsScreenContent(
                 actionLabel = userSettings.preferredStudyTime,
                 testTag = TestTags.SETTINGS_STUDY_TIME,
                 enabled = userSettings.studyReminders,
+                modifier = Modifier.padding(start = 24.dp),
                 onClick = { showTimePicker.value = true }
             )
 
@@ -269,6 +289,7 @@ fun SettingsScreenContent(
                 checked = userSettings.notificationSound,
                 testTag = TestTags.SETTINGS_NOTIFICATION_SOUND,
                 enabled = userSettings.studyReminders,
+                modifier = Modifier.padding(start = 24.dp),
                 onCheckedChange = onNotificationSoundChanged
             )
 
@@ -362,11 +383,14 @@ fun SwitchSetting(
     description: String,
     checked: Boolean,
     testTag: String,
+    modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onCheckedChange: (Boolean) -> Unit
 ) {
+    val alpha by animateFloatAsState(targetValue = if (enabled) 1f else 0.5f, label = "alpha")
+
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp)
             .testTag(testTag),
@@ -377,7 +401,7 @@ fun SwitchSetting(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .weight(1f)
-                .alpha(if (enabled) 1f else 0.5f)
+                .alpha(alpha)
         ) {
             Icon(imageVector = icon, contentDescription = null, tint = Color(0xFFB0B0B0), modifier = Modifier.size(24.dp))
             Spacer(modifier = Modifier.width(16.dp))
@@ -410,11 +434,14 @@ fun ActionSetting(
     description: String,
     actionLabel: String,
     testTag: String,
+    modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
+    val alpha by animateFloatAsState(targetValue = if (enabled) 1f else 0.5f, label = "alpha")
+
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp)
             .testTag(testTag),
@@ -425,7 +452,7 @@ fun ActionSetting(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .weight(1f)
-                .alpha(if (enabled) 1f else 0.5f)
+                .alpha(alpha)
         ) {
             Icon(imageVector = icon, contentDescription = null, tint = Color(0xFFB0B0B0), modifier = Modifier.size(24.dp))
             Spacer(modifier = Modifier.width(16.dp))

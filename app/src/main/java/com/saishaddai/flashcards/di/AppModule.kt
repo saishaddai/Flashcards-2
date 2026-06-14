@@ -52,5 +52,5 @@ val appModule = module {
     viewModel { (deckId: Int) -> FlashcardViewModel(androidApplication(), deckId, get(), get()) }
     viewModel { StatsViewModel(get()) }
     viewModel { FinishSessionViewModel(get()) }
-    viewModel { SettingsViewModel(get()) }
+    viewModel { SettingsViewModel(androidApplication(), get()) }
 }

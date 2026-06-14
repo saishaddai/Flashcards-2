@@ -1,20 +1,24 @@
 package com.saishaddai.flashcards.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.UserSettings
+import com.saishaddai.flashcards.worker.WorkerUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
 
 class SettingsViewModel(
+    application: Application,
     private val repository: SettingsRepository
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -40,6 +44,12 @@ class SettingsViewModel(
             val hourFormatted = if (hour % 12 == 0) 12 else hour % 12
             val time = String.format(Locale.getDefault(), "%02d:%02d %s", hourFormatted, minute, amPm)
             repository.savePreferredStudyTime(time)
+
+            // Update worker if reminders are enabled
+            val settings = repository.getSettings().first()
+            if (settings.studyReminders) {
+                WorkerUtils.scheduleDailyReminder(getApplication(), time)
+            }
         }
     }
 
@@ -76,6 +86,12 @@ class SettingsViewModel(
     fun onStudyRemindersChanged(enabled: Boolean) {
         viewModelScope.launch {
             repository.saveStudyReminders(enabled)
+            if (enabled) {
+                val settings = repository.getSettings().first()
+                WorkerUtils.scheduleDailyReminder(getApplication(), settings.preferredStudyTime)
+            } else {
+                WorkerUtils.cancelDailyReminder(getApplication())
+            }
         }
     }
 

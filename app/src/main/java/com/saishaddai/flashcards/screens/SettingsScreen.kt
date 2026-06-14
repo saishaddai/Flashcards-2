@@ -1,5 +1,9 @@
 package com.saishaddai.flashcards.screens
 
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -119,6 +123,14 @@ fun SettingsScreenContent(
 ) {
     val showRestartDialog = rememberSaveable { mutableStateOf(false) }
     val showTimePicker = rememberSaveable { mutableStateOf(false) }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            onStudyRemindersChanged(true)
+        }
+    }
 
     val localFlashcardsPerSession = remember(userSettings?.flashcardsPerSession) {
         mutableFloatStateOf(userSettings?.flashcardsPerSession?.toFloat() ?: DEFAULT_FLASHCARDS_PER_SESSION.toFloat())
@@ -250,7 +262,13 @@ fun SettingsScreenContent(
                 description = stringResource(R.string.settings_daily_reminders_description),
                 checked = userSettings.studyReminders,
                 testTag = TestTags.SETTINGS_DAILY_REMINDERS,
-                onCheckedChange = onStudyRemindersChanged
+                onCheckedChange = { enabled ->
+                    if (enabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        onStudyRemindersChanged(enabled)
+                    }
+                }
             )
 
             ActionSetting(

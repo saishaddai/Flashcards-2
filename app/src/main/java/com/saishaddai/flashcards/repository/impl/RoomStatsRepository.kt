@@ -5,7 +5,7 @@ import com.saishaddai.flashcards.data.local.StudyDao
 import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.repository.StatsRepository
 import com.saishaddai.flashcards.screens.MasteryData
-import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.ui.theme.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
@@ -75,8 +75,8 @@ class RoomStatsRepository(
                     MasteryData(
                         title = friendlyName,
                         percentage = 0,
-                        level = "Novato",
-                        color = getMasteryColor("Novato")
+                        level = "Novice",
+                        color = getMasteryColor("Novice")
                     )
                 }
             }
@@ -87,12 +87,12 @@ class RoomStatsRepository(
 
     private fun getMasteryColor(level: String): Color {
         return when (level) {
-            "Novato" -> Color(0xFFB0B0B0)
-            "Intermedio" -> Color(0xFFF59E0B)
-            "Avanzado" -> Color(0xFF10B981)
-            "Experto" -> RoyalBlue
-            "Master" -> Color(0xFFFFC700)
-            else -> RoyalBlue
+            "Novice" -> TextGray
+            "Intermediate" -> WarningOrange
+            "Advanced" -> SuccessGreen
+            "Expert" -> RoyalBlue
+            "Master" -> Gold
+            else -> TextGray
         }
     }
 

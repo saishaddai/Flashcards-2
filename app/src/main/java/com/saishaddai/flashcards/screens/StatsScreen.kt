@@ -641,8 +641,8 @@ fun StatsScreenPreview() {
             promoDeck = Deck(1, "Kotlin", "Kotlin Fundamentals", isSelected = false),
             weeklyActivity = listOf(10, 20, 15, 30, 25, 40, 35),
             skillMastery = listOf(
-                MasteryData("Language", 85, "Advanced", RoyalBlue),
-                MasteryData("UI/UX", 60, "Intermediate", WarningOrange)
+                MasteryData("Language", 85, "Veteran", RoyalBlue),
+                MasteryData("UI/UX", 60, "Sophomore", WarningOrange)
             ),
             flashcardsViewed = "1,234",
             currentStreak = "7",

@@ -31,14 +31,14 @@ class RoomStudyRepository(
         val today = dateFormatter.format(Calendar.getInstance().time)
         val streak = calculateStreak()
         val currentMastery = studyDao.getDeckMastery(deck.id)
-        val progresoAcumulado = currentMastery?.progress ?: 0.0
+        val accumulatedProgress = currentMastery?.progress ?: 0.0
 
         // Calculate results using the formula
         val result = calculator.calculateProgress(
-            flashcardsVistas = cardsReviewed,
-            totalFlashcardsTema = if (deck.cardCount > 0) deck.cardCount else 20, // Fallback if count is 0
-            rachaDias = streak,
-            progresoAcumulado = progresoAcumulado
+            flashcardsViewed = cardsReviewed,
+            totalTopicFlashcards = if (deck.cardCount > 0) deck.cardCount else 20, // Fallback if count is 0
+            daysStreak = streak,
+            accumulatedProgress = accumulatedProgress
         )
 
         // Update Room
@@ -47,15 +47,15 @@ class RoomStudyRepository(
             cardsReviewed = cardsReviewed,
             startTime = startTime,
             endTime = endTime,
-            xpGained = result.avanceSesion,
+            xpGained = result.sessionProgress,
             streakAtTime = streak
         )
 
         val newDeckMastery = DeckMastery(
             deckId = deck.id,
             deckName = deck.name,
-            progress = result.nuevoProgreso,
-            level = result.titulo,
+            progress = result.newProgress,
+            level = result.title,
             lastReviewed = endTime
         )
 

@@ -215,14 +215,14 @@ fun FinishSessionContent(
                 Spacer(modifier = Modifier.height(32.dp))
                 AchievementReached(
                     icon = Icons.AutoMirrored.Filled.TrendingUp,
-                    text = stringResource(R.string.finish_total_experience, sessionResult?.avanceSesion?.toInt() ?: 0),
+                    text = stringResource(R.string.finish_total_experience, sessionResult?.sessionProgress?.toInt() ?: 0),
                 )
 
                 //Daily Goal percentage
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
                     icon = Icons.Default.Star,
-                    text = stringResource(R.string.finish_current_level, sessionResult?.titulo ?: ""),
+                    text = stringResource(R.string.finish_current_level, sessionResult?.title ?: ""),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
@@ -348,7 +348,7 @@ fun FinishSessionScreenPreview() {
             cardsReviewed = 20,
             startTime = 0L,
             endTime = 1000L * 60 * 12,
-            sessionResult = SessionResult(5.0, 50.0, "Mid"),
+            sessionResult = SessionResult(5.0, 50.0, "Intermediate"),
             isLoading = false,
             onBackToDecksClicked = {},
             onShareSummary = {}

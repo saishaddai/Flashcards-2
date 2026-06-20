@@ -33,8 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
-import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
-import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.utils.TestTags
 
 @Composable
@@ -94,7 +93,7 @@ fun PromoWidget(
                     onClick = { onPromoClick(randomDeck) },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White,
-                        contentColor = Color(0xFF2563EB)
+                        contentColor = PromoBlue
                     ),
                     shape = RoundedCornerShape(50),
                     contentPadding = PaddingValues(horizontal = 32.dp, vertical = 12.dp)

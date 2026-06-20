@@ -49,7 +49,7 @@ import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.Header
-import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.utils.DeckAssets
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.getMasteryLevel
@@ -185,7 +185,7 @@ private fun DeckListDialogs(
             text = {
                 Text(
                     text = stringResource(R.string.empty_deck_message),
-                    color = Color(0xFFB0B0B0)
+                    color = TextGray
                 )
             },
             confirmButton = {
@@ -197,7 +197,7 @@ private fun DeckListDialogs(
                     )
                 }
             },
-            containerColor = Color(0xFF2C2C4E),
+            containerColor = SurfaceDark,
             shape = RoundedCornerShape(28.dp)
         )
     }
@@ -216,7 +216,7 @@ private fun DeckListDialogs(
             text = {
                 Text(
                     text = description,
-                    color = Color(0xFFB0B0B0)
+                    color = TextGray
                 )
             },
             confirmButton = {
@@ -237,7 +237,7 @@ private fun DeckListDialogs(
                     )
                 }
             },
-            containerColor = Color(0xFF2C2C4E),
+            containerColor = SurfaceDark,
             shape = RoundedCornerShape(28.dp)
         )
     }
@@ -280,7 +280,7 @@ fun DeckCard(deck: Deck, onClick: () -> Unit, onDoubleClick: () -> Unit) {
             ),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF2C2C4E)
+            containerColor = SurfaceDark
         ),
         border = if (deck.isSelected) BorderStroke(2.dp, RoyalBlue) else null
     ) {

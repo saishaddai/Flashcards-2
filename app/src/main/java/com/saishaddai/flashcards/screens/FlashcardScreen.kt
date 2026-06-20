@@ -52,8 +52,7 @@ import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.TransparentButton
-import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
-import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -137,7 +136,7 @@ fun FlashcardContent(
             text = {
                 Text(
                     text = stringResource(R.string.flashcard_cancel_dialog_message),
-                    color = Color(0xFFB0B0B0)
+                    color = TextGray
                 )
             },
             confirmButton = {
@@ -161,7 +160,7 @@ fun FlashcardContent(
                     )
                 }
             },
-            containerColor = Color(0xFF2C2C4E),
+            containerColor = SurfaceDark,
             shape = RoundedCornerShape(28.dp)
         )
     }
@@ -178,7 +177,7 @@ fun FlashcardContent(
                             text = stringResource(R.string.flashcard_top_bar_title),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFB0B0B0)
+                            color = TextGray
                         )
                         Text(
                             text = deck.name,
@@ -202,11 +201,11 @@ fun FlashcardContent(
                 },
                 actions = {},
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1A1A2E)
+                    containerColor = DarkBackground
                 )
             )
         },
-        containerColor = Color(0xFF1A1A2E)
+        containerColor = DarkBackground
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -293,7 +292,7 @@ fun ProgressIndicator(current: Int, total: Int) {
             progress = { progress },
             modifier = Modifier.fillMaxWidth(),
             color = RoyalBlue,
-            trackColor = Color(0xFF2C2C4E)
+            trackColor = SurfaceDark
         )
     }
 }
@@ -307,7 +306,7 @@ fun Flashcard(flashcard: Flashcard, onClick: () -> Unit = {}) {
             .clickable(enabled = true, onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF2C2C4E)
+            containerColor = SurfaceDark
         ),
     ) {
         Column(
@@ -349,7 +348,7 @@ fun FlashcardAnswer(flashcard: Flashcard) {
             .height(200.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF3366FF)
+            containerColor = ElectricBlue
         ),
     ) {
         Column(

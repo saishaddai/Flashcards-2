@@ -76,8 +76,7 @@ import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.screens.commons.PromoWidget
-import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
-import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
@@ -164,7 +163,7 @@ fun StatsContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF1A1A2E))
+                .background(DarkBackground)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp)
         ) {
@@ -230,7 +229,7 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
             Icon(
                 imageVector = Icons.Default.Info,
                 contentDescription = null,
-                tint = Color(0xFFB0B0B0),
+                tint = TextGray,
                 modifier = Modifier
                     .size(18.dp)
                     .testTag(TestTags.STATS_WEEKLY_ACTIVITY_DESCRIPTION)
@@ -240,7 +239,7 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
         Text(
             text = dateRange,
             fontSize = 14.sp,
-            color = Color(0xFFB0B0B0)
+            color = TextGray
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -248,7 +247,7 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(28.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF161D31))
+            colors = CardDefaults.cardColors(containerColor = DeepBlue)
         ) {
             Column(modifier = Modifier.padding(24.dp)) {
                 Row(
@@ -267,7 +266,7 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
                         Text(
                             text = stringResource(R.string.stats_cards_reviewed),
                             fontSize = 12.sp,
-                            color = Color(0xFFB0B0B0)
+                            color = TextGray
                         )
                     }
                     Column(horizontalAlignment = Alignment.End,
@@ -318,7 +317,7 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
                                 },
                                 guideline = null,
                                 label = rememberAxisLabelComponent(
-                                    color = Color(0xFFB0B0B0),
+                                    color = TextGray,
                                     textSize = 12.sp
                                 )
                             ),
@@ -360,7 +359,7 @@ fun SkillMasterySection(
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = stringResource(R.string.stats_skill_mastery_info_title),
-                    tint = Color(0xFFB0B0B0),
+                    tint = TextGray,
                     modifier = Modifier
                         .size(18.dp)
                         .testTag(TestTags.STATS_SKILL_MASTERY_DESCRIPTION)
@@ -420,7 +419,7 @@ fun SkillCard(data: MasteryData) {
     Card(
         modifier = Modifier.size(width = 160.dp, height = 180.dp),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF161D31))
+        colors = CardDefaults.cardColors(containerColor = DeepBlue)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -433,7 +432,7 @@ fun SkillCard(data: MasteryData) {
                     modifier = Modifier.size(80.dp),
                     color = data.color,
                     strokeWidth = 8.dp,
-                    trackColor = Color(0xFF2C2C4E),
+                    trackColor = SurfaceDark,
                     strokeCap = StrokeCap.Round
                 )
                 Text(
@@ -454,7 +453,7 @@ fun SkillCard(data: MasteryData) {
                 text = data.level,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFFB0B0B0)
+                color = TextGray
             )
         }
     }
@@ -484,7 +483,7 @@ fun AtAGlanceSection(
                     icon = Icons.Default.Style,
                     value = flashcardsViewed,
                     label = stringResource(R.string.stats_flashcards_viewed),
-                    containerColor = Color(0xFF1E293B),
+                    containerColor = SlateBlue,
                     iconColor = RoyalBlue,
                     testTag = TestTags.STATS_FLASHCARDS_VIEWED
                 )
@@ -493,8 +492,8 @@ fun AtAGlanceSection(
                     icon = Icons.Default.LocalFireDepartment,
                     value = currentStreak,
                     label = stringResource(R.string.stats_current_streak),
-                    containerColor = Color(0xFF3E2723),
-                    iconColor = Color(0xFFF59E0B),
+                    containerColor = DeepBrown,
+                    iconColor = WarningOrange,
                     testTag = TestTags.STATS_CURRENT_STREAK
                 )
             }
@@ -504,8 +503,8 @@ fun AtAGlanceSection(
                     icon = Icons.Default.AccessTime,
                     value = studyTime,
                     label = stringResource(R.string.stats_study_time),
-                    containerColor = Color(0xFF2E1065),
-                    iconColor = Color(0xFF8B5CF6),
+                    containerColor = Indigo,
+                    iconColor = SoftPurple,
                     testTag = TestTags.STATS_STUDY_TIME
                 )
                 StatCard(
@@ -513,8 +512,8 @@ fun AtAGlanceSection(
                     icon = Icons.Default.CheckCircle,
                     value = masteredDecks,
                     label = stringResource(R.string.stats_mastered_decks),
-                    containerColor = Color(0xFF064E3B),
-                    iconColor = Color(0xFF10B981),
+                    containerColor = DeepGreen,
+                    iconColor = SuccessGreen,
                     testTag = TestTags.STATS_MASTERED_DECKS
                 )
             }
@@ -560,7 +559,7 @@ fun StatCard(
                 Text(
                     text = label,
                     fontSize = 12.sp,
-                    color = Color(0xFFB0B0B0)
+                    color = TextGray
                 )
             }
         }
@@ -582,8 +581,8 @@ private data class ComparisonData(val color: Color, val icon: ImageVector?, val 
 
 private fun getComparisonData(weeklyComparison: Int): ComparisonData {
     val color = when {
-        weeklyComparison > 0 -> Color(0xFF10B981)
-        weeklyComparison < 0 -> Color(0xFFEF4444)
+        weeklyComparison > 0 -> SuccessGreen
+        weeklyComparison < 0 -> ErrorRed
         else -> Color.White
     }
     val icon = when {
@@ -617,7 +616,7 @@ private fun StatsInfoDialog(
         text = {
             Text(
                 text = description,
-                color = Color(0xFFB0B0B0)
+                color = TextGray
             )
         },
         confirmButton = {
@@ -629,7 +628,7 @@ private fun StatsInfoDialog(
                 )
             }
         },
-        containerColor = Color(0xFF2C2C4E),
+        containerColor = SurfaceDark,
         shape = RoundedCornerShape(28.dp)
     )
 }
@@ -643,7 +642,7 @@ fun StatsScreenPreview() {
             weeklyActivity = listOf(10, 20, 15, 30, 25, 40, 35),
             skillMastery = listOf(
                 MasteryData("Language", 85, "Advanced", RoyalBlue),
-                MasteryData("UI/UX", 60, "Intermediate", Color(0xFFF59E0B))
+                MasteryData("UI/UX", 60, "Intermediate", WarningOrange)
             ),
             flashcardsViewed = "1,234",
             currentStreak = "7",

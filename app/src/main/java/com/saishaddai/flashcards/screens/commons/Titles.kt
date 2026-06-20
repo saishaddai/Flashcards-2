@@ -11,7 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.ui.theme.*
 
 
 @Composable
@@ -56,7 +56,7 @@ fun Title(text: String) {
 fun Subtitle(text: String) {
     Text(
         text = text,
-        color = Color(0xFFB0B0B0),
+        color = TextGray,
         fontSize = 16.sp,
         lineHeight = 24.sp
     )

@@ -4,42 +4,42 @@ import kotlin.math.min
 
 class SessionCalculator {
     fun calculateProgress(
-        flashcardsVistas: Int,
-        totalFlashcardsTema: Int,
-        rachaDias: Int,
-        progresoAcumulado: Double
+        flashcardsViewed: Int,
+        totalTopicFlashcards: Int,
+        daysStreak: Int,
+        accumulatedProgress: Double
     ): SessionResult {
-        // 1. Progreso base
-        val base = (100.0 / totalFlashcardsTema) * flashcardsVistas
+        // 1. Base progress
+        val base = (100.0 / totalTopicFlashcards) * flashcardsViewed
 
-        // 2. Multiplicador de constancia
-        val multiplicador = 1 + (0.03 * rachaDias)
+        // 2. Consistency multiplier
+        val multiplier = 1 + (0.03 * daysStreak)
 
-        // 3. Bonus mensual & Titulo
+        // 3. Monthly Bonus & Title
         var bonus = 0.0
-        val titulo = when {
-            rachaDias >= 30 -> {
+        val title = when {
+            daysStreak >= 30 -> {
                 bonus = 10.0
                 "Master"
             }
-            progresoAcumulado < 20 -> "Novato"
-            progresoAcumulado < 50 -> "Intermedio"
-            progresoAcumulado < 80 -> "Avanzado"
-            else -> "Experto"
+            accumulatedProgress < 20 -> "Novice"
+            accumulatedProgress < 50 -> "Intermediate"
+            accumulatedProgress < 80 -> "Advanced"
+            else -> "Expert"
         }
 
-        // 4. Avance de la sesión
-        val avanceSesion = (base * multiplicador) + bonus
+        // 4. Session progress
+        val sessionProgress = (base * multiplier) + bonus
 
-        // 5. Nuevo progreso acumulado (máx. 100)
-        val nuevoProgreso = min(progresoAcumulado + avanceSesion, 100.0)
+        // 5. New accumulated progress (max 100)
+        val newProgress = min(accumulatedProgress + sessionProgress, 100.0)
 
-        return SessionResult(avanceSesion, nuevoProgreso, titulo)
+        return SessionResult(sessionProgress, newProgress, title)
     }
 }
 
 data class SessionResult(
-    val avanceSesion: Double,
-    val nuevoProgreso: Double,
-    val titulo: String
+    val sessionProgress: Double,
+    val newProgress: Double,
+    val title: String
 )

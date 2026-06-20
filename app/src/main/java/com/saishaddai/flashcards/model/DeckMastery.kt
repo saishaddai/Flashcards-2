@@ -8,6 +8,6 @@ data class DeckMastery(
     @PrimaryKey val deckId: Int,
     val deckName: String,
     val progress: Double = 0.0,
-    val level: String = "Novato",
+    val level: String = "Novice",
     val lastReviewed: Long = System.currentTimeMillis()
 )

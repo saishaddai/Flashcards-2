@@ -54,8 +54,7 @@ import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.screens.commons.FullLoader
-import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
-import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.viewmodel.FinishSessionViewModel
 import com.saishaddai.flashcards.utils.SessionResult
 import nl.dionsegijn.konfetti.compose.KonfettiView
@@ -163,11 +162,11 @@ fun FinishSessionContent(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1A1A2E)
+                    containerColor = DarkBackground
                 )
             )
         },
-        containerColor = Color(0xFF1A1A2E)
+        containerColor = DarkBackground
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -216,14 +215,14 @@ fun FinishSessionContent(
                 Spacer(modifier = Modifier.height(32.dp))
                 AchievementReached(
                     icon = Icons.AutoMirrored.Filled.TrendingUp,
-                    text = stringResource(R.string.finish_total_experience, sessionResult?.avanceSesion?.toInt() ?: 0),
+                    text = stringResource(R.string.finish_total_experience, sessionResult?.sessionProgress?.toInt() ?: 0),
                 )
 
                 //Daily Goal percentage
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
                     icon = Icons.Default.Star,
-                    text = stringResource(R.string.finish_current_level, sessionResult?.titulo ?: ""),
+                    text = stringResource(R.string.finish_current_level, sessionResult?.title ?: ""),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
@@ -266,7 +265,7 @@ fun TrophyIcon() {
         Icon(
             imageVector = Icons.Default.Star,
             contentDescription = null,
-            tint = Color(0xFFFFC700),
+            tint = Gold,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(8.dp)
@@ -281,7 +280,7 @@ fun InfoCard(title: String, value: String, unit: String, icon: ImageVector) {
         modifier = Modifier.size(150.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF2C2C4E)
+            containerColor = SurfaceDark
         )
     ) {
         Column(
@@ -315,13 +314,13 @@ fun AchievementReached(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .clip(RoundedCornerShape(50))
-            .background(Color(0x3300BFA5))
+            .background(Teal.copy(alpha = 0.2f))
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
-            tint = Color(0xFF00BFA5)
+            tint = Teal
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(text = text, color = RoyalBlue)
@@ -349,7 +348,7 @@ fun FinishSessionScreenPreview() {
             cardsReviewed = 20,
             startTime = 0L,
             endTime = 1000L * 60 * 12,
-            sessionResult = SessionResult(5.0, 50.0, "Mid"),
+            sessionResult = SessionResult(5.0, 50.0, "Intermediate"),
             isLoading = false,
             onBackToDecksClicked = {},
             onShareSummary = {}

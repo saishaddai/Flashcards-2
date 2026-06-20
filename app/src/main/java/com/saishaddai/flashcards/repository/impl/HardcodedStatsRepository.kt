@@ -14,8 +14,8 @@ class HardcodedStatsRepository : StatsRepository {
     override fun getSkillMastery(): Flow<List<MasteryData>> = flow {
         emit(
             listOf(
-                MasteryData("Compose", 92, "EXPERT", RoyalBlue),
-                MasteryData("Android SDK", 85, "ADVANCED", Color(0xFF10B981))
+                MasteryData("Compose", 92, "Expert", RoyalBlue),
+                MasteryData("Android SDK", 85, "Advanced", Color(0xFF10B981))
             )
         )
     }

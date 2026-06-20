@@ -74,8 +74,7 @@ import com.saishaddai.flashcards.repository.UserSettings
 import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.Header
-import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
-import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -165,7 +164,7 @@ fun SettingsScreenContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF1A1A2E))
+                .background(DarkBackground)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp)
         ) {
@@ -300,7 +299,7 @@ fun SettingsScreenContent(
             RestartMasteryButton(onClick = { showRestartDialog.value = true })
             Text(
                 text = stringResource(R.string.settings_system_restart_description),
-                color = Color(0xFFB0B0B0),
+                color = TextGray,
                 fontSize = 12.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -363,15 +362,15 @@ fun SliderSetting(
             colors = SliderDefaults.colors(
                 thumbColor = RoyalBlue,
                 activeTrackColor = RoyalBlue,
-                inactiveTrackColor = Color(0xFF2C2C4E)
+                inactiveTrackColor = SurfaceDark
             )
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = minLabel, color = Color(0xFFB0B0B0), fontSize = 12.sp)
-            Text(text = maxLabel, color = Color(0xFFB0B0B0), fontSize = 12.sp)
+            Text(text = minLabel, color = TextGray, fontSize = 12.sp)
+            Text(text = maxLabel, color = TextGray, fontSize = 12.sp)
         }
     }
 }
@@ -403,11 +402,11 @@ fun SwitchSetting(
                 .weight(1f)
                 .alpha(alpha)
         ) {
-            Icon(imageVector = icon, contentDescription = null, tint = Color(0xFFB0B0B0), modifier = Modifier.size(24.dp))
+            Icon(imageVector = icon, contentDescription = null, tint = TextGray, modifier = Modifier.size(24.dp))
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(text = title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                Text(text = description, color = Color(0xFFB0B0B0), fontSize = 12.sp)
+                Text(text = description, color = TextGray, fontSize = 12.sp)
             }
         }
         Switch(
@@ -419,9 +418,9 @@ fun SwitchSetting(
                 checkedThumbColor = Color.White,
                 checkedTrackColor = RoyalBlue,
                 uncheckedThumbColor = Color.White,
-                uncheckedTrackColor = Color(0xFF2C2C4E),
+                uncheckedTrackColor = SurfaceDark,
                 disabledCheckedTrackColor = RoyalBlue.copy(alpha = 0.5f),
-                disabledUncheckedTrackColor = Color(0xFF2C2C4E).copy(alpha = 0.5f)
+                disabledUncheckedTrackColor = SurfaceDark.copy(alpha = 0.5f)
             )
         )
     }
@@ -454,17 +453,17 @@ fun ActionSetting(
                 .weight(1f)
                 .alpha(alpha)
         ) {
-            Icon(imageVector = icon, contentDescription = null, tint = Color(0xFFB0B0B0), modifier = Modifier.size(24.dp))
+            Icon(imageVector = icon, contentDescription = null, tint = TextGray, modifier = Modifier.size(24.dp))
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(text = title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                Text(text = description, color = Color(0xFFB0B0B0), fontSize = 12.sp)
+                Text(text = description, color = TextGray, fontSize = 12.sp)
             }
         }
         Box(
             modifier = Modifier
                 .background(
-                    color = if (enabled) Color(0xFF2C2C4E) else Color(0xFF2C2C4E).copy(alpha = 0.5f),
+                    color = if (enabled) SurfaceDark else SurfaceDark.copy(alpha = 0.5f),
                     shape = RoundedCornerShape(50)
                 )
                 .testTag(testTag + "_button")
@@ -488,7 +487,7 @@ fun RestartMasteryButton(onClick: () -> Unit) {
             .fillMaxWidth()
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF251A24)) // Dark Reddish
+        colors = CardDefaults.cardColors(containerColor = DarkReddish) // Dark Reddish
     ) {
         Row(
             modifier = Modifier
@@ -497,11 +496,11 @@ fun RestartMasteryButton(onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Icon(imageVector = Icons.Default.Warning, contentDescription = null, tint = Color(0xFFF06292))
+            Icon(imageVector = Icons.Default.Warning, contentDescription = null, tint = AccentPink)
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = stringResource(R.string.settings_system_restart),
-                color = Color(0xFFF06292),
+                color = AccentPink,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
@@ -516,14 +515,14 @@ fun SettingsFooter() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = Icons.Default.ChevronLeft, contentDescription = null, tint = Color(0xFF4D4D66), modifier = Modifier.size(20.dp))
-            Icon(imageVector = Icons.Default.ChevronRight, contentDescription = null, tint = Color(0xFF4D4D66), modifier = Modifier.size(20.dp))
+            Icon(imageVector = Icons.Default.ChevronLeft, contentDescription = null, tint = MutedBlue, modifier = Modifier.size(20.dp))
+            Icon(imageVector = Icons.Default.ChevronRight, contentDescription = null, tint = MutedBlue, modifier = Modifier.size(20.dp))
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = stringResource(R.string.app_version), color = Color(0xFFB0B0B0), fontSize = 14.sp)
-        Text(text = stringResource(R.string.last_updated), color = Color(0xFFB0B0B0), fontSize = 14.sp)
+        Text(text = stringResource(R.string.app_version), color = TextGray, fontSize = 14.sp)
+        Text(text = stringResource(R.string.last_updated), color = TextGray, fontSize = 14.sp)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = stringResource(R.string.designed_for), color = Color(0xFF4D4D66), fontSize = 12.sp)
+        Text(text = stringResource(R.string.designed_for), color = MutedBlue, fontSize = 12.sp)
     }
 }
 
@@ -545,14 +544,14 @@ fun RestartMasteryDialog(
         text = {
             Text(
                 text = stringResource(R.string.settings_system_restart_description),
-                color = Color(0xFFB0B0B0)
+                color = TextGray
             )
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
                 Text(
                     text = stringResource(R.string.settings_restart_dialog_confirm),
-                    color = Color(0xFFF06292),
+                    color = AccentPink,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -566,7 +565,7 @@ fun RestartMasteryDialog(
                 )
             }
         },
-        containerColor = Color(0xFF2C2C4E),
+        containerColor = SurfaceDark,
         shape = RoundedCornerShape(28.dp)
     )
 }
@@ -596,9 +595,9 @@ fun TimePickerDialogWrapper(
                 .height(IntrinsicSize.Min)
                 .background(
                     shape = RoundedCornerShape(28.dp),
-                    color = Color(0xFF2C2C4E)
+                    color = SurfaceDark
                 ),
-            color = Color(0xFF2C2C4E)
+            color = SurfaceDark
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),

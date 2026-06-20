@@ -42,8 +42,7 @@ import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.screens.commons.PromoWidget
-import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
-import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -108,14 +107,14 @@ fun InstructionsScreenContent(
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A2E))
+            colors = CardDefaults.cardColors(containerColor = DarkBackground)
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Surface(
                         modifier = Modifier.size(48.dp),
                         shape = RoundedCornerShape(12.dp),
-                        color = Color(0xFF2C2C4E)
+                        color = SurfaceDark
                     ) {
                         Box(contentAlignment = Alignment.Center) {
                             Icon(
@@ -138,7 +137,7 @@ fun InstructionsScreenContent(
 
                 Text(
                     text = stringResource(R.string.instructions_sessions_desc),
-                    color = Color(0xFFB0B0B0),
+                    color = TextGray,
                     fontSize = 14.sp
                 )
 
@@ -186,14 +185,14 @@ fun InstructionCard(icon: ImageVector, title: String, description: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A2E))
+        colors = CardDefaults.cardColors(containerColor = DarkBackground)
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Surface(
                     modifier = Modifier.size(48.dp),
                     shape = RoundedCornerShape(12.dp),
-                    color = Color(0xFF2C2C4E)
+                    color = SurfaceDark
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
@@ -214,7 +213,7 @@ fun InstructionCard(icon: ImageVector, title: String, description: String) {
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = description,
-                color = Color(0xFFB0B0B0),
+                color = TextGray,
                 fontSize = 14.sp,
                 lineHeight = 20.sp
             )
@@ -227,7 +226,7 @@ fun NestedInfoItem(icon: ImageVector, text: String) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        color = Color(0xFF232339)
+        color = DarkPurple
     ) {
         Row(
             modifier = Modifier.padding(12.dp),

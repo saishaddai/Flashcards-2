@@ -5,67 +5,76 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.repository.DeckRepository
-import com.saishaddai.flashcards.repository.impl.JSONDeckRepository
+import com.saishaddai.flashcards.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+data class DecksUiState(
+    val decks: List<Deck> = emptyList(),
+    val showEmptyDeckDialog: Boolean = false
+)
 
 class DecksViewModel(
     application: Application,
     private val repository: DeckRepository<Deck>
 ) : AndroidViewModel(application) {
-    private val _decks = MutableStateFlow<List<Deck>>(emptyList())
-    val decks: StateFlow<List<Deck>> = _decks.asStateFlow()
-
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
-    private val _showEmptyDeckDialog = MutableStateFlow(false)
-    val showEmptyDeckDialog: StateFlow<Boolean> = _showEmptyDeckDialog.asStateFlow()
+    private val _uiState = MutableStateFlow<UiState<DecksUiState>>(UiState.Loading)
+    val uiState: StateFlow<UiState<DecksUiState>> = _uiState.asStateFlow()
 
     init {
         loadDecks()
     }
 
-    private fun loadDecks() {
+    fun loadDecks() {
         viewModelScope.launch {
-            _isLoading.value = true
-            val loadedDecks = repository.getData()
-            _decks.value = if (loadedDecks.isNotEmpty()) {
-                // Ensure something is selected by default if nothing is
-                if (loadedDecks.none { it.isSelected }) {
-                    loadedDecks.mapIndexed { index, deck ->
-                        deck.copy(isSelected = index == 0)
+            _uiState.value = UiState.Loading
+            try {
+                val loadedDecks = repository.getData()
+                val finalDecks = if (loadedDecks.isNotEmpty()) {
+                    if (loadedDecks.none { it.isSelected }) {
+                        loadedDecks.mapIndexed { index, deck ->
+                            deck.copy(isSelected = index == 0)
+                        }
+                    } else {
+                        loadedDecks
                     }
                 } else {
-                    loadedDecks
+                    emptyList()
                 }
-            } else {
-                emptyList()
+                _uiState.value = UiState.Success(DecksUiState(decks = finalDecks))
+            } catch (e: Exception) {
+                _uiState.value = UiState.Error("Failed to load decks", e)
             }
-            _isLoading.value = false
         }
     }
 
     fun onDeckSelected(selectedDeck: Deck) {
-        _decks.value = _decks.value.map {
-            it.copy(isSelected = it.id == selectedDeck.id)
+        val currentState = _uiState.value
+        if (currentState is UiState.Success) {
+            val updatedDecks = currentState.data.decks.map {
+                it.copy(isSelected = it.id == selectedDeck.id)
+            }
+            _uiState.value = UiState.Success(currentState.data.copy(decks = updatedDecks))
         }
     }
 
     fun getRandomDeck(): Deck? {
-        return _decks.value.randomOrNull()
+        return (_uiState.value as? UiState.Success)?.data?.decks?.randomOrNull()
     }
 
     fun onStartSession() {
-        if (_decks.value.isEmpty()) {
-            _showEmptyDeckDialog.value = true
+        val currentState = _uiState.value
+        if (currentState is UiState.Success && currentState.data.decks.isEmpty()) {
+            _uiState.value = UiState.Success(currentState.data.copy(showEmptyDeckDialog = true))
         }
     }
 
     fun dismissEmptyDeckDialog() {
-        _showEmptyDeckDialog.value = false
+        val currentState = _uiState.value
+        if (currentState is UiState.Success) {
+            _uiState.value = UiState.Success(currentState.data.copy(showEmptyDeckDialog = false))
+        }
     }
 }

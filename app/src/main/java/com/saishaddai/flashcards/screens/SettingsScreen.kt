@@ -72,10 +72,12 @@ import androidx.compose.ui.window.DialogProperties
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.repository.UserSettings
 import com.saishaddai.flashcards.screens.commons.BlueButton
+import com.saishaddai.flashcards.screens.commons.ErrorView
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.utils.TestTags
+import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.util.Calendar
@@ -87,22 +89,34 @@ const val DEFAULT_DAILY_GOAL = 50
 fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel()
 ) {
-    val isLoading by viewModel.isLoading.collectAsState()
-    val userSettings by viewModel.userSettings.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
-    SettingsScreenContent(
-        isLoading = isLoading,
-        userSettings = userSettings,
-        onRestartMasteryClicked = viewModel::onRestartMasteryClicked,
-        onPreferredStudyTimeChanged = viewModel::onPreferredStudyTimeChanged,
-        onFlashcardsPerSessionChanged = viewModel::onFlashcardsPerSessionChanged,
-        onDailyStudyGoalChanged = viewModel::onDailyStudyGoalChanged,
-        onQuickStartChanged = viewModel::onQuickStartChanged,
-        onShowAnswersChanged = viewModel::onShowAnswersChanged,
-        onShowSuggestionsChanged = viewModel::onShowSuggestionsChanged,
-        onStudyRemindersChanged = viewModel::onStudyRemindersChanged,
-        onNotificationSoundChanged = viewModel::onNotificationSoundChanged
-    )
+    when (val state = uiState) {
+        is UiState.Loading -> {
+            FullLoader(message = null)
+        }
+        is UiState.Success -> {
+            SettingsScreenContent(
+                isLoading = state.data.isActionLoading,
+                userSettings = state.data.userSettings,
+                onRestartMasteryClicked = viewModel::onRestartMasteryClicked,
+                onPreferredStudyTimeChanged = viewModel::onPreferredStudyTimeChanged,
+                onFlashcardsPerSessionChanged = viewModel::onFlashcardsPerSessionChanged,
+                onDailyStudyGoalChanged = viewModel::onDailyStudyGoalChanged,
+                onQuickStartChanged = viewModel::onQuickStartChanged,
+                onShowAnswersChanged = viewModel::onShowAnswersChanged,
+                onShowSuggestionsChanged = viewModel::onShowSuggestionsChanged,
+                onStudyRemindersChanged = viewModel::onStudyRemindersChanged,
+                onNotificationSoundChanged = viewModel::onNotificationSoundChanged
+            )
+        }
+        is UiState.Error -> {
+            ErrorView(
+                message = state.message,
+                onRetry = { /* Settings usually doesn't have a simple reload function if it fails to bind, but getSettings is a flow */ }
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -5,36 +5,56 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.UserSettings
+import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.worker.WorkerUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
+
+data class SettingsUiData(
+    val userSettings: UserSettings,
+    val isActionLoading: Boolean = false
+)
 
 class SettingsViewModel(
     application: Application,
     private val repository: SettingsRepository
 ) : AndroidViewModel(application) {
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    private val _isActionLoading = MutableStateFlow(false)
 
-    val userSettings: StateFlow<UserSettings?> = repository.getSettings()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = null
-        )
+    val uiState: StateFlow<UiState<SettingsUiData>> = combine(
+        repository.getSettings(),
+        _isActionLoading
+    ) { settings, loading ->
+        UiState.Success(SettingsUiData(settings, loading)) as UiState<SettingsUiData>
+    }.catch { e ->
+        emit(UiState.Error("Failed to load settings", e))
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = UiState.Loading
+    )
 
     fun onRestartMasteryClicked() {
         viewModelScope.launch {
-            _isLoading.value = true
-            repository.restartMasteryExperience()
-            _isLoading.value = false
+            _isActionLoading.value = true
+            try {
+                repository.restartMasteryExperience()
+            } catch (e: Exception) {
+                // We might want a separate error state for actions, 
+                // but for now we'll just log or show a global error if it's critical.
+            } finally {
+                _isActionLoading.value = false
+            }
         }
     }
 

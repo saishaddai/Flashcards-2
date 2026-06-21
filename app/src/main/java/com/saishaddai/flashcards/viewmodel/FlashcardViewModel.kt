@@ -59,13 +59,18 @@ class FlashcardViewModel(
     private fun loadFlashcards() {
         viewModelScope.launch {
             _isLoading.value = true
-            val settings = settingsRepository.getSettings().first()
-            Timber.d("Loaded settings: flashcardsPerSession=${settings.flashcardsPerSession}")
-            _flashcards.value = repository.getData(
-                type = DeckType.fromId(deckId),
-                size = settings.flashcardsPerSession
-            )
-            _isLoading.value = false
+            try {
+                val settings = settingsRepository.getSettings().first()
+                Timber.d("Loaded settings: flashcardsPerSession=${settings.flashcardsPerSession}")
+                _flashcards.value = repository.getData(
+                    type = DeckType.fromId(deckId),
+                    size = settings.flashcardsPerSession
+                )
+            } catch (e: Exception) {
+                Timber.e(e, "Error loading flashcards")
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 

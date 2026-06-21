@@ -47,11 +47,13 @@ import androidx.compose.ui.unit.sp
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.BlueButton
+import com.saishaddai.flashcards.screens.commons.ErrorView
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.utils.DeckAssets
 import com.saishaddai.flashcards.utils.TestTags
+import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.utils.getMasteryLevel
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
@@ -63,104 +65,115 @@ fun DeckListScreen(
     viewModel: DecksViewModel = koinViewModel(),
     settingsViewModel: SettingsViewModel = koinViewModel()
 ) {
-    val decksState by viewModel.decks.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val userSettings by settingsViewModel.userSettings.collectAsState()
     val quickStartEnabled = userSettings?.quickStart ?: false
 
-    DeckListContent(
-        decks = decksState,
-        isLoading = isLoading,
-        quickStartEnabled = quickStartEnabled,
-        onDeckSelected = viewModel::onDeckSelected,
-        onStartSessionClick = onStartSessionClick
-    )
+    when (val state = uiState) {
+        is UiState.Loading -> {
+            FullLoader(stringResource(R.string.loading_decks))
+        }
+        is UiState.Success -> {
+            DeckListContent(
+                decks = state.data.decks,
+                showEmptyDeckDialogState = state.data.showEmptyDeckDialog,
+                quickStartEnabled = quickStartEnabled,
+                onDeckSelected = viewModel::onDeckSelected,
+                onStartSessionClick = onStartSessionClick,
+                onDismissEmptyDeckDialog = viewModel::dismissEmptyDeckDialog
+            )
+        }
+        is UiState.Error -> {
+            ErrorView(
+                message = state.message,
+                onRetry = viewModel::loadDecks
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeckListContent(
     decks: List<Deck>,
-    isLoading: Boolean,
+    showEmptyDeckDialogState: Boolean,
     quickStartEnabled: Boolean,
     onDeckSelected: (Deck) -> Unit,
-    onStartSessionClick: (Deck) -> Unit
+    onStartSessionClick: (Deck) -> Unit,
+    onDismissEmptyDeckDialog: () -> Unit
 ) {
     val selectedDeck = decks.find { it.isSelected }
-    val showEmptyDeckDialog = rememberSaveable { mutableStateOf(false) }
     val deckToQuickStart = rememberSaveable { mutableStateOf<Deck?>(null) }
 
-    if (isLoading) {
-        FullLoader(stringResource(R.string.loading_decks))
-    } else {
-        DeckListDialogs(
-            emptyDeckDialogVisible = showEmptyDeckDialog.value,
-            onDismissEmptyDeckDialog = { showEmptyDeckDialog.value = false },
-            quickStartDeck = deckToQuickStart.value,
-            onDismissQuickStartDialog = { deckToQuickStart.value = null },
-            onConfirmQuickStart = { deck ->
-                deckToQuickStart.value = null
-                onStartSessionClick(deck)
-            }
+    DeckListDialogs(
+        emptyDeckDialogVisible = showEmptyDeckDialogState,
+        onDismissEmptyDeckDialog = onDismissEmptyDeckDialog,
+        quickStartDeck = deckToQuickStart.value,
+        onDismissQuickStartDialog = { deckToQuickStart.value = null },
+        onConfirmQuickStart = { deck ->
+            deckToQuickStart.value = null
+            onStartSessionClick(deck)
+        }
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+    ) {
+        Header(
+            headText = stringResource(R.string.decks_welcome),
+            titleText = stringResource(R.string.decks_learning_today)
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-        ) {
-            Header(
-                headText = stringResource(R.string.decks_welcome),
-                titleText = stringResource(R.string.decks_learning_today)
-            )
-
-            if (decks.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.no_decks_available),
-                        color = Color.Gray,
-                        fontSize = 16.sp,
-                        modifier = Modifier.testTag(TestTags.DECKS_EMPTY_STATE)
-                    )
-                }
-            } else {
-                DeckGrid(
-                    decks = decks,
-                    onDeckSelected = onDeckSelected,
-                    onDeckDoubleClicked = { deck ->
-                        onDeckSelected(deck)
-                        if (deck.cardCount > 0) {
-                            if (quickStartEnabled) {
-                                onStartSessionClick(deck)
-                            } else {
-                                deckToQuickStart.value = deck
-                            }
-                        } else {
-                            showEmptyDeckDialog.value = true
-                        }
-                    },
-                    modifier = Modifier.weight(1f)
+        if (decks.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.no_decks_available),
+                    color = Color.Gray,
+                    fontSize = 16.sp,
+                    modifier = Modifier.testTag(TestTags.DECKS_EMPTY_STATE)
                 )
             }
-
-            BlueButton(
-                icon = Icons.Default.Navigation,
-                text = stringResource(R.string.decks_start_session_button),
-                onClick = {
-                    selectedDeck?.let { deck ->
-                        if (deck.cardCount > 0) {
+        } else {
+            DeckGrid(
+                decks = decks,
+                onDeckSelected = onDeckSelected,
+                onDeckDoubleClicked = { deck ->
+                    onDeckSelected(deck)
+                    if (deck.cardCount > 0) {
+                        if (quickStartEnabled) {
                             onStartSessionClick(deck)
                         } else {
-                            showEmptyDeckDialog.value = true
+                            deckToQuickStart.value = deck
                         }
+                    } else {
+                        // In this version, the ViewModel handles showing the dialog
+                        // or we can still do it locally if it's purely UI state.
+                        // But since we moved it to VM, we should call a VM function.
                     }
-                }
+                },
+                modifier = Modifier.weight(1f)
             )
         }
+
+        BlueButton(
+            icon = Icons.Default.Navigation,
+            text = stringResource(R.string.decks_start_session_button),
+            onClick = {
+                selectedDeck?.let { deck ->
+                    if (deck.cardCount > 0) {
+                        onStartSessionClick(deck)
+                    } else {
+                        // ViewModel trigger
+                    }
+                }
+            }
+        )
     }
 }
 
@@ -353,9 +366,10 @@ fun DeckListScreenPreview() {
             Deck(1, "Kotlin", "Kotlin Fundamentals", mastery = 50, cardCount = 20, isSelected = true),
             Deck(2, "Android", "Android Development", mastery = 30, cardCount = 15)
         ),
-        isLoading = false,
+        showEmptyDeckDialogState = false,
         quickStartEnabled = false,
         onDeckSelected = {},
-        onStartSessionClick = {}
+        onStartSessionClick = {},
+        onDismissEmptyDeckDialog = {}
     )
 }

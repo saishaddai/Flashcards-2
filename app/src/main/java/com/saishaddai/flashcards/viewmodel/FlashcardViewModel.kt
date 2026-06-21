@@ -1,7 +1,6 @@
 package com.saishaddai.flashcards.viewmodel
 
 import android.app.Application
-import timber.log.Timber
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.saishaddai.flashcards.model.DeckType
@@ -9,12 +8,18 @@ import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.impl.JSONFlashcardRepository
+import com.saishaddai.flashcards.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+
+data class FlashcardsUiData(
+    val flashcards: List<Flashcard> = emptyList(),
+    val showAnswer: Boolean = false,
+    val isFinished: Boolean = false
+)
 
 class FlashcardViewModel(
     application: Application,
@@ -22,73 +27,64 @@ class FlashcardViewModel(
     private val repository: FlashcardRepository<DeckType, Flashcard> = JSONFlashcardRepository(context = application),
     private val settingsRepository: SettingsRepository
 ) : AndroidViewModel(application) {
-    private val _flashcards = MutableStateFlow<List<Flashcard>>(emptyList())
-    val flashcards: StateFlow<List<Flashcard>> = _flashcards.asStateFlow()
-
-    private val _showAnswer = MutableStateFlow(false)
-    private val _flashcardsPerSession = MutableStateFlow(20)
-    val showAnswer: StateFlow<Boolean> = _showAnswer.asStateFlow()
-    val flashcardsPerSession: StateFlow<Int> = _flashcardsPerSession.asStateFlow()
-
-    private val _isFinished = MutableStateFlow(false)
-    val isFinished: StateFlow<Boolean> = _isFinished.asStateFlow()
-
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    private val _uiState = MutableStateFlow<UiState<FlashcardsUiData>>(UiState.Loading)
+    val uiState: StateFlow<UiState<FlashcardsUiData>> = _uiState.asStateFlow()
 
     private var startTime: Long = System.currentTimeMillis()
-    private var cardsReviewed: Int = 0
+    private var cardsReviewedCount: Int = 0
     private var endTime: Long = 0
 
-    fun getSessionSummary() = Triple(cardsReviewed, startTime, endTime)
+    fun getSessionSummary() = Triple(cardsReviewedCount, startTime, endTime)
 
     init {
-        observeSettings()
         loadFlashcards()
     }
 
-    private fun observeSettings() {
+    fun loadFlashcards() {
         viewModelScope.launch {
-            settingsRepository.getSettings().collectLatest { settings ->
-                _showAnswer.value = settings.showAnswers
-                _flashcardsPerSession.value = settings.flashcardsPerSession
-            }
-        }
-    }
-
-    private fun loadFlashcards() {
-        viewModelScope.launch {
-            _isLoading.value = true
+            _uiState.value = UiState.Loading
             try {
                 val settings = settingsRepository.getSettings().first()
-                Timber.d("Loaded settings: flashcardsPerSession=${settings.flashcardsPerSession}")
-                _flashcards.value = repository.getData(
+                val flashcards = repository.getData(
                     type = DeckType.fromId(deckId),
                     size = settings.flashcardsPerSession
                 )
+                _uiState.value = UiState.Success(
+                    FlashcardsUiData(
+                        flashcards = flashcards,
+                        showAnswer = settings.showAnswers
+                    )
+                )
             } catch (e: Exception) {
-                Timber.e(e, "Error loading flashcards")
-            } finally {
-                _isLoading.value = false
+                _uiState.value = UiState.Error("Failed to load flashcards", e)
             }
         }
     }
 
     fun onShowResponseClicked() {
-        _showAnswer.value = true
+        val currentState = _uiState.value
+        if (currentState is UiState.Success) {
+            _uiState.value = UiState.Success(currentState.data.copy(showAnswer = true))
+        }
     }
 
     fun onPageChanged(page: Int) {
-        cardsReviewed = maxOf(cardsReviewed, page + 1)
+        cardsReviewedCount = maxOf(cardsReviewedCount, page + 1)
         viewModelScope.launch {
             val settings = settingsRepository.getSettings().first()
-            _showAnswer.value = settings.showAnswers
+            val currentState = _uiState.value
+            if (currentState is UiState.Success) {
+                _uiState.value = UiState.Success(currentState.data.copy(showAnswer = settings.showAnswers))
+            }
         }
     }
 
     fun onFinishSession(finalPage: Int) {
-        cardsReviewed = maxOf(cardsReviewed, finalPage + 1)
+        cardsReviewedCount = maxOf(cardsReviewedCount, finalPage + 1)
         endTime = System.currentTimeMillis()
-        _isFinished.value = true
+        val currentState = _uiState.value
+        if (currentState is UiState.Success) {
+            _uiState.value = UiState.Success(currentState.data.copy(isFinished = true))
+        }
     }
 }

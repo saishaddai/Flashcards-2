@@ -50,9 +50,11 @@ import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.screens.commons.BlueButton
+import com.saishaddai.flashcards.screens.commons.ErrorView
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.TransparentButton
 import com.saishaddai.flashcards.ui.theme.*
+import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -68,26 +70,35 @@ fun FlashcardScreen(
         parameters = { parametersOf(deck.id) }
     )
 ) {
-    val flashcards by viewModel.flashcards.collectAsState()
-    val showAnswer by viewModel.showAnswer.collectAsState()
-    val isFinished by viewModel.isFinished.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
-    FlashcardContent(
-        deck = deck,
-        flashcards = flashcards,
-        showAnswer = showAnswer,
-        isFinished = isFinished,
-        isLoading = isLoading,
-        onShowResponseClicked = viewModel::onShowResponseClicked,
-        onPageChanged = viewModel::onPageChanged,
-        onFinishSession = viewModel::onFinishSession,
-        onCancelSessionClick = onCancelSessionClick,
-        onFinishedSessionClick = {
-            val (reviewed, start, end) = viewModel.getSessionSummary()
-            onFinishedSessionClick(reviewed, start, end)
+    when (val state = uiState) {
+        is UiState.Loading -> {
+            FullLoader(message = stringResource(R.string.loading))
         }
-    )
+        is UiState.Success -> {
+            FlashcardContent(
+                deck = deck,
+                flashcards = state.data.flashcards,
+                showAnswer = state.data.showAnswer,
+                isFinished = state.data.isFinished,
+                onShowResponseClicked = viewModel::onShowResponseClicked,
+                onPageChanged = viewModel::onPageChanged,
+                onFinishSession = viewModel::onFinishSession,
+                onCancelSessionClick = onCancelSessionClick,
+                onFinishedSessionClick = {
+                    val (reviewed, start, end) = viewModel.getSessionSummary()
+                    onFinishedSessionClick(reviewed, start, end)
+                }
+            )
+        }
+        is UiState.Error -> {
+            ErrorView(
+                message = state.message,
+                onRetry = viewModel::loadFlashcards
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,30 +108,26 @@ fun FlashcardContent(
     flashcards: List<Flashcard>,
     showAnswer: Boolean,
     isFinished: Boolean,
-    isLoading: Boolean,
     onShowResponseClicked: () -> Unit,
     onPageChanged: (Int) -> Unit,
     onFinishSession: (Int) -> Unit,
     onCancelSessionClick: () -> Unit,
     onFinishedSessionClick: () -> Unit
 ) {
-    if (isLoading) {
-        FullLoader(message = stringResource(R.string.loading))
-        return
-    }
-
     if (isFinished) {
         onFinishedSessionClick()
         return
     }
 
     val pagerState = rememberPagerState(pageCount = { flashcards.size })
-    val isLastPage = pagerState.currentPage == flashcards.size - 1
+    val isLastPage = if (flashcards.isEmpty()) true else pagerState.currentPage == flashcards.size - 1
     val showCancelConfirmation = rememberSaveable { mutableStateOf(false) }
 
     // Hide answer when the user starts swiping to a new page
     LaunchedEffect(pagerState.currentPage) {
-        onPageChanged(pagerState.currentPage)
+        if (flashcards.isNotEmpty()) {
+            onPageChanged(pagerState.currentPage)
+        }
     }
 
     if (showCancelConfirmation.value) {
@@ -422,7 +429,6 @@ fun FlashcardScreenPreview() {
             ),
             showAnswer = true,
             isFinished = false,
-            isLoading = false,
             onShowResponseClicked = {},
             onPageChanged = {},
             onFinishSession = {}

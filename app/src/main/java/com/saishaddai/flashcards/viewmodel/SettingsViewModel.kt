@@ -35,7 +35,9 @@ class SettingsViewModel(
         repository.getSettings(),
         _isActionLoading
     ) { settings, loading ->
-        UiState.Success(SettingsUiData(settings, loading)) as UiState<SettingsUiData>
+        SettingsUiData(settings, loading)
+    }.map { data ->
+        UiState.Success(data) as UiState<SettingsUiData>
     }.catch { e ->
         emit(UiState.Error("Failed to load settings", e))
     }.stateIn(
@@ -44,14 +46,21 @@ class SettingsViewModel(
         initialValue = UiState.Loading
     )
 
+    val userSettings: StateFlow<UserSettings?> = repository.getSettings()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
+
+
     fun onRestartMasteryClicked() {
         viewModelScope.launch {
             _isActionLoading.value = true
             try {
                 repository.restartMasteryExperience()
             } catch (e: Exception) {
-                // We might want a separate error state for actions, 
-                // but for now we'll just log or show a global error if it's critical.
+                // Settings usually just fail to load, action failures are currently silent or logged
             } finally {
                 _isActionLoading.value = false
             }

@@ -43,6 +43,7 @@ import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.*
+import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -53,8 +54,10 @@ fun InstructionsScreen(
     settingsViewModel: SettingsViewModel = koinViewModel(),
     onPromoClick: (Deck) -> Unit = {},
 ) {
-    val decksState by viewModel.decks.collectAsState()
-    val promoDeck = remember(decksState) { decksState.randomOrNull() }
+    val uiState by viewModel.uiState.collectAsState()
+    val promoDeck = remember(uiState) {
+        (uiState as? UiState.Success)?.data?.decks?.randomOrNull()
+    }
     val userSettings by settingsViewModel.userSettings.collectAsState()
     val showSuggestions = userSettings?.showSuggestions ?: true
 

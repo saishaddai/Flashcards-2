@@ -64,10 +64,13 @@ class DecksViewModel(
         return (_uiState.value as? UiState.Success)?.data?.decks?.randomOrNull()
     }
 
-    fun onStartSession() {
+    fun onStartSession(deck: Deck? = null) {
         val currentState = _uiState.value
-        if (currentState is UiState.Success && currentState.data.decks.isEmpty()) {
-            _uiState.value = UiState.Success(currentState.data.copy(showEmptyDeckDialog = true))
+        if (currentState is UiState.Success) {
+            val targetDeck = deck ?: currentState.data.decks.find { it.isSelected }
+            if (targetDeck == null || targetDeck.cardCount == 0) {
+                _uiState.value = UiState.Success(currentState.data.copy(showEmptyDeckDialog = true))
+            }
         }
     }
 

@@ -80,7 +80,8 @@ fun DeckListScreen(
                 quickStartEnabled = quickStartEnabled,
                 onDeckSelected = viewModel::onDeckSelected,
                 onStartSessionClick = onStartSessionClick,
-                onDismissEmptyDeckDialog = viewModel::dismissEmptyDeckDialog
+                onDismissEmptyDeckDialog = viewModel::dismissEmptyDeckDialog,
+                onTriggerEmptyDeckDialog = viewModel::onStartSession
             )
         }
         is UiState.Error -> {
@@ -100,7 +101,8 @@ fun DeckListContent(
     quickStartEnabled: Boolean,
     onDeckSelected: (Deck) -> Unit,
     onStartSessionClick: (Deck) -> Unit,
-    onDismissEmptyDeckDialog: () -> Unit
+    onDismissEmptyDeckDialog: () -> Unit,
+    onTriggerEmptyDeckDialog: (Deck) -> Unit
 ) {
     val selectedDeck = decks.find { it.isSelected }
     val deckToQuickStart = rememberSaveable { mutableStateOf<Deck?>(null) }
@@ -152,9 +154,7 @@ fun DeckListContent(
                             deckToQuickStart.value = deck
                         }
                     } else {
-                        // In this version, the ViewModel handles showing the dialog
-                        // or we can still do it locally if it's purely UI state.
-                        // But since we moved it to VM, we should call a VM function.
+                        onTriggerEmptyDeckDialog(deck)
                     }
                 },
                 modifier = Modifier.weight(1f)
@@ -169,7 +169,7 @@ fun DeckListContent(
                     if (deck.cardCount > 0) {
                         onStartSessionClick(deck)
                     } else {
-                        // ViewModel trigger
+                        onTriggerEmptyDeckDialog(deck)
                     }
                 }
             }
@@ -370,6 +370,7 @@ fun DeckListScreenPreview() {
         quickStartEnabled = false,
         onDeckSelected = {},
         onStartSessionClick = {},
-        onDismissEmptyDeckDialog = {}
+        onDismissEmptyDeckDialog = {},
+        onTriggerEmptyDeckDialog = {}
     )
 }

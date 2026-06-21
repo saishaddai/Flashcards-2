@@ -53,10 +53,12 @@ import androidx.compose.ui.unit.sp
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.BlueButton
+import com.saishaddai.flashcards.screens.commons.ErrorView
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.viewmodel.FinishSessionViewModel
 import com.saishaddai.flashcards.utils.SessionResult
+import com.saishaddai.flashcards.utils.UiState
 import nl.dionsegijn.konfetti.compose.KonfettiView
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
@@ -74,31 +76,41 @@ fun FinishSessionScreen(
     onShareSummary: (Deck) -> Unit,
     viewModel: FinishSessionViewModel = koinViewModel()
 ) {
-    val navigateToDeckList by viewModel.navigateToDeckList.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val sessionResult by viewModel.sessionResult.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.saveSession(deck, cardsReviewed, startTime, endTime)
     }
 
-    LaunchedEffect(navigateToDeckList) {
-        if (navigateToDeckList) {
-            onFinishSession()
-            viewModel.onNavigationHandled()
+    when (val state = uiState) {
+        is UiState.Loading -> {
+            FullLoader(message = stringResource(R.string.loading))
+        }
+        is UiState.Success -> {
+            LaunchedEffect(state.data.navigateToDeckList) {
+                if (state.data.navigateToDeckList) {
+                    onFinishSession()
+                    viewModel.onNavigationHandled()
+                }
+            }
+
+            FinishSessionContent(
+                deck = deck,
+                cardsReviewed = cardsReviewed,
+                startTime = startTime,
+                endTime = endTime,
+                sessionResult = state.data.sessionResult,
+                onBackToDecksClicked = { viewModel.onBackToDecksClicked() },
+                onShareSummary = onShareSummary
+            )
+        }
+        is UiState.Error -> {
+            ErrorView(
+                message = state.message,
+                onRetry = { viewModel.saveSession(deck, cardsReviewed, startTime, endTime) }
+            )
         }
     }
-
-    FinishSessionContent(
-        deck = deck,
-        cardsReviewed = cardsReviewed,
-        startTime = startTime,
-        endTime = endTime,
-        sessionResult = sessionResult,
-        isLoading = isLoading,
-        onBackToDecksClicked = { viewModel.onBackToDecksClicked() },
-        onShareSummary = onShareSummary
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -109,15 +121,9 @@ fun FinishSessionContent(
     startTime: Long,
     endTime: Long,
     sessionResult: SessionResult?,
-    isLoading: Boolean = false,
     onBackToDecksClicked: () -> Unit,
     onShareSummary: (Deck) -> Unit
 ) {
-    if (isLoading) {
-        FullLoader(message = stringResource(R.string.loading))
-        return
-    }
-
     val parties = remember {
         listOf(
             Party(
@@ -349,7 +355,6 @@ fun FinishSessionScreenPreview() {
             startTime = 0L,
             endTime = 1000L * 60 * 12,
             sessionResult = SessionResult(5.0, 50.0, "Intermediate"),
-            isLoading = false,
             onBackToDecksClicked = {},
             onShareSummary = {}
         )

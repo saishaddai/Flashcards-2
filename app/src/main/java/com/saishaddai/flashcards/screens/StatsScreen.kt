@@ -73,11 +73,13 @@ import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.screens.commons.ErrorView
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.utils.TestTags
+import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import com.saishaddai.flashcards.viewmodel.StatsViewModel
@@ -97,37 +99,40 @@ fun StatsScreen(
     onPromoClick: (Deck) -> Unit = {},
 ) {
     val promoDeck = decksViewModel.getRandomDeck()
-    val weeklyActivity by statsViewModel.weeklyActivity.collectAsState()
-    val skillMastery by statsViewModel.skillMastery.collectAsState()
-    val flashcardsViewed by statsViewModel.flashcardsViewed.collectAsState()
-    val currentStreak by statsViewModel.currentStreak.collectAsState()
-    val studyTime by statsViewModel.studyTime.collectAsState()
-    val masteredDecks by statsViewModel.masteredDecks.collectAsState()
-    val weeklyComparison by statsViewModel.weeklyComparison.collectAsState()
-    val isLoading by statsViewModel.isLoading.collectAsState()
+    val uiState by statsViewModel.uiState.collectAsState()
     val userSettings by settingsViewModel.userSettings.collectAsState()
     val showSuggestions = userSettings?.showSuggestions ?: true
-    val infoDialogContent by statsViewModel.infoDialogContent.collectAsState()
-    val isSkillsExpanded by statsViewModel.isSkillsExpanded.collectAsState()
 
-    StatsContent(
-        promoDeck = promoDeck,
-        weeklyActivity = weeklyActivity,
-        skillMastery = skillMastery,
-        flashcardsViewed = flashcardsViewed,
-        currentStreak = currentStreak,
-        studyTime = studyTime,
-        masteredDecks = masteredDecks,
-        weeklyComparison = weeklyComparison,
-        isLoading = isLoading,
-        showSuggestions = showSuggestions,
-        infoDialogContent = infoDialogContent,
-        isSkillsExpanded = isSkillsExpanded,
-        onViewAllSkillsClicked = statsViewModel::onViewAllSkillsClicked,
-        onInfoClick = statsViewModel::onInfoClick,
-        onDismissInfoDialog = statsViewModel::onDismissInfoDialog,
-        onPromoClick = onPromoClick
-    )
+    when (val state = uiState) {
+        is UiState.Loading -> {
+            FullLoader(message = stringResource(R.string.loading_stats))
+        }
+        is UiState.Success -> {
+            StatsContent(
+                promoDeck = promoDeck,
+                weeklyActivity = state.data.weeklyActivity,
+                skillMastery = state.data.skillMastery,
+                flashcardsViewed = state.data.flashcardsViewed,
+                currentStreak = state.data.currentStreak,
+                studyTime = state.data.studyTime,
+                masteredDecks = state.data.masteredDecks,
+                weeklyComparison = state.data.weeklyComparison,
+                showSuggestions = showSuggestions,
+                infoDialogContent = state.data.infoDialogContent,
+                isSkillsExpanded = state.data.isSkillsExpanded,
+                onViewAllSkillsClicked = statsViewModel::onViewAllSkillsClicked,
+                onInfoClick = statsViewModel::onInfoClick,
+                onDismissInfoDialog = statsViewModel::onDismissInfoDialog,
+                onPromoClick = onPromoClick
+            )
+        }
+        is UiState.Error -> {
+            ErrorView(
+                message = state.message,
+                onRetry = statsViewModel::loadStats
+            )
+        }
+    }
 }
 
 @Composable
@@ -140,7 +145,6 @@ fun StatsContent(
     studyTime: String,
     masteredDecks: String,
     weeklyComparison: Int,
-    isLoading: Boolean,
     showSuggestions: Boolean,
     infoDialogContent: Pair<String, String>?,
     isSkillsExpanded: Boolean,
@@ -149,58 +153,54 @@ fun StatsContent(
     onDismissInfoDialog: () -> Unit,
     onPromoClick: (Deck) -> Unit,
 ) {
-    if (isLoading) {
-        FullLoader(message = stringResource(R.string.loading_stats))
-    } else {
-        infoDialogContent?.let { (title, desc) ->
-            StatsInfoDialog(
-                title = title,
-                description = desc,
-                onDismiss = onDismissInfoDialog
+    infoDialogContent?.let { (title, desc) ->
+        StatsInfoDialog(
+            title = title,
+            description = desc,
+            onDismiss = onDismissInfoDialog
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(DarkBackground)
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 24.dp)
+    ) {
+        Header(
+            headText = stringResource(R.string.stats_head_title),
+            titleText = stringResource(R.string.stats_title)
+        )
+
+        val weeklyActivityTitle = stringResource(R.string.stats_weekly_activity_info_title)
+        val weeklyActivityDesc = stringResource(R.string.stats_weekly_activity_info_desc)
+        val skillMasteryTitle = stringResource(R.string.stats_skill_mastery_info_title)
+        val skillMasteryDesc = stringResource(R.string.stats_skill_mastery_info_desc)
+
+        Spacer(modifier = Modifier.height(24.dp))
+        WeeklyActivityCard(
+            activityData = weeklyActivity,
+            weeklyComparison = weeklyComparison,
+            onInfoClick = { onInfoClick(weeklyActivityTitle, weeklyActivityDesc) }
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        SkillMasterySection(
+            masteryList = skillMastery,
+            isExpanded = isSkillsExpanded,
+            onViewAllClick = onViewAllSkillsClicked,
+            onInfoClick = { onInfoClick(skillMasteryTitle, skillMasteryDesc) }
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        AtAGlanceSection(flashcardsViewed, currentStreak, studyTime, masteredDecks)
+        Spacer(modifier = Modifier.height(32.dp))
+
+        if (showSuggestions && promoDeck != null) {
+            PromoWidget(
+                randomDeck = promoDeck,
+                onPromoClick = onPromoClick
             )
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(DarkBackground)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp)
-        ) {
-            Header(
-                headText = stringResource(R.string.stats_head_title),
-                titleText = stringResource(R.string.stats_title)
-            )
-
-            val weeklyActivityTitle = stringResource(R.string.stats_weekly_activity_info_title)
-            val weeklyActivityDesc = stringResource(R.string.stats_weekly_activity_info_desc)
-            val skillMasteryTitle = stringResource(R.string.stats_skill_mastery_info_title)
-            val skillMasteryDesc = stringResource(R.string.stats_skill_mastery_info_desc)
-
             Spacer(modifier = Modifier.height(24.dp))
-            WeeklyActivityCard(
-                activityData = weeklyActivity,
-                weeklyComparison = weeklyComparison,
-                onInfoClick = { onInfoClick(weeklyActivityTitle, weeklyActivityDesc) }
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            SkillMasterySection(
-                masteryList = skillMastery,
-                isExpanded = isSkillsExpanded,
-                onViewAllClick = onViewAllSkillsClicked,
-                onInfoClick = { onInfoClick(skillMasteryTitle, skillMasteryDesc) }
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            AtAGlanceSection(flashcardsViewed, currentStreak, studyTime, masteredDecks)
-            Spacer(modifier = Modifier.height(32.dp))
-
-            if (showSuggestions && promoDeck != null) {
-                PromoWidget(
-                    randomDeck = promoDeck,
-                    onPromoClick = onPromoClick
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-            }
         }
     }
 }
@@ -649,7 +649,6 @@ fun StatsScreenPreview() {
             studyTime = "12h 30m",
             masteredDecks = "92%",
             weeklyComparison = 12,
-            isLoading = false,
             showSuggestions = true,
             infoDialogContent = null,
             isSkillsExpanded = false,

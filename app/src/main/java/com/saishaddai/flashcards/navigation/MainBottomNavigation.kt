@@ -11,46 +11,46 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.saishaddai.flashcards.R
-import com.saishaddai.flashcards.routes.Routes
+import com.saishaddai.flashcards.routes.Route
+import com.saishaddai.flashcards.ui.theme.DarkBackground
 
 @Composable
 fun MainBottomNavigation(
-    currentRoute: Any?,
+    currentRoute: Route?,
     onLearnClick: () -> Unit,
     onInstructionsClick: () -> Unit,
     onStatsClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
     BottomAppBar(
-        containerColor = Color(0xFF1A1A2E),
+        containerColor = DarkBackground,
     ) {
         BottomNavigationItem(
             text = stringResource(R.string.decks_bottom_nav_learn),
             icon = Icons.Default.School,
-            selected = currentRoute == Routes.DeckList,
+            selected = currentRoute is Route.DeckList,
             onClick = onLearnClick
         )
         BottomNavigationItem(
             text = stringResource(R.string.decks_bottom_nav_instructions),
             icon = Icons.Default.Info,
-            selected = currentRoute == Routes.Instructions,
+            selected = currentRoute is Route.Instructions,
             onClick = onInstructionsClick
         )
         BottomNavigationItem(
             text = stringResource(R.string.decks_bottom_nav_stats),
             icon = Icons.Default.BarChart,
-            selected = currentRoute == Routes.Stats,
+            selected = currentRoute is Route.Stats,
             onClick = onStatsClick
         )
         BottomNavigationItem(
             text = stringResource(R.string.decks_bottom_nav_settings),
             icon = Icons.Default.Settings,
-            selected = currentRoute == Routes.Settings,
+            selected = currentRoute is Route.Settings,
             onClick = onSettingsClick
         )
     }

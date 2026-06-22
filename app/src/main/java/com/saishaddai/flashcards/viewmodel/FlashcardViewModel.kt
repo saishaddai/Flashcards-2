@@ -7,7 +7,6 @@ import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.repository.SettingsRepository
-import com.saishaddai.flashcards.repository.impl.JSONFlashcardRepository
 import com.saishaddai.flashcards.utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +23,7 @@ data class FlashcardsUiData(
 class FlashcardViewModel(
     application: Application,
     private val deckId: Int,
-    private val repository: FlashcardRepository<DeckType, Flashcard> = JSONFlashcardRepository(context = application),
+    private val repository: FlashcardRepository<DeckType, Flashcard>,
     private val settingsRepository: SettingsRepository
 ) : AndroidViewModel(application) {
     private val _uiState = MutableStateFlow<UiState<FlashcardsUiData>>(UiState.Loading)

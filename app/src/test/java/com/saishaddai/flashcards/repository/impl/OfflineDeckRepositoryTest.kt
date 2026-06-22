@@ -15,9 +15,9 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 
-class JSONDeckRepositoryTest {
+class OfflineDeckRepositoryTest {
 
-    private lateinit var repository: JSONDeckRepository
+    private lateinit var repository: OfflineDeckRepository
     private val flashcardRepository: FlashcardRepository<DeckType, Flashcard> = mock {
         onBlocking { getDataCount(any()) } doReturn 0
     }
@@ -27,7 +27,7 @@ class JSONDeckRepositoryTest {
 
     @Before
     fun setUp() {
-        repository = JSONDeckRepository(flashcardRepository, sessionRepository)
+        repository = OfflineDeckRepository(flashcardRepository, sessionRepository)
     }
 
     @Test

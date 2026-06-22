@@ -4,29 +4,28 @@ import androidx.navigation3.runtime.NavKey
 import com.saishaddai.flashcards.model.Deck
 import kotlinx.serialization.Serializable
 
-object Routes {
+sealed interface Route : NavKey {
 
     @Serializable
-    data object DeckList : NavKey
+    data object DeckList : Route
 
     @Serializable
-    data object Instructions : NavKey
+    data object Instructions : Route
 
     @Serializable
-    data object Stats : NavKey
+    data object Stats : Route
 
     @Serializable
-    data object Settings : NavKey
+    data object Settings : Route
 
     @Serializable
-    data class FlashcardSession(val deck: Deck) : NavKey
+    data class FlashcardSession(val deck: Deck) : Route
 
     @Serializable
-    data class FinishSession (
+    data class FinishSession(
         val deck: Deck,
         val cardsReviewed: Int,
         val startTime: Long,
         val endTime: Long
-    ) : NavKey
-
+    ) : Route
 }

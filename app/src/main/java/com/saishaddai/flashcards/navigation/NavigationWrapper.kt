@@ -14,12 +14,13 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.saishaddai.flashcards.routes.Routes.DeckList
-import com.saishaddai.flashcards.routes.Routes.FinishSession
-import com.saishaddai.flashcards.routes.Routes.FlashcardSession
-import com.saishaddai.flashcards.routes.Routes.Instructions
-import com.saishaddai.flashcards.routes.Routes.Settings
-import com.saishaddai.flashcards.routes.Routes.Stats
+import com.saishaddai.flashcards.routes.Route
+import com.saishaddai.flashcards.routes.Route.DeckList
+import com.saishaddai.flashcards.routes.Route.FinishSession
+import com.saishaddai.flashcards.routes.Route.FlashcardSession
+import com.saishaddai.flashcards.routes.Route.Instructions
+import com.saishaddai.flashcards.routes.Route.Settings
+import com.saishaddai.flashcards.routes.Route.Stats
 import com.saishaddai.flashcards.screens.DeckListScreen
 import com.saishaddai.flashcards.screens.FinishSessionScreen
 import com.saishaddai.flashcards.screens.FlashcardScreen
@@ -34,21 +35,19 @@ import com.saishaddai.flashcards.utils.resetTo
 @Composable
 fun NavigationWrapper() {
     val backStack: NavBackStack<NavKey> = rememberNavBackStack(DeckList)
-    val currentKey = backStack.lastOrNull()
+    val currentKey = backStack.lastOrNull() as? Route
 
     Scaffold(
         bottomBar = {
-            if (currentKey == DeckList || currentKey == Instructions || currentKey == Stats || currentKey == Settings) {
+            if (currentKey is DeckList || currentKey is Instructions || currentKey is Stats || currentKey is Settings) {
                 MainBottomNavigation(
                     currentRoute = currentKey,
-                    onLearnClick = { if (currentKey != DeckList) backStack.navigateTo(DeckList) },
+                    onLearnClick = { if (currentKey !is DeckList) backStack.navigateTo(DeckList) },
                     onInstructionsClick = {
-                        if (currentKey != Instructions) backStack.navigateTo(
-                            Instructions
-                        )
+                        if (currentKey !is Instructions) backStack.navigateTo(Instructions)
                     },
-                    onStatsClick = { if (currentKey != Stats) backStack.navigateTo(Stats) },
-                    onSettingsClick = { if (currentKey != Settings) backStack.navigateTo(Settings) }
+                    onStatsClick = { if (currentKey !is Stats) backStack.navigateTo(Stats) },
+                    onSettingsClick = { if (currentKey !is Settings) backStack.navigateTo(Settings) }
                 )
             }
         }

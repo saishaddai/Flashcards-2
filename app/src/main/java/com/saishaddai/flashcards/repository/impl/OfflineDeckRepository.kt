@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
-class JSONDeckRepository(
+class OfflineDeckRepository(
     private val flashcardRepository: FlashcardRepository<DeckType, Flashcard>,
     private val sessionRepository: SessionRepository
 ) : DeckRepository<Deck> {

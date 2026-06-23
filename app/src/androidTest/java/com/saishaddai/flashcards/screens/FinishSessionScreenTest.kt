@@ -25,15 +25,16 @@ class FinishSessionScreenTest {
     )
 
     @Test
-    fun finishSessionScreen_initialState_showsSummaryInfo() {
+    fun finishSessionContent_initialState_showsSummaryInfo() {
         composeTestRule.setContent {
             Flashcards2Theme {
-                FinishSessionScreen(
+                FinishSessionContent(
                     deck = testDeck,
                     cardsReviewed = 20,
                     startTime = 0L,
                     endTime = 1000L * 60 * 12, // 12 mins
-                    onFinishSession = {},
+                    sessionResult = null,
+                    onBackToDecksClicked = {},
                     onShareSummary = {}
                 )
             }
@@ -57,16 +58,17 @@ class FinishSessionScreenTest {
     }
 
     @Test
-    fun finishSessionScreen_clickBackToDecks_triggersCallback() {
-        var finishSessionCalled = false
+    fun finishSessionContent_clickBackToDecks_callsCallback() {
+        var backClicked = false
         composeTestRule.setContent {
             Flashcards2Theme {
-                FinishSessionScreen(
+                FinishSessionContent(
                     deck = testDeck,
                     cardsReviewed = 10,
                     startTime = 0L,
                     endTime = 1000L,
-                    onFinishSession = { finishSessionCalled = true },
+                    sessionResult = null,
+                    onBackToDecksClicked = { backClicked = true },
                     onShareSummary = {}
                 )
             }
@@ -77,49 +79,43 @@ class FinishSessionScreenTest {
             .performScrollTo()
             .performClick()
 
-        // Wait for the LaunchedEffect to trigger the callback via ViewModel state change
-        composeTestRule.waitUntil(5000) {
-            finishSessionCalled
-        }
+        assert(backClicked)
     }
 
     @Test
-    fun finishSessionScreen_clickTopCheckIcon_triggersCallback() {
-        var finishSessionCalled = false
+    fun finishSessionContent_clickTopCheckIcon_callsCallback() {
+        var backClicked = false
         composeTestRule.setContent {
             Flashcards2Theme {
-                FinishSessionScreen(
+                FinishSessionContent(
                     deck = testDeck,
                     cardsReviewed = 10,
                     startTime = 0L,
                     endTime = 1000L,
-                    onFinishSession = { finishSessionCalled = true },
+                    sessionResult = null,
+                    onBackToDecksClicked = { backClicked = true },
                     onShareSummary = {}
                 )
             }
         }
 
-        // Click the check icon in the navigation bar (finish_nav_icon_content_desc is "Close" in strings.xml)
-        // I should verify what the actual string is. In FinishSessionScreen.kt it uses R.string.finish_nav_icon_content_desc
         composeTestRule.onNodeWithContentDescription("Close").performClick()
 
-        // Wait for the LaunchedEffect to trigger the callback
-        composeTestRule.waitUntil(5000) {
-            finishSessionCalled
-        }
+        assert(backClicked)
     }
 
     @Test
-    fun finishSessionScreen_clickShareIcon_triggersCallback() {
+    fun finishSessionContent_clickShareIcon_callsCallback() {
         var shareSummaryCalled = false
         composeTestRule.setContent {
             Flashcards2Theme {
-                FinishSessionScreen(
+                FinishSessionContent(
                     deck = testDeck,
                     cardsReviewed = 10,
                     startTime = 0L,
                     endTime = 1000L,
-                    onFinishSession = {},
+                    sessionResult = null,
+                    onBackToDecksClicked = {},
                     onShareSummary = { shareSummaryCalled = true }
                 )
             }
@@ -128,29 +124,6 @@ class FinishSessionScreenTest {
         // Click the share icon
         composeTestRule.onNodeWithContentDescription("Share").performClick()
 
-        // Verify callback was triggered
-        composeTestRule.runOnIdle {
-            assert(shareSummaryCalled)
-        }
-    }
-
-    @Test
-    fun finishSessionScreen_isLoading_showsFullLoader() {
-        composeTestRule.setContent {
-            Flashcards2Theme {
-                FinishSessionContent(
-                    deck = testDeck,
-                    cardsReviewed = 20,
-                    startTime = 0L,
-                    endTime = 1000L,
-                    sessionResult = null,
-                    isLoading = true,
-                    onBackToDecksClicked = {},
-                    onShareSummary = {}
-                )
-            }
-        }
-
-        composeTestRule.onNodeWithTag(TestTags.FULL_LOADER).assertIsDisplayed()
+        assert(shareSummaryCalled)
     }
 }

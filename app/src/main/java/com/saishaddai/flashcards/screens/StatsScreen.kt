@@ -40,8 +40,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -80,56 +78,52 @@ import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
-import com.saishaddai.flashcards.viewmodel.DecksViewModel
-import com.saishaddai.flashcards.viewmodel.SettingsViewModel
-import com.saishaddai.flashcards.viewmodel.StatsViewModel
+import com.saishaddai.flashcards.viewmodel.StatsUiState
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import org.koin.androidx.compose.koinViewModel
 
 val ColorKey = SemanticsPropertyKey<Color>("Color")
 var SemanticsPropertyReceiver.colorProperty by ColorKey
 
 @Composable
 fun StatsScreen(
-    decksViewModel: DecksViewModel = koinViewModel(),
-    statsViewModel: StatsViewModel = koinViewModel(),
-    settingsViewModel: SettingsViewModel = koinViewModel(),
-    onPromoClick: (Deck) -> Unit = {},
+    uiState: UiState<StatsUiState>,
+    promoDeck: Deck?,
+    showSuggestions: Boolean,
+    onViewAllSkillsClicked: () -> Unit,
+    onInfoClick: (String, String) -> Unit,
+    onDismissInfoDialog: () -> Unit,
+    onRetry: () -> Unit,
+    onPromoClick: (Deck) -> Unit,
 ) {
-    val promoDeck = decksViewModel.getRandomDeck()
-    val uiState by statsViewModel.uiState.collectAsState()
-    val userSettings by settingsViewModel.userSettings.collectAsState()
-    val showSuggestions = userSettings?.showSuggestions ?: true
-
-    when (val state = uiState) {
+    when (uiState) {
         is UiState.Loading -> {
             FullLoader(message = stringResource(R.string.loading_stats))
         }
         is UiState.Success -> {
             StatsContent(
                 promoDeck = promoDeck,
-                weeklyActivity = state.data.weeklyActivity,
-                skillMastery = state.data.skillMastery,
-                flashcardsViewed = state.data.flashcardsViewed,
-                currentStreak = state.data.currentStreak,
-                studyTime = state.data.studyTime,
-                masteredDecks = state.data.masteredDecks,
-                weeklyComparison = state.data.weeklyComparison,
+                weeklyActivity = uiState.data.weeklyActivity,
+                skillMastery = uiState.data.skillMastery,
+                flashcardsViewed = uiState.data.flashcardsViewed,
+                currentStreak = uiState.data.currentStreak,
+                studyTime = uiState.data.studyTime,
+                masteredDecks = uiState.data.masteredDecks,
+                weeklyComparison = uiState.data.weeklyComparison,
                 showSuggestions = showSuggestions,
-                infoDialogContent = state.data.infoDialogContent,
-                isSkillsExpanded = state.data.isSkillsExpanded,
-                onViewAllSkillsClicked = statsViewModel::onViewAllSkillsClicked,
-                onInfoClick = statsViewModel::onInfoClick,
-                onDismissInfoDialog = statsViewModel::onDismissInfoDialog,
+                infoDialogContent = uiState.data.infoDialogContent,
+                isSkillsExpanded = uiState.data.isSkillsExpanded,
+                onViewAllSkillsClicked = onViewAllSkillsClicked,
+                onInfoClick = onInfoClick,
+                onDismissInfoDialog = onDismissInfoDialog,
                 onPromoClick = onPromoClick
             )
         }
         is UiState.Error -> {
             ErrorView(
-                message = state.message,
-                onRetry = statsViewModel::loadStats
+                message = uiState.message,
+                onRetry = onRetry
             )
         }
     }
@@ -637,24 +631,29 @@ private fun StatsInfoDialog(
 @Composable
 fun StatsScreenPreview() {
     Flashcards2Theme {
-        StatsContent(
-            promoDeck = Deck(1, "Kotlin", "Kotlin Fundamentals", isSelected = false),
-            weeklyActivity = listOf(10, 20, 15, 30, 25, 40, 35),
-            skillMastery = listOf(
-                MasteryData("Language", 85, "Veteran", RoyalBlue),
-                MasteryData("UI/UX", 60, "Sophomore", WarningOrange)
+        StatsScreen(
+            uiState = UiState.Success(
+                StatsUiState(
+                    weeklyActivity = listOf(10, 20, 15, 30, 25, 40, 35),
+                    skillMastery = listOf(
+                        MasteryData("Language", 85, "Veteran", RoyalBlue),
+                        MasteryData("UI/UX", 60, "Sophomore", WarningOrange)
+                    ),
+                    flashcardsViewed = "1,234",
+                    currentStreak = "7",
+                    studyTime = "12h 30m",
+                    masteredDecks = "92%",
+                    weeklyComparison = 12,
+                    isSkillsExpanded = false,
+                    infoDialogContent = null
+                )
             ),
-            flashcardsViewed = "1,234",
-            currentStreak = "7",
-            studyTime = "12h 30m",
-            masteredDecks = "92%",
-            weeklyComparison = 12,
+            promoDeck = Deck(1, "Kotlin", "Kotlin Fundamentals", isSelected = false),
             showSuggestions = true,
-            infoDialogContent = null,
-            isSkillsExpanded = false,
             onViewAllSkillsClicked = {},
             onInfoClick = { _, _ -> },
             onDismissInfoDialog = {},
+            onRetry = {},
             onPromoClick = {}
         )
     }

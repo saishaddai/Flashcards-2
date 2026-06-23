@@ -8,6 +8,9 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
@@ -27,9 +30,15 @@ import com.saishaddai.flashcards.screens.FlashcardScreen
 import com.saishaddai.flashcards.screens.InstructionsScreen
 import com.saishaddai.flashcards.screens.SettingsScreen
 import com.saishaddai.flashcards.screens.StatsScreen
+import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.utils.navigateBack
 import com.saishaddai.flashcards.utils.navigateTo
 import com.saishaddai.flashcards.utils.resetTo
+
+import com.saishaddai.flashcards.viewmodel.DecksViewModel
+import com.saishaddai.flashcards.viewmodel.SettingsViewModel
+import com.saishaddai.flashcards.viewmodel.StatsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -84,12 +93,42 @@ fun NavigationWrapper() {
                     )
                 }
                 entry<Instructions> {
+                    val decksViewModel: DecksViewModel = koinViewModel()
+                    val settingsViewModel: SettingsViewModel = koinViewModel()
+
+                    val uiState by decksViewModel.uiState.collectAsState()
+                    val promoDeck = remember(uiState) {
+                        (uiState as? UiState.Success)?.data?.decks?.randomOrNull()
+                    }
+                    val settingsUiState by settingsViewModel.uiState.collectAsState()
+                    val showSuggestions = (settingsUiState as? UiState.Success)?.data?.userSettings?.showSuggestions ?: true
+
                     InstructionsScreen(
+                        promoDeck = promoDeck,
+                        showSuggestions = showSuggestions,
                         onPromoClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) }
                     )
                 }
                 entry<Stats> {
+                    val statsViewModel: StatsViewModel = koinViewModel()
+                    val decksViewModel: DecksViewModel = koinViewModel()
+                    val settingsViewModel: SettingsViewModel = koinViewModel()
+
+                    val uiState by statsViewModel.uiState.collectAsState()
+                    val promoDeck = remember(uiState) {
+                        decksViewModel.getRandomDeck()
+                    }
+                    val settingsUiState by settingsViewModel.uiState.collectAsState()
+                    val showSuggestions = (settingsUiState as? UiState.Success)?.data?.userSettings?.showSuggestions ?: true
+
                     StatsScreen(
+                        uiState = uiState,
+                        promoDeck = promoDeck,
+                        showSuggestions = showSuggestions,
+                        onViewAllSkillsClicked = statsViewModel::onViewAllSkillsClicked,
+                        onInfoClick = statsViewModel::onInfoClick,
+                        onDismissInfoDialog = statsViewModel::onDismissInfoDialog,
+                        onRetry = statsViewModel::loadStats,
                         onPromoClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) }
                     )
                 }

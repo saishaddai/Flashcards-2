@@ -26,9 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,34 +40,9 @@ import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.screens.commons.PromoWidget
 import com.saishaddai.flashcards.ui.theme.*
-import com.saishaddai.flashcards.utils.UiState
-import com.saishaddai.flashcards.viewmodel.DecksViewModel
-import com.saishaddai.flashcards.viewmodel.SettingsViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun InstructionsScreen(
-    viewModel: DecksViewModel = koinViewModel(),
-    settingsViewModel: SettingsViewModel = koinViewModel(),
-    onPromoClick: (Deck) -> Unit = {},
-) {
-    val uiState by viewModel.uiState.collectAsState()
-    val promoDeck = remember(uiState) {
-        (uiState as? UiState.Success)?.data?.decks?.randomOrNull()
-    }
-    val userSettings by settingsViewModel.userSettings.collectAsState()
-    val showSuggestions = userSettings?.showSuggestions ?: true
-
-    // Use a content-only Composable to avoid Koin dependency in Previews
-    InstructionsScreenContent(
-        promoDeck = promoDeck,
-        showSuggestions = showSuggestions,
-        onPromoClick = onPromoClick
-    )
-}
-
-@Composable
-fun InstructionsScreenContent(
     promoDeck: Deck?,
     showSuggestions: Boolean = true,
     onPromoClick: (Deck) -> Unit = {},
@@ -255,7 +227,7 @@ fun NestedInfoItem(icon: ImageVector, text: String) {
 @Composable
 fun InstructionsScreenPreview() {
     Flashcards2Theme {
-        InstructionsScreenContent(
+        InstructionsScreen(
             promoDeck = Deck(1, "Mock Deck", "This is a mock deck for preview"),
             showSuggestions = true,
             onPromoClick = {},

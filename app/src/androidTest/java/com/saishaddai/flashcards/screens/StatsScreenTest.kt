@@ -19,6 +19,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.utils.TestTags
+import com.saishaddai.flashcards.utils.UiState
+import com.saishaddai.flashcards.viewmodel.StatsUiState
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -36,22 +38,14 @@ class StatsScreenTest {
     @Test
     fun testStatsScreen_isLoading_showsFullLoader() {
         composeTestRule.setContent {
-            StatsContent(
+            StatsScreen(
+                uiState = UiState.Loading,
                 promoDeck = null,
-                weeklyActivity = emptyList(),
-                skillMastery = emptyList(),
-                flashcardsViewed = "0",
-                currentStreak = "0 Days",
-                studyTime = "0",
-                masteredDecks = "0",
-                weeklyComparison = 0,
-                isLoading = true,
                 showSuggestions = true,
-                infoDialogContent = null,
-                isSkillsExpanded = false,
                 onViewAllSkillsClicked = {},
                 onInfoClick = { _, _ -> },
                 onDismissInfoDialog = {},
+                onRetry = {},
                 onPromoClick = { _ -> },
             )
         }
@@ -64,22 +58,22 @@ class StatsScreenTest {
         val statsTitle = context.getString(R.string.stats_title)
         
         composeTestRule.setContent {
-            StatsContent(
+            StatsScreen(
+                uiState = UiState.Success(
+                    StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
+                        flashcardsViewed = "100",
+                        currentStreak = "5",
+                        studyTime = "2h",
+                        masteredDecks = "10"
+                    )
+                ),
                 promoDeck = null,
-                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
-                skillMastery = emptyList(),
-                flashcardsViewed = "100",
-                currentStreak = "5",
-                studyTime = "2h",
-                masteredDecks = "10",
-                weeklyComparison = 0,
-                isLoading = false,
                 showSuggestions = true,
-                infoDialogContent = null,
-                isSkillsExpanded = false,
                 onViewAllSkillsClicked = {},
                 onInfoClick = { _, _ -> },
                 onDismissInfoDialog = {},
+                onRetry = {},
                 onPromoClick = { _ -> },
             )
         }
@@ -91,22 +85,18 @@ class StatsScreenTest {
     @Test
     fun testStatsScreen_weeklyComparison_positiveGrowth() {
         composeTestRule.setContent {
-            StatsContent(
+            StatsScreen(
+                uiState = UiState.Success(
+                    StatsUiState(
+                        weeklyComparison = 15
+                    )
+                ),
                 promoDeck = null,
-                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
-                skillMastery = emptyList(),
-                flashcardsViewed = "100",
-                currentStreak = "5",
-                studyTime = "2h",
-                masteredDecks = "10",
-                weeklyComparison = 15,
-                isLoading = false,
                 showSuggestions = true,
-                infoDialogContent = null,
-                isSkillsExpanded = false,
                 onViewAllSkillsClicked = {},
                 onInfoClick = { _, _ -> },
                 onDismissInfoDialog = {},
+                onRetry = {},
                 onPromoClick = { _ -> },
             )
         }
@@ -126,22 +116,18 @@ class StatsScreenTest {
     @Test
     fun testStatsScreen_weeklyComparison_negativeGrowth() {
         composeTestRule.setContent {
-            StatsContent(
+            StatsScreen(
+                uiState = UiState.Success(
+                    StatsUiState(
+                        weeklyComparison = -8
+                    )
+                ),
                 promoDeck = null,
-                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
-                skillMastery = emptyList(),
-                flashcardsViewed = "100",
-                currentStreak = "5",
-                studyTime = "2h",
-                masteredDecks = "10",
-                weeklyComparison = -8,
-                isLoading = false,
                 showSuggestions = true,
-                infoDialogContent = null,
-                isSkillsExpanded = false,
                 onViewAllSkillsClicked = {},
                 onInfoClick = { _, _ -> },
                 onDismissInfoDialog = {},
+                onRetry = {},
                 onPromoClick = { _ -> },
             )
         }
@@ -161,22 +147,18 @@ class StatsScreenTest {
     @Test
     fun testStatsScreen_weeklyComparison_zeroGrowth() {
         composeTestRule.setContent {
-            StatsContent(
+            StatsScreen(
+                uiState = UiState.Success(
+                    StatsUiState(
+                        weeklyComparison = 0
+                    )
+                ),
                 promoDeck = null,
-                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
-                skillMastery = emptyList(),
-                flashcardsViewed = "100",
-                currentStreak = "5",
-                studyTime = "2h",
-                masteredDecks = "10",
-                weeklyComparison = 0,
-                isLoading = false,
                 showSuggestions = true,
-                infoDialogContent = null,
-                isSkillsExpanded = false,
                 onViewAllSkillsClicked = {},
                 onInfoClick = { _, _ -> },
                 onDismissInfoDialog = {},
+                onRetry = {},
                 onPromoClick = { _ -> },
             )
         }
@@ -199,22 +181,23 @@ class StatsScreenTest {
         val mockDeck = Deck(id = 1, name = mockDeckName, longName = "Test Deck Long", cardCount = 10)
 
         composeTestRule.setContent {
-            StatsContent(
+            StatsScreen(
+                uiState = UiState.Success(
+                    StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 42, 50, 60, 70),
+                        flashcardsViewed = "1,234",
+                        currentStreak = "7",
+                        studyTime = "12h 30m",
+                        masteredDecks = "5",
+                        weeklyComparison = 12
+                    )
+                ),
                 promoDeck = mockDeck,
-                weeklyActivity = listOf(10, 20, 30, 42, 50, 60, 70),
-                skillMastery = emptyList(),
-                flashcardsViewed = "1,234",
-                currentStreak = "7",
-                studyTime = "12h 30m",
-                masteredDecks = "5",
-                weeklyComparison = 12,
-                isLoading = false,
                 showSuggestions = true,
-                infoDialogContent = null,
-                isSkillsExpanded = false,
                 onViewAllSkillsClicked = {},
                 onInfoClick = { _, _ -> },
                 onDismissInfoDialog = {},
+                onRetry = {},
                 onPromoClick = { _ -> promoClicked = true },
             )
         }
@@ -245,22 +228,18 @@ class StatsScreenTest {
     @Test
     fun testStatsScreen_weeklyActivityGraph_isDisplayed() {
         composeTestRule.setContent {
-            StatsContent(
+            StatsScreen(
+                uiState = UiState.Success(
+                    StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70)
+                    )
+                ),
                 promoDeck = null,
-                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
-                skillMastery = emptyList(),
-                flashcardsViewed = "100",
-                currentStreak = "5",
-                studyTime = "2h",
-                masteredDecks = "10",
-                weeklyComparison = 0,
-                isLoading = false,
                 showSuggestions = true,
-                infoDialogContent = null,
-                isSkillsExpanded = false,
                 onViewAllSkillsClicked = {},
                 onInfoClick = { _, _ -> },
                 onDismissInfoDialog = {},
+                onRetry = {},
                 onPromoClick = { _ -> },
             )
         }
@@ -275,22 +254,18 @@ class StatsScreenTest {
         val atAGlanceTitle = context.getString(R.string.stats_at_glance)
 
         composeTestRule.setContent {
-            StatsContent(
+            StatsScreen(
+                uiState = UiState.Success(
+                    StatsUiState(
+                        weeklyActivity = listOf(0, 0, 0, 0, 0, 0, 0)
+                    )
+                ),
                 promoDeck = null,
-                weeklyActivity = listOf(0, 0, 0, 0, 0, 0, 0),
-                skillMastery = emptyList(),
-                flashcardsViewed = "0",
-                currentStreak = "0 Days",
-                studyTime = "0m",
-                masteredDecks = "0%",
-                weeklyComparison = 0,
-                isLoading = false,
                 showSuggestions = true,
-                infoDialogContent = null,
-                isSkillsExpanded = false,
                 onViewAllSkillsClicked = {},
                 onInfoClick = { _, _ -> },
                 onDismissInfoDialog = {},
+                onRetry = {},
                 onPromoClick = { _ -> },
             )
         }
@@ -317,24 +292,31 @@ class StatsScreenTest {
 
     @Test
     fun testStatsScreen_clickWeeklyActivityInfo_showsDialog() {
-        var infoDialogContent by mutableStateOf<Pair<String, String>?>(null)
+        var uiState by mutableStateOf<UiState<StatsUiState>>(
+            UiState.Success(
+                StatsUiState(
+                    weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70)
+                )
+            )
+        )
         composeTestRule.setContent {
-            StatsContent(
+            val state = uiState
+            StatsScreen(
+                uiState = state,
                 promoDeck = null,
-                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
-                skillMastery = emptyList(),
-                flashcardsViewed = "100",
-                currentStreak = "5",
-                studyTime = "2h",
-                masteredDecks = "10",
-                weeklyComparison = 0,
-                isLoading = false,
                 showSuggestions = true,
-                infoDialogContent = infoDialogContent,
-                isSkillsExpanded = false,
                 onViewAllSkillsClicked = {},
-                onInfoClick = { title, desc -> infoDialogContent = title to desc },
-                onDismissInfoDialog = { infoDialogContent = null },
+                onInfoClick = { title, desc -> 
+                    if (state is UiState.Success) {
+                        uiState = UiState.Success(state.data.copy(infoDialogContent = title to desc))
+                    }
+                },
+                onDismissInfoDialog = { 
+                    if (state is UiState.Success) {
+                        uiState = UiState.Success(state.data.copy(infoDialogContent = null))
+                    }
+                },
+                onRetry = {},
                 onPromoClick = { _ -> },
             )
         }
@@ -355,24 +337,31 @@ class StatsScreenTest {
 
     @Test
     fun testStatsScreen_clickSkillMasteryInfo_showsDialog() {
-        var infoDialogContent by mutableStateOf<Pair<String, String>?>(null)
+        var uiState by mutableStateOf<UiState<StatsUiState>>(
+            UiState.Success(
+                StatsUiState(
+                    weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70)
+                )
+            )
+        )
         composeTestRule.setContent {
-            StatsContent(
+            val state = uiState
+            StatsScreen(
+                uiState = state,
                 promoDeck = null,
-                weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
-                skillMastery = emptyList(),
-                flashcardsViewed = "100",
-                currentStreak = "5",
-                studyTime = "2h",
-                masteredDecks = "10",
-                weeklyComparison = 0,
-                isLoading = false,
                 showSuggestions = true,
-                infoDialogContent = infoDialogContent,
-                isSkillsExpanded = false,
                 onViewAllSkillsClicked = {},
-                onInfoClick = { title, desc -> infoDialogContent = title to desc },
-                onDismissInfoDialog = { infoDialogContent = null },
+                onInfoClick = { title, desc -> 
+                    if (state is UiState.Success) {
+                        uiState = UiState.Success(state.data.copy(infoDialogContent = title to desc))
+                    }
+                },
+                onDismissInfoDialog = { 
+                    if (state is UiState.Success) {
+                        uiState = UiState.Success(state.data.copy(infoDialogContent = null))
+                    }
+                },
+                onRetry = {},
                 onPromoClick = { _ -> },
             )
         }

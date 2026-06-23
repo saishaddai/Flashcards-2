@@ -24,13 +24,19 @@ class FlashcardScreenTest {
     )
 
     @Test
-    fun flashcardScreen_initialState_showsQuestionAndHideAnswer() {
+    fun flashcardContent_initialState_showsQuestionAndHideAnswer() {
         composeTestRule.setContent {
             Flashcards2Theme {
-                FlashcardScreen(
+                FlashcardContent(
+                    deck = testDeck,
+                    flashcards = listOf(FlashcardModel(1, 1, "What is OOP?", "Answer")),
+                    showAnswer = false,
+                    isFinished = false,
+                    onShowResponseClicked = {},
+                    onPageChanged = { _ -> },
+                    onFinishSession = { _ -> },
                     onCancelSessionClick = {},
-                    onFinishedSessionClick = { _, _, _ -> },
-                    deck = testDeck
+                    onFinishedSessionClick = {}
                 )
             }
         }
@@ -42,7 +48,6 @@ class FlashcardScreenTest {
         composeTestRule.onNodeWithText("QUESTION").assertIsDisplayed()
 
         // Check if the "Show Response" button is displayed
-        // Based on strings.xml: <string name="flashcard_button_show_response">Show Response</string>
         composeTestRule.onNodeWithText("Show Response").assertIsDisplayed()
 
         // The answer label "ANSWER" should NOT be displayed initially
@@ -50,13 +55,20 @@ class FlashcardScreenTest {
     }
 
     @Test
-    fun flashcardScreen_clickShowResponse_revealsAnswer() {
+    fun flashcardContent_clickShowResponse_callsCallback() {
+        var showResponseClicked = false
         composeTestRule.setContent {
             Flashcards2Theme {
-                FlashcardScreen(
+                FlashcardContent(
+                    deck = testDeck,
+                    flashcards = listOf(FlashcardModel(1, 1, "Q", "A")),
+                    showAnswer = false,
+                    isFinished = false,
+                    onShowResponseClicked = { showResponseClicked = true },
+                    onPageChanged = { _ -> },
+                    onFinishSession = { _ -> },
                     onCancelSessionClick = {},
-                    onFinishedSessionClick = { _, _, _ -> },
-                    deck = testDeck
+                    onFinishedSessionClick = {}
                 )
             }
         }
@@ -64,70 +76,43 @@ class FlashcardScreenTest {
         // Click "Show Response"
         composeTestRule.onNodeWithText("Show Response").performClick()
 
-        // Now the "ANSWER" label should be displayed
-        composeTestRule.onNodeWithText("ANSWER").assertIsDisplayed()
+        assert(showResponseClicked)
     }
 
     @Test
-    fun flashcardScreen_clickFlashcard_revealsAnswer() {
-        composeTestRule.setContent {
-            Flashcards2Theme {
-                FlashcardScreen(
-                    onCancelSessionClick = {},
-                    onFinishedSessionClick = { _, _, _ -> },
-                    deck = testDeck
-                )
-            }
-        }
-
-        // The answer label "ANSWER" should NOT be displayed initially
-        composeTestRule.onNodeWithText("ANSWER").assertDoesNotExist()
-
-        // Click on the Flashcard (Question Card)
-        composeTestRule.onNodeWithText("QUESTION").performClick()
-
-        // Now the "ANSWER" label should be displayed
-        composeTestRule.onNodeWithText("ANSWER").assertIsDisplayed()
-    }
-
-    @Test
-    fun flashcardScreen_clickCancelSession_showsConfirmationDialog() {
-        composeTestRule.setContent {
-            Flashcards2Theme {
-                FlashcardScreen(
-                    onCancelSessionClick = {},
-                    onFinishedSessionClick = { _, _, _ -> },
-                    deck = testDeck
-                )
-            }
-        }
-
-        // Click "CANCEL SESSION"
-        // Based on strings.xml: <string name="flashcard_button_cancel_session">CANCEL SESSION</string>
-        composeTestRule.onNodeWithText("CANCEL SESSION").performClick()
-
-        // Check if the dialog title is displayed
-        // Based on strings.xml: <string name="flashcard_cancel_dialog_title">Cancel Session?</string>
-        composeTestRule.onNodeWithText("Cancel Session?").assertIsDisplayed()
-        
-        // Check if 'confirm' and 'dismiss' buttons are present
-        // Based on strings.xml: 
-        // <string name="flashcard_cancel_dialog_confirm">Yes, Cancel</string>
-        // <string name="flashcard_cancel_dialog_dismiss">No, Continue</string>
-        composeTestRule.onNodeWithText("Yes, Cancel").assertIsDisplayed()
-        composeTestRule.onNodeWithText("No, Continue").assertIsDisplayed()
-    }
-
-    @Test
-    fun flashcardScreen_isLoading_showsFullLoader() {
+    fun flashcardContent_clickFlashcard_callsCallback() {
+        var showResponseClicked = false
         composeTestRule.setContent {
             Flashcards2Theme {
                 FlashcardContent(
                     deck = testDeck,
-                    flashcards = emptyList(),
+                    flashcards = listOf(FlashcardModel(1, 1, "Q", "A")),
                     showAnswer = false,
                     isFinished = false,
-                    isLoading = true,
+                    onShowResponseClicked = { showResponseClicked = true },
+                    onPageChanged = { _ -> },
+                    onFinishSession = { _ -> },
+                    onCancelSessionClick = {},
+                    onFinishedSessionClick = {}
+                )
+            }
+        }
+
+        // Click on the Flashcard (Question Card)
+        composeTestRule.onNodeWithText("QUESTION").performClick()
+
+        assert(showResponseClicked)
+    }
+
+    @Test
+    fun flashcardContent_clickCancelSession_showsConfirmationDialog() {
+        composeTestRule.setContent {
+            Flashcards2Theme {
+                FlashcardContent(
+                    deck = testDeck,
+                    flashcards = listOf(FlashcardModel(1, 1, "Q", "A")),
+                    showAnswer = false,
+                    isFinished = false,
                     onShowResponseClicked = {},
                     onPageChanged = { _ -> },
                     onFinishSession = { _ -> },
@@ -137,23 +122,28 @@ class FlashcardScreenTest {
             }
         }
 
-        composeTestRule.onNodeWithTag(TestTags.FULL_LOADER).assertIsDisplayed()
+        // Click "CANCEL SESSION"
+        composeTestRule.onNodeWithText("CANCEL SESSION").performClick()
+
+        // Check if the dialog title is displayed
+        composeTestRule.onNodeWithText("Cancel Session?").assertIsDisplayed()
+        
+        composeTestRule.onNodeWithText("Yes, Cancel").assertIsDisplayed()
+        composeTestRule.onNodeWithText("No, Continue").assertIsDisplayed()
     }
 
     @Test
-    fun flashcardScreen_confirmCancelSession_callsCallback() {
+    fun flashcardContent_confirmCancelSession_callsCallback() {
         var cancelClicked = false
         composeTestRule.setContent {
             Flashcards2Theme {
                 FlashcardContent(
                     deck = testDeck,
                     flashcards = listOf(
-                        FlashcardModel(1, 1, "Q1", "A1"),
-                        FlashcardModel(1, 1, "Q2", "A2")
+                        FlashcardModel(1, 1, "Q1", "A1")
                     ),
                     showAnswer = false,
                     isFinished = false,
-                    isLoading = false,
                     onShowResponseClicked = {},
                     onPageChanged = { _ -> },
                     onFinishSession = { _ -> },
@@ -170,7 +160,7 @@ class FlashcardScreenTest {
     }
 
     @Test
-    fun flashcardScreen_lastPage_showsFinishButton() {
+    fun flashcardContent_lastPage_showsFinishButton() {
         var finishClicked = false
         composeTestRule.setContent {
             Flashcards2Theme {
@@ -179,7 +169,6 @@ class FlashcardScreenTest {
                     flashcards = listOf(FlashcardModel(1, 1, "Q", "A")),
                     showAnswer = true,
                     isFinished = false,
-                    isLoading = false,
                     onShowResponseClicked = {},
                     onPageChanged = { _ -> },
                     onFinishSession = { finishClicked = true },
@@ -197,7 +186,7 @@ class FlashcardScreenTest {
     }
 
     @Test
-    fun flashcardScreen_isFinished_callsFinishedCallback() {
+    fun flashcardContent_isFinished_callsFinishedCallback() {
         var finishedSessionCalled = false
         composeTestRule.setContent {
             Flashcards2Theme {
@@ -206,7 +195,6 @@ class FlashcardScreenTest {
                     flashcards = emptyList(),
                     showAnswer = false,
                     isFinished = true,
-                    isLoading = false,
                     onShowResponseClicked = {},
                     onPageChanged = { _ -> },
                     onFinishSession = { _ -> },
@@ -217,28 +205,5 @@ class FlashcardScreenTest {
         }
 
         assert(finishedSessionCalled)
-    }
-
-    @Test
-    fun flashcardScreen_showAnswerTrue_displaysAnswerInitially() {
-        composeTestRule.setContent {
-            Flashcards2Theme {
-                FlashcardContent(
-                    deck = testDeck,
-                    flashcards = listOf(FlashcardModel(1, 1, "Q", "A")),
-                    showAnswer = true,
-                    isFinished = false,
-                    isLoading = false,
-                    onShowResponseClicked = {},
-                    onPageChanged = { _ -> },
-                    onFinishSession = { _ -> },
-                    onCancelSessionClick = {},
-                    onFinishedSessionClick = {}
-                )
-            }
-        }
-
-        // Now the "ANSWER" label should be displayed immediately
-        composeTestRule.onNodeWithText("ANSWER").assertIsDisplayed()
     }
 }

@@ -3,15 +3,12 @@ package com.saishaddai.flashcards.screens
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.test.platform.app.InstrumentationRegistry
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
-import com.saishaddai.flashcards.repository.DeckRepository
-import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -26,7 +23,7 @@ class InstructionsScreenTest {
     @Test
     fun instructionsScreen_initialState_showsInstructions() {
         composeTestRule.setContent {
-            InstructionsScreen()
+            InstructionsScreen(promoDeck = null)
         }
 
         composeTestRule.onNodeWithText(context.getString(R.string.instructions_guide_label)).assertIsDisplayed()
@@ -46,25 +43,14 @@ class InstructionsScreenTest {
         val mockDeckName = "Test Deck"
         val mockDeck = Deck(id = 1, name = mockDeckName, longName = "Test Deck Long", cardCount = 10)
         
-        val fakeRepository = object : DeckRepository<Deck> {
-            override suspend fun getData(): List<Deck> = listOf(mockDeck)
-        }
-        val application = context.applicationContext as android.app.Application
-        val viewModel = DecksViewModel(application, fakeRepository)
-
         composeTestRule.setContent {
             InstructionsScreen(
-                viewModel = viewModel,
+                promoDeck = mockDeck,
                 onPromoClick = { promoClicked = true }
             )
         }
 
         val startNowText = context.getString(R.string.promo_widget_confirm)
-
-        // Wait for the asynchronous data to load and the PromoWidget to appear
-        composeTestRule.waitUntil(5000) {
-            composeTestRule.onAllNodesWithText(startNowText).fetchSemanticsNodes().isNotEmpty()
-        }
 
         // SCROLL to the PromoWidget first. If it's off-screen, assertions will fail.
         composeTestRule.onNodeWithText(startNowText).performScrollTo()
@@ -85,25 +71,13 @@ class InstructionsScreenTest {
     
     @Test
     fun instructionScreen_checkScrollingCoverEntireScreen() {
-        val mockDecks = List(10) { i -> 
-            Deck(id = i, name = "Deck $i", longName = "Deck $i Long", cardCount = 10)
-        }
-        val fakeRepository = object : DeckRepository<Deck> {
-            override suspend fun getData(): List<Deck> = mockDecks
-        }
-        val application = context.applicationContext as android.app.Application
-        val viewModel = DecksViewModel(application, fakeRepository)
+        val mockDeck = Deck(id = 1, name = "Deck", longName = "Deck Long", cardCount = 10)
 
         composeTestRule.setContent {
-            InstructionsScreen(viewModel = viewModel)
+            InstructionsScreen(promoDeck = mockDeck)
         }
 
         val startNowText = context.getString(R.string.promo_widget_confirm)
-
-        // Wait for content to load
-        composeTestRule.waitUntil(5000) {
-            composeTestRule.onAllNodesWithText(startNowText).fetchSemanticsNodes().isNotEmpty()
-        }
 
         // The button is at the bottom, so we must scroll to it
         composeTestRule.onNodeWithText(startNowText).performScrollTo().assertIsDisplayed()

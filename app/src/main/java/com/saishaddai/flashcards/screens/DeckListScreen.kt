@@ -26,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -55,39 +54,37 @@ import com.saishaddai.flashcards.utils.DeckAssets
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.utils.getMasteryLevel
-import com.saishaddai.flashcards.viewmodel.DecksViewModel
-import com.saishaddai.flashcards.viewmodel.SettingsViewModel
-import org.koin.androidx.compose.koinViewModel
+import com.saishaddai.flashcards.viewmodel.DecksUiState
 
 @Composable
 fun DeckListScreen(
+    uiState: UiState<DecksUiState>,
+    quickStartEnabled: Boolean,
+    onDeckSelected: (Deck) -> Unit,
     onStartSessionClick: (Deck) -> Unit,
-    viewModel: DecksViewModel = koinViewModel(),
-    settingsViewModel: SettingsViewModel = koinViewModel()
+    onDismissEmptyDeckDialog: () -> Unit,
+    onTriggerEmptyDeckDialog: (Deck) -> Unit,
+    onRetry: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val userSettings by settingsViewModel.userSettings.collectAsState()
-    val quickStartEnabled = userSettings?.quickStart ?: false
-
-    when (val state = uiState) {
+    when (uiState) {
         is UiState.Loading -> {
             FullLoader(stringResource(R.string.loading_decks))
         }
         is UiState.Success -> {
             DeckListContent(
-                decks = state.data.decks,
-                showEmptyDeckDialogState = state.data.showEmptyDeckDialog,
+                decks = uiState.data.decks,
+                showEmptyDeckDialogState = uiState.data.showEmptyDeckDialog,
                 quickStartEnabled = quickStartEnabled,
-                onDeckSelected = viewModel::onDeckSelected,
+                onDeckSelected = onDeckSelected,
                 onStartSessionClick = onStartSessionClick,
-                onDismissEmptyDeckDialog = viewModel::dismissEmptyDeckDialog,
-                onTriggerEmptyDeckDialog = viewModel::onStartSession
+                onDismissEmptyDeckDialog = onDismissEmptyDeckDialog,
+                onTriggerEmptyDeckDialog = onTriggerEmptyDeckDialog
             )
         }
         is UiState.Error -> {
             ErrorView(
-                message = state.message,
-                onRetry = viewModel::loadDecks
+                message = uiState.message,
+                onRetry = onRetry
             )
         }
     }
@@ -361,16 +358,20 @@ fun DeckCard(deck: Deck, onClick: () -> Unit, onDoubleClick: () -> Unit) {
 @Preview
 @Composable
 fun DeckListScreenPreview() {
-    DeckListContent(
-        decks = listOf(
-            Deck(1, "Kotlin", "Kotlin Fundamentals", mastery = 50, cardCount = 20, isSelected = true),
-            Deck(2, "Android", "Android Development", mastery = 30, cardCount = 15)
+    DeckListScreen(
+        uiState = UiState.Success(
+            DecksUiState(
+                decks = listOf(
+                    Deck(1, "Kotlin", "Kotlin Fundamentals", mastery = 50, cardCount = 20, isSelected = true),
+                    Deck(2, "Android", "Android Development", mastery = 30, cardCount = 15)
+                )
+            )
         ),
-        showEmptyDeckDialogState = false,
         quickStartEnabled = false,
         onDeckSelected = {},
         onStartSessionClick = {},
         onDismissEmptyDeckDialog = {},
-        onTriggerEmptyDeckDialog = {}
+        onTriggerEmptyDeckDialog = {},
+        onRetry = {}
     )
 }

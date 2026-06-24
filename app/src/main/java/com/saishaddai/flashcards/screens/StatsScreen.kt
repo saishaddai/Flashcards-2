@@ -117,7 +117,7 @@ fun StatsScreen(
                 onViewAllSkillsClicked = onViewAllSkillsClicked,
                 onInfoClick = onInfoClick,
                 onDismissInfoDialog = onDismissInfoDialog,
-                onPromoClick = onPromoClick
+                onPromoClick = onPromoClick,
             )
         }
         is UiState.Error -> {
@@ -176,7 +176,7 @@ fun StatsContent(
         WeeklyActivityCard(
             activityData = weeklyActivity,
             weeklyComparison = weeklyComparison,
-            onInfoClick = { onInfoClick(weeklyActivityTitle, weeklyActivityDesc) }
+            onInfoClick = { onInfoClick(weeklyActivityTitle, weeklyActivityDesc) },
         )
         Spacer(modifier = Modifier.height(24.dp))
         SkillMasterySection(
@@ -189,7 +189,7 @@ fun StatsContent(
         AtAGlanceSection(flashcardsViewed, currentStreak, studyTime, masteredDecks)
         Spacer(modifier = Modifier.height(32.dp))
 
-        if (showSuggestions && promoDeck != null) {
+        if (showSuggestions && (promoDeck != null)) {
             PromoWidget(
                 randomDeck = promoDeck,
                 onPromoClick = onPromoClick
@@ -263,8 +263,10 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
                             color = TextGray
                         )
                     }
-                    Column(horizontalAlignment = Alignment.End,
-                        modifier = Modifier.testTag(TestTags.STATS_PROGRESS_COMPARE),) {
+                    Column(
+                        horizontalAlignment = Alignment.End,
+                        modifier = Modifier.testTag(TestTags.STATS_PROGRESS_COMPARE),
+                    ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             val comparisonData = getComparisonData(weeklyComparison)
 
@@ -563,7 +565,7 @@ fun StatCard(
 private fun getWeeklyDateRange(): String {
     val calendar = Calendar.getInstance()
     calendar.firstDayOfWeek = Calendar.MONDAY
-    calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+    calendar[Calendar.DAY_OF_WEEK] = Calendar.MONDAY
     val startDate = calendar.time
     calendar.add(Calendar.DAY_OF_WEEK, 6)
     val endDate = calendar.time

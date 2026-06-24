@@ -36,6 +36,8 @@ import com.saishaddai.flashcards.utils.navigateTo
 import com.saishaddai.flashcards.utils.resetTo
 
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
+import com.saishaddai.flashcards.viewmodel.FinishSessionViewModel
+import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import com.saishaddai.flashcards.viewmodel.StatsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -67,12 +69,32 @@ fun NavigationWrapper() {
             onBack = { backStack.removeLastOrNull() },
             entryProvider = entryProvider {
                 entry<DeckList> {
+                    val viewModel: DecksViewModel = koinViewModel()
+                    val settingsViewModel: SettingsViewModel = koinViewModel()
+                    val uiState by viewModel.uiState.collectAsState()
+                    val userSettings by settingsViewModel.userSettings.collectAsState()
+                    val quickStartEnabled = userSettings?.quickStart ?: false
+
                     DeckListScreen(
-                        onStartSessionClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) }
+                        uiState = uiState,
+                        quickStartEnabled = quickStartEnabled,
+                        onDeckSelected = viewModel::onDeckSelected,
+                        onStartSessionClick = { deck -> backStack.navigateTo(FlashcardSession(deck)) },
+                        onDismissEmptyDeckDialog = viewModel::dismissEmptyDeckDialog,
+                        onTriggerEmptyDeckDialog = viewModel::onStartSession,
+                        onRetry = viewModel::loadDecks
                     )
                 }
                 entry<FinishSession> { route ->
+                    val viewModel: FinishSessionViewModel = koinViewModel()
+                    val uiState by viewModel.uiState.collectAsState()
+
+                    androidx.compose.runtime.LaunchedEffect(Unit) {
+                        viewModel.saveSession(route.deck, route.cardsReviewed, route.startTime, route.endTime)
+                    }
+
                     FinishSessionScreen(
+                        uiState = uiState,
                         deck = route.deck,
                         cardsReviewed = route.cardsReviewed,
                         startTime = route.startTime,
@@ -80,16 +102,33 @@ fun NavigationWrapper() {
                         onFinishSession = {
                             backStack.resetTo(DeckList)
                         },
-                        onShareSummary = {}
+                        onShareSummary = {},
+                        onBackToDecksClicked = viewModel::onBackToDecksClicked,
+                        onNavigationHandled = viewModel::onNavigationHandled,
+                        onRetry = {
+                            viewModel.saveSession(route.deck, route.cardsReviewed, route.startTime, route.endTime)
+                        }
                     )
                 }
                 entry<FlashcardSession> { route ->
+                    val viewModel: FlashcardViewModel = koinViewModel(
+                        key = route.deck.id.toString(),
+                        parameters = { org.koin.core.parameter.parametersOf(route.deck.id) }
+                    )
+                    val uiState by viewModel.uiState.collectAsState()
+
                     FlashcardScreen(
+                        uiState = uiState,
+                        deck = route.deck,
+                        onShowResponseClicked = viewModel::onShowResponseClicked,
+                        onPageChanged = viewModel::onPageChanged,
+                        onFinishSession = viewModel::onFinishSession,
                         onCancelSessionClick = { backStack.navigateBack() },
-                        onFinishedSessionClick = { reviewed, start, end ->
+                        onFinishedSessionClick = {
+                            val (reviewed, start, end) = viewModel.getSessionSummary()
                             backStack.navigateTo(FinishSession(route.deck, reviewed, start, end))
                         },
-                        deck = route.deck
+                        onRetry = viewModel::loadFlashcards
                     )
                 }
                 entry<Instructions> {
@@ -133,7 +172,22 @@ fun NavigationWrapper() {
                     )
                 }
                 entry<Settings> {
-                    SettingsScreen()
+                    val viewModel: SettingsViewModel = koinViewModel()
+                    val uiState by viewModel.uiState.collectAsState()
+
+                    SettingsScreen(
+                        uiState = uiState,
+                        onRestartMasteryClicked = viewModel::onRestartMasteryClicked,
+                        onPreferredStudyTimeChanged = viewModel::onPreferredStudyTimeChanged,
+                        onFlashcardsPerSessionChanged = viewModel::onFlashcardsPerSessionChanged,
+                        onDailyStudyGoalChanged = viewModel::onDailyStudyGoalChanged,
+                        onQuickStartChanged = viewModel::onQuickStartChanged,
+                        onShowAnswersChanged = viewModel::onShowAnswersChanged,
+                        onShowSuggestionsChanged = viewModel::onShowSuggestionsChanged,
+                        onStudyRemindersChanged = viewModel::onStudyRemindersChanged,
+                        onNotificationSoundChanged = viewModel::onNotificationSoundChanged,
+                        onRetry = { /* Settings load is automatic with flow */ }
+                    )
                 }
             },
             transitionSpec = {

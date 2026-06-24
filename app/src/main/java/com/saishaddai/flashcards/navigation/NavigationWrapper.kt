@@ -85,7 +85,11 @@ fun NavigationWrapper() {
                     )
                 }
                 entry<FinishSession> { route ->
+                    val viewModel: FinishSessionViewModel = koinViewModel()
+                    val uiState by viewModel.uiState.collectAsState()
+
                     FinishSessionScreen(
+                        uiState = uiState,
                         deck = route.deck,
                         cardsReviewed = route.cardsReviewed,
                         startTime = route.startTime,
@@ -93,7 +97,12 @@ fun NavigationWrapper() {
                         onFinishSession = {
                             backStack.resetTo(DeckList)
                         },
-                        onShareSummary = {}
+                        onShareSummary = {},
+                        onBackToDecksClicked = viewModel::onBackToDecksClicked,
+                        onNavigationHandled = viewModel::onNavigationHandled,
+                        onRetry = {
+                            viewModel.saveSession(route.deck, route.cardsReviewed, route.startTime, route.endTime)
+                        }
                     )
                 }
                 entry<FlashcardSession> { route ->

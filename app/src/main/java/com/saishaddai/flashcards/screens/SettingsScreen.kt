@@ -48,7 +48,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -78,8 +77,7 @@ import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
-import com.saishaddai.flashcards.viewmodel.SettingsViewModel
-import org.koin.androidx.compose.koinViewModel
+import com.saishaddai.flashcards.viewmodel.SettingsUiData
 import java.util.Calendar
 
 const val DEFAULT_FLASHCARDS_PER_SESSION = 20
@@ -87,33 +85,41 @@ const val DEFAULT_DAILY_GOAL = 50
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = koinViewModel()
+    uiState: UiState<SettingsUiData>,
+    onRestartMasteryClicked: () -> Unit,
+    onPreferredStudyTimeChanged: (Int, Int) -> Unit,
+    onFlashcardsPerSessionChanged: (Int) -> Unit,
+    onDailyStudyGoalChanged: (Int) -> Unit,
+    onQuickStartChanged: (Boolean) -> Unit,
+    onShowAnswersChanged: (Boolean) -> Unit,
+    onShowSuggestionsChanged: (Boolean) -> Unit,
+    onStudyRemindersChanged: (Boolean) -> Unit,
+    onNotificationSoundChanged: (Boolean) -> Unit,
+    onRetry: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-
-    when (val state = uiState) {
+    when (uiState) {
         is UiState.Loading -> {
             FullLoader(message = null)
         }
         is UiState.Success -> {
             SettingsScreenContent(
-                isLoading = state.data.isActionLoading,
-                userSettings = state.data.userSettings,
-                onRestartMasteryClicked = viewModel::onRestartMasteryClicked,
-                onPreferredStudyTimeChanged = viewModel::onPreferredStudyTimeChanged,
-                onFlashcardsPerSessionChanged = viewModel::onFlashcardsPerSessionChanged,
-                onDailyStudyGoalChanged = viewModel::onDailyStudyGoalChanged,
-                onQuickStartChanged = viewModel::onQuickStartChanged,
-                onShowAnswersChanged = viewModel::onShowAnswersChanged,
-                onShowSuggestionsChanged = viewModel::onShowSuggestionsChanged,
-                onStudyRemindersChanged = viewModel::onStudyRemindersChanged,
-                onNotificationSoundChanged = viewModel::onNotificationSoundChanged
+                isLoading = uiState.data.isActionLoading,
+                userSettings = uiState.data.userSettings,
+                onRestartMasteryClicked = onRestartMasteryClicked,
+                onPreferredStudyTimeChanged = onPreferredStudyTimeChanged,
+                onFlashcardsPerSessionChanged = onFlashcardsPerSessionChanged,
+                onDailyStudyGoalChanged = onDailyStudyGoalChanged,
+                onQuickStartChanged = onQuickStartChanged,
+                onShowAnswersChanged = onShowAnswersChanged,
+                onShowSuggestionsChanged = onShowSuggestionsChanged,
+                onStudyRemindersChanged = onStudyRemindersChanged,
+                onNotificationSoundChanged = onNotificationSoundChanged
             )
         }
         is UiState.Error -> {
             ErrorView(
-                message = state.message,
-                onRetry = { /* Settings usually doesn't have a simple reload function if it fails to bind, but getSettings is a flow */ }
+                message = uiState.message,
+                onRetry = onRetry
             )
         }
     }
@@ -660,21 +666,33 @@ fun TimePickerDialogWrapper(
 @Composable
 fun SettingsScreenPreview() {
     Flashcards2Theme {
-        SettingsScreenContent(
-            isLoading = false,
-            userSettings = UserSettings(
-                flashcardsPerSession = 20,
-                dailyStudyGoal = 50,
-                isDarkMode = true,
-                studyReminders = true,
-                notificationSound = false,
-                preferredStudyTime = "09:00 PM",
-                quickStart = true,
-                showAnswers = true,
-                showSuggestions = true
+        SettingsScreen(
+            uiState = UiState.Success(
+                SettingsUiData(
+                    userSettings = UserSettings(
+                        flashcardsPerSession = 20,
+                        dailyStudyGoal = 50,
+                        isDarkMode = true,
+                        studyReminders = true,
+                        notificationSound = false,
+                        preferredStudyTime = "09:00 PM",
+                        quickStart = true,
+                        showAnswers = true,
+                        showSuggestions = true
+                    ),
+                    isActionLoading = false
+                )
             ),
             onRestartMasteryClicked = {},
-            onPreferredStudyTimeChanged = { _, _ -> }
+            onPreferredStudyTimeChanged = { _, _ -> },
+            onFlashcardsPerSessionChanged = {},
+            onDailyStudyGoalChanged = {},
+            onQuickStartChanged = {},
+            onShowAnswersChanged = {},
+            onShowSuggestionsChanged = {},
+            onStudyRemindersChanged = {},
+            onNotificationSoundChanged = {},
+            onRetry = {}
         )
     }
 }

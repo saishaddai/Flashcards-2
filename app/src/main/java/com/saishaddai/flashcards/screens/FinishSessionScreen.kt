@@ -19,13 +19,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.FactCheck
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Style
-import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,8 +30,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,41 +47,44 @@ import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.screens.commons.ErrorView
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.ui.theme.*
-import com.saishaddai.flashcards.viewmodel.FinishSessionViewModel
+import com.saishaddai.flashcards.viewmodel.FinishSessionUiData
 import com.saishaddai.flashcards.utils.SessionResult
 import com.saishaddai.flashcards.utils.UiState
 import nl.dionsegijn.konfetti.compose.KonfettiView
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
 import nl.dionsegijn.konfetti.core.emitter.Emitter
-import org.koin.androidx.compose.koinViewModel
 import java.util.concurrent.TimeUnit
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Style
+import androidx.compose.material.icons.filled.Timer
 
 @Composable
 fun FinishSessionScreen(
+    uiState: UiState<FinishSessionUiData>,
     deck: Deck,
     cardsReviewed: Int,
     startTime: Long,
     endTime: Long,
     onFinishSession: () -> Unit,
     onShareSummary: (Deck) -> Unit,
-    viewModel: FinishSessionViewModel = koinViewModel()
+    onBackToDecksClicked: () -> Unit,
+    onNavigationHandled: () -> Unit,
+    onRetry: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-
-    LaunchedEffect(Unit) {
-        viewModel.saveSession(deck, cardsReviewed, startTime, endTime)
-    }
-
-    when (val state = uiState) {
+    when (uiState) {
         is UiState.Loading -> {
             FullLoader(message = stringResource(R.string.loading))
         }
         is UiState.Success -> {
-            LaunchedEffect(state.data.navigateToDeckList) {
-                if (state.data.navigateToDeckList) {
+            LaunchedEffect(uiState.data.navigateToDeckList) {
+                if (uiState.data.navigateToDeckList) {
                     onFinishSession()
-                    viewModel.onNavigationHandled()
+                    onNavigationHandled()
                 }
             }
 
@@ -99,15 +93,15 @@ fun FinishSessionScreen(
                 cardsReviewed = cardsReviewed,
                 startTime = startTime,
                 endTime = endTime,
-                sessionResult = state.data.sessionResult,
-                onBackToDecksClicked = { viewModel.onBackToDecksClicked() },
+                sessionResult = uiState.data.sessionResult,
+                onBackToDecksClicked = onBackToDecksClicked,
                 onShareSummary = onShareSummary
             )
         }
         is UiState.Error -> {
             ErrorView(
-                message = state.message,
-                onRetry = { viewModel.saveSession(deck, cardsReviewed, startTime, endTime) }
+                message = uiState.message,
+                onRetry = onRetry
             )
         }
     }
@@ -349,14 +343,22 @@ fun BackToDecksButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 fun FinishSessionScreenPreview() {
     Flashcards2Theme {
         val deck = Deck(1, "Preview Text", "preview name long version", isSelected = false)
-        FinishSessionContent(
+        FinishSessionScreen(
+            uiState = UiState.Success(
+                FinishSessionUiData(
+                    sessionResult = SessionResult(5.0, 50.0, "Intermediate"),
+                    navigateToDeckList = false
+                )
+            ),
             deck = deck,
             cardsReviewed = 20,
             startTime = 0L,
             endTime = 1000L * 60 * 12,
-            sessionResult = SessionResult(5.0, 50.0, "Intermediate"),
+            onFinishSession = {},
+            onShareSummary = {},
             onBackToDecksClicked = {},
-            onShareSummary = {}
+            onNavigationHandled = {},
+            onRetry = {}
         )
     }
 }

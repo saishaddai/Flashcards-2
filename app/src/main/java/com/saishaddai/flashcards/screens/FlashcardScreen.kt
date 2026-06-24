@@ -33,7 +33,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -55,47 +54,40 @@ import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.TransparentButton
 import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.utils.UiState
-import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
+import com.saishaddai.flashcards.viewmodel.FlashcardsUiData
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FlashcardScreen(
-    onCancelSessionClick: () -> Unit,
-    onFinishedSessionClick: (Int, Long, Long) -> Unit,
+    uiState: UiState<FlashcardsUiData>,
     deck: Deck,
-    viewModel: FlashcardViewModel = koinViewModel(
-        key = deck.id.toString(),
-        parameters = { parametersOf(deck.id) }
-    )
+    onShowResponseClicked: () -> Unit,
+    onPageChanged: (Int) -> Unit,
+    onFinishSession: (Int) -> Unit,
+    onCancelSessionClick: () -> Unit,
+    onFinishedSessionClick: () -> Unit,
+    onRetry: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-
-    when (val state = uiState) {
+    when (uiState) {
         is UiState.Loading -> {
             FullLoader(message = stringResource(R.string.loading))
         }
         is UiState.Success -> {
             FlashcardContent(
                 deck = deck,
-                flashcards = state.data.flashcards,
-                showAnswer = state.data.showAnswer,
-                isFinished = state.data.isFinished,
-                onShowResponseClicked = viewModel::onShowResponseClicked,
-                onPageChanged = viewModel::onPageChanged,
-                onFinishSession = viewModel::onFinishSession,
+                flashcards = uiState.data.flashcards,
+                showAnswer = uiState.data.showAnswer,
+                isFinished = uiState.data.isFinished,
+                onShowResponseClicked = onShowResponseClicked,
+                onPageChanged = onPageChanged,
+                onFinishSession = onFinishSession,
                 onCancelSessionClick = onCancelSessionClick,
-                onFinishedSessionClick = {
-                    val (reviewed, start, end) = viewModel.getSessionSummary()
-                    onFinishedSessionClick(reviewed, start, end)
-                }
+                onFinishedSessionClick = onFinishedSessionClick
             )
         }
         is UiState.Error -> {
             ErrorView(
-                message = state.message,
-                onRetry = viewModel::loadFlashcards
+                message = uiState.message,
+                onRetry = onRetry
             )
         }
     }
@@ -419,19 +411,24 @@ fun CancelSessionButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 fun FlashcardScreenPreview() {
     Flashcards2Theme {
-        FlashcardContent(
-            onCancelSessionClick = {},
-            onFinishedSessionClick = {},
-            deck = Deck(id = 1, name = "Preview Text", longName = "preview name long version", isSelected = false),
-            flashcards = listOf(
-                Flashcard(deckId = 1, id = 1, question = "What is Kotlin?", answer = "A modern programming language."),
-                Flashcard(deckId = 1, id = 2, question = "What is Jetpack Compose?", answer = "A modern toolkit for building native UI.")
+        FlashcardScreen(
+            uiState = UiState.Success(
+                FlashcardsUiData(
+                    flashcards = listOf(
+                        Flashcard(deckId = 1, id = 1, question = "What is Kotlin?", answer = "A modern programming language."),
+                        Flashcard(deckId = 1, id = 2, question = "What is Jetpack Compose?", answer = "A modern toolkit for building native UI.")
+                    ),
+                    showAnswer = true,
+                    isFinished = false
+                )
             ),
-            showAnswer = true,
-            isFinished = false,
+            deck = Deck(id = 1, name = "Preview Text", longName = "preview name long version", isSelected = false),
             onShowResponseClicked = {},
             onPageChanged = {},
-            onFinishSession = {}
+            onFinishSession = {},
+            onCancelSessionClick = {},
+            onFinishedSessionClick = {},
+            onRetry = {}
         )
     }
 }

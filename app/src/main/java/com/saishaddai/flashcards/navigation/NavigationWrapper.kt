@@ -36,6 +36,7 @@ import com.saishaddai.flashcards.utils.navigateTo
 import com.saishaddai.flashcards.utils.resetTo
 
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
+import com.saishaddai.flashcards.viewmodel.FinishSessionViewModel
 import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
 import com.saishaddai.flashcards.viewmodel.SettingsViewModel
 import com.saishaddai.flashcards.viewmodel.StatsViewModel
@@ -87,6 +88,10 @@ fun NavigationWrapper() {
                 entry<FinishSession> { route ->
                     val viewModel: FinishSessionViewModel = koinViewModel()
                     val uiState by viewModel.uiState.collectAsState()
+
+                    androidx.compose.runtime.LaunchedEffect(Unit) {
+                        viewModel.saveSession(route.deck, route.cardsReviewed, route.startTime, route.endTime)
+                    }
 
                     FinishSessionScreen(
                         uiState = uiState,

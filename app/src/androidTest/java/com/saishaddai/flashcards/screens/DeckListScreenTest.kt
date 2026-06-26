@@ -13,6 +13,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.utils.TestTags
+import com.saishaddai.flashcards.utils.UiState
 import org.junit.Rule
 import org.junit.Test
 
@@ -26,24 +27,19 @@ class DeckListScreenTest {
     @Test
     fun testDeckListScreen_isLoading_showsLoader() {
         composeTestRule.setContent {
-            DeckListContent(
-                decks = emptyList(),
-                showEmptyDeckDialogState = false,
+            DeckListScreen(
+                uiState = UiState.Loading,
                 quickStartEnabled = false,
                 onDeckSelected = {},
                 onStartSessionClick = {},
                 onDismissEmptyDeckDialog = {},
-                onTriggerEmptyDeckDialog = {}
+                onTriggerEmptyDeckDialog = {},
+                onRetry = {}
             )
-            // Wait, I should wrap it to actually see the loader if I test the Screen, not Content
-            // But since I'm refactoring to be stateless, I can test Content directly or the Screen with Loading state
         }
 
-        // Actually testing the Screen with Loading state
-        composeTestRule.setContent {
-            // Mocking DecksViewModel and SettingsViewModel would be hard here without Koin
-            // So I'll test DeckListContent or provide a way to pass states to DeckListScreen if I refactor it fully
-        }
+        composeTestRule.onNodeWithTag(TestTags.FULL_LOADER).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.loading_decks)).assertIsDisplayed()
     }
 
     @Test

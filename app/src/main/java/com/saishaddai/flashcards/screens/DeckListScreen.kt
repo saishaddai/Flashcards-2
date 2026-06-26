@@ -26,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -49,7 +48,9 @@ import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.screens.commons.ErrorView
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.Header
-import com.saishaddai.flashcards.ui.theme.*
+import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.ui.theme.SurfaceDark
+import com.saishaddai.flashcards.ui.theme.TextGray
 import com.saishaddai.flashcards.utils.DeckAssets
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
@@ -64,7 +65,7 @@ fun DeckListScreen(
     onStartSessionClick: (Deck) -> Unit,
     onDismissEmptyDeckDialog: () -> Unit,
     onTriggerEmptyDeckDialog: (Deck) -> Unit,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
 ) {
     when (uiState) {
         is UiState.Loading -> {
@@ -112,7 +113,7 @@ fun DeckListContent(
         onConfirmQuickStart = { deck ->
             deckToQuickStart.value = null
             onStartSessionClick(deck)
-        }
+        },
     )
 
     Column(
@@ -159,8 +160,10 @@ fun DeckListContent(
         }
 
         BlueButton(
+            modifier = Modifier.testTag(TestTags.DECKS_LIST_START_BUTTON),
             icon = Icons.Default.Navigation,
             text = stringResource(R.string.decks_start_session_button),
+            enabled = selectedDeck != null,
             onClick = {
                 selectedDeck?.let { deck ->
                     if (deck.cardCount > 0) {
@@ -299,23 +302,26 @@ fun DeckCard(deck: Deck, onClick: () -> Unit, onDoubleClick: () -> Unit) {
                 .padding(16.dp)
                 .fillMaxHeight(),
         ) {
-            val icon = DeckAssets.getIconForDeck(deck.id)
-            if (icon is ImageVector) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-            } else if (icon is Int) {
-                Icon(
-                    painter = painterResource(id = icon),
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier
-                        .padding(bottom = 8.dp)
-                        .size(24.dp)
-                )
+            when (val icon = DeckAssets.getIconForDeck(deck.id)) {
+                is ImageVector -> {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+
+                is Int -> {
+                    Icon(
+                        painter = painterResource(id = icon),
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .size(24.dp)
+                    )
+                }
             }
 
             Text(

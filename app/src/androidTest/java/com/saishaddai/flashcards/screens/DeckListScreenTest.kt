@@ -1,11 +1,10 @@
 package com.saishaddai.flashcards.screens
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsSelected
-import androidx.compose.ui.test.assertIsNotSelected
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.doubleClick
-import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -15,7 +14,6 @@ import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
-import com.saishaddai.flashcards.viewmodel.DecksUiState
 import org.junit.Rule
 import org.junit.Test
 
@@ -29,24 +27,19 @@ class DeckListScreenTest {
     @Test
     fun testDeckListScreen_isLoading_showsLoader() {
         composeTestRule.setContent {
-            DeckListContent(
-                decks = emptyList(),
-                showEmptyDeckDialogState = false,
+            DeckListScreen(
+                uiState = UiState.Loading,
                 quickStartEnabled = false,
                 onDeckSelected = {},
                 onStartSessionClick = {},
                 onDismissEmptyDeckDialog = {},
-                onTriggerEmptyDeckDialog = {}
+                onTriggerEmptyDeckDialog = {},
+                onRetry = {}
             )
-            // Wait, I should wrap it to actually see the loader if I test the Screen, not Content
-            // But since I'm refactoring to be stateless, I can test Content directly or the Screen with Loading state
         }
-        
-        // Actually testing the Screen with Loading state
-        composeTestRule.setContent {
-            // Mocking DecksViewModel and SettingsViewModel would be hard here without Koin
-            // So I'll test DeckListContent or provide a way to pass states to DeckListScreen if I refactor it fully
-        }
+
+        composeTestRule.onNodeWithTag(TestTags.FULL_LOADER).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.loading_decks)).assertIsDisplayed()
     }
 
     @Test
@@ -76,7 +69,13 @@ class DeckListScreenTest {
     fun testDeckListContent_emptyMockDeck_triggersDialogCallback() {
         var triggerDialogCalled = false
         val mockDecks = listOf(
-            Deck(id = 1, name = "Empty Deck", longName = "Empty Deck Long", cardCount = 0, isSelected = true)
+            Deck(
+                id = 1,
+                name = "Empty Deck",
+                longName = "Empty Deck Long",
+                cardCount = 0,
+                isSelected = true
+            )
         )
 
         composeTestRule.setContent {
@@ -91,7 +90,8 @@ class DeckListScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText(context.getString(R.string.decks_start_session_button)).performClick()
+        composeTestRule.onNodeWithText(context.getString(R.string.decks_start_session_button))
+            .performClick()
 
         assert(triggerDialogCalled)
     }
@@ -100,7 +100,13 @@ class DeckListScreenTest {
     fun testDeckListContent_clickMockDeck_triggersCallBack() {
         var onStartSessionClickCalled = false
         val mockDecks = listOf(
-            Deck(id = 1, name = "Mock Deck", longName = "Mock Deck Long", cardCount = 1, isSelected = true)
+            Deck(
+                id = 1,
+                name = "Mock Deck",
+                longName = "Mock Deck Long",
+                cardCount = 1,
+                isSelected = true
+            )
         )
 
         composeTestRule.setContent {
@@ -115,7 +121,8 @@ class DeckListScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText(context.getString(R.string.decks_start_session_button)).performClick()
+        composeTestRule.onNodeWithText(context.getString(R.string.decks_start_session_button))
+            .performClick()
 
         assert(onStartSessionClickCalled)
     }
@@ -166,13 +173,14 @@ class DeckListScreenTest {
             )
         }
 
-        // Double click the deck title
+        // Double-click the deck title
         composeTestRule.onNodeWithText("Double Click Deck").performTouchInput {
             doubleClick()
         }
 
         // Verify the confirmation dialog is displayed
-        composeTestRule.onNodeWithText(context.getString(R.string.flashcard_start_dialog_title)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.flashcard_start_dialog_title))
+            .assertIsDisplayed()
     }
 
     @Test
@@ -194,14 +202,15 @@ class DeckListScreenTest {
             )
         }
 
-        // Double click the deck title
+        // Double-click the deck title
         composeTestRule.onNodeWithText("Quick Start Deck").performTouchInput {
             doubleClick()
         }
 
         // Verify the confirmation dialog is NOT displayed
-        composeTestRule.onNodeWithText(context.getString(R.string.flashcard_start_dialog_title)).assertDoesNotExist()
-        
+        composeTestRule.onNodeWithText(context.getString(R.string.flashcard_start_dialog_title))
+            .assertDoesNotExist()
+
         // Verify callback was triggered immediately
         assert(onStartSessionClickCalled)
     }
@@ -222,6 +231,77 @@ class DeckListScreenTest {
 
         // Verify the empty state message is displayed
         composeTestRule.onNodeWithTag(TestTags.DECKS_EMPTY_STATE).assertIsDisplayed()
-        composeTestRule.onNodeWithText(context.getString(R.string.no_decks_available)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.no_decks_available))
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun testDeckListContent_noDeckSelected_startButtonDisabled() {
+        val mockDecks = listOf(
+            Deck(
+                id = 1,
+                name = "Deck 1",
+                longName = "Deck 1 Long",
+                cardCount = 10,
+                isSelected = false
+            ),
+            Deck(
+                id = 2,
+                name = "Deck 2",
+                longName = "Deck 2 Long",
+                cardCount = 5,
+                isSelected = false
+            )
+        )
+
+        composeTestRule.setContent {
+            DeckListContent(
+                decks = mockDecks,
+                showEmptyDeckDialogState = false,
+                quickStartEnabled = false,
+                onDeckSelected = {},
+                onStartSessionClick = {},
+                onDismissEmptyDeckDialog = {},
+                onTriggerEmptyDeckDialog = {}
+            )
+        }
+
+        // Verify the start button is disabled
+        composeTestRule.onNodeWithTag(TestTags.DECKS_LIST_START_BUTTON).assertIsNotEnabled()
+    }
+
+    @Test
+    fun testDeckListContent_deckSelected_startButtonEnabled() {
+        val mockDecks = listOf(
+            Deck(
+                id = 1,
+                name = "Deck 1",
+                longName = "Deck 1 Long",
+                cardCount = 10,
+                isSelected = true
+            ),
+            Deck(
+                id = 2,
+                name = "Deck 2",
+                longName = "Deck 2 Long",
+                cardCount = 5,
+                isSelected = false
+            )
+        )
+
+        composeTestRule.setContent {
+            DeckListContent(
+                decks = mockDecks,
+                showEmptyDeckDialogState = false,
+                quickStartEnabled = false,
+                onDeckSelected = {},
+                onStartSessionClick = {},
+                onDismissEmptyDeckDialog = {},
+                onTriggerEmptyDeckDialog = {}
+            )
+        }
+
+        // Verify the start button is enabled
+        composeTestRule.onNodeWithTag(TestTags.DECKS_LIST_START_BUTTON).assertIsEnabled()
     }
 }

@@ -4,10 +4,12 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.doubleClick
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTouchInput
 import androidx.test.platform.app.InstrumentationRegistry
 import com.saishaddai.flashcards.R
@@ -303,5 +305,35 @@ class DeckListScreenTest {
 
         // Verify the start button is enabled
         composeTestRule.onNodeWithTag(TestTags.DECKS_LIST_START_BUTTON).assertIsEnabled()
+    }
+
+    @Test
+    fun testDeckListContent_longList_isScrollable() {
+        val mockDecks = List(20) { i ->
+            Deck(
+                id = i + 1,
+                name = "Deck ${i + 1}",
+                longName = "Deck ${i + 1} Long",
+                cardCount = 10
+            )
+        }
+
+        composeTestRule.setContent {
+            DeckListContent(
+                decks = mockDecks,
+                showEmptyDeckDialogState = false,
+                quickStartEnabled = false,
+                onDeckSelected = {},
+                onStartSessionClick = {},
+                onDismissEmptyDeckDialog = {},
+                onTriggerEmptyDeckDialog = {}
+            )
+        }
+
+        // Try to scroll to the last item using the grid and performScrollToNode
+        composeTestRule.onNodeWithTag(TestTags.DECKS_LIST_GRID)
+            .performScrollToNode(hasText("Deck 20"))
+        
+        composeTestRule.onNodeWithText("Deck 20").assertIsDisplayed()
     }
 }

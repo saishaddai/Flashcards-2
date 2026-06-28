@@ -69,7 +69,6 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.vico.compose)
     implementation(libs.vico.compose.m3)
-    implementation(libs.vico.core)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockito.kotlin)

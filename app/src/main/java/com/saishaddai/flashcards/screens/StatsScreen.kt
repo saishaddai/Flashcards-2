@@ -21,11 +21,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.automirrored.filled.TrendingDown
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
@@ -51,31 +52,43 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.SemanticsPropertyKey
 import androidx.compose.ui.semantics.SemanticsPropertyReceiver
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.columnModel
+import com.patrykandpatrick.vico.compose.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.common.Fill
 import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
 import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
-import com.patrykandpatrick.vico.compose.common.fill
 import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
-import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
-import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
-import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.screens.commons.ErrorView
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.screens.commons.PromoWidget
-import com.saishaddai.flashcards.ui.theme.*
+import com.saishaddai.flashcards.ui.theme.DarkBackground
+import com.saishaddai.flashcards.ui.theme.DeepBlue
+import com.saishaddai.flashcards.ui.theme.DeepBrown
+import com.saishaddai.flashcards.ui.theme.DeepGreen
+import com.saishaddai.flashcards.ui.theme.ErrorRed
+import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
+import com.saishaddai.flashcards.ui.theme.Indigo
+import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.ui.theme.SlateBlue
+import com.saishaddai.flashcards.ui.theme.SoftPurple
+import com.saishaddai.flashcards.ui.theme.SuccessGreen
+import com.saishaddai.flashcards.ui.theme.SurfaceDark
+import com.saishaddai.flashcards.ui.theme.TextGray
+import com.saishaddai.flashcards.ui.theme.WarningOrange
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.viewmodel.StatsUiState
@@ -101,6 +114,7 @@ fun StatsScreen(
         is UiState.Loading -> {
             FullLoader(message = stringResource(R.string.loading_stats))
         }
+
         is UiState.Success -> {
             StatsContent(
                 promoDeck = promoDeck,
@@ -120,6 +134,7 @@ fun StatsScreen(
                 onPromoClick = onPromoClick,
             )
         }
+
         is UiState.Error -> {
             ErrorView(
                 message = uiState.message,
@@ -206,7 +221,7 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
     val modelProducer = remember { CartesianChartModelProducer() }
     LaunchedEffect(activityData) {
         modelProducer.runTransaction {
-            columnSeries { series(activityData) }
+            columnModel { series(activityData) }
         }
     }
 
@@ -275,7 +290,8 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
                                     imageVector = comparisonData.icon,
                                     contentDescription = null,
                                     tint = comparisonData.color,
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier
+                                        .size(24.dp)
                                         .testTag(TestTags.STATS_PROGRESS_ICON)
                                         .semantics { colorProperty = comparisonData.color }
                                 )
@@ -286,7 +302,8 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
                                 fontSize = 28.sp,
                                 color = comparisonData.color,
                                 fontWeight = FontWeight.Bold,
-                                modifier = Modifier.testTag(TestTags.STATS_PROGRESS_NUMBER)
+                                modifier = Modifier
+                                    .testTag(TestTags.STATS_PROGRESS_NUMBER)
                                     .semantics { colorProperty = comparisonData.color }
                             )
                         }
@@ -301,9 +318,9 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
                             rememberColumnCartesianLayer(
                                 columnProvider = ColumnCartesianLayer.ColumnProvider.series(
                                     rememberLineComponent(
-                                        fill = fill(RoyalBlue),
+                                        fill = Fill(RoyalBlue),
                                         thickness = 12.dp,
-                                        shape = CorneredShape.Pill
+                                        shape = CircleShape
                                     )
                                 )
                             ),
@@ -313,8 +330,7 @@ fun WeeklyActivityCard(activityData: List<Int>, weeklyComparison: Int, onInfoCli
                                 },
                                 guideline = null,
                                 label = rememberAxisLabelComponent(
-                                    color = TextGray,
-                                    textSize = 12.sp
+                                    style = TextStyle(color = TextGray, fontSize = 12.sp)
                                 )
                             ),
                         ),
@@ -364,7 +380,8 @@ fun SkillMasterySection(
             }
             TextButton(
                 onClick = onViewAllClick,
-                modifier = Modifier.testTag(TestTags.STATS_SKILL_MASTERY_VIEW_ALL)) {
+                modifier = Modifier.testTag(TestTags.STATS_SKILL_MASTERY_VIEW_ALL),
+            ) {
                 val buttonText = if (isExpanded) {
                     stringResource(R.string.stats_skill_mastery_show_less)
                 } else {
@@ -528,7 +545,8 @@ fun StatCard(
     testTag: String = ""
 ) {
     Card(
-        modifier = modifier.height(110.dp)
+        modifier = modifier
+            .height(110.dp)
             .testTag(testTag),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = containerColor)

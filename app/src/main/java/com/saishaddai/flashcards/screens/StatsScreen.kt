@@ -425,7 +425,7 @@ fun SkillMasterySection(
     }
 }
 
-data class MasteryData(val title: String, val percentage: Int, val level: String, val color: Color)
+data class MasteryData(val title: String, val percentage: Int, @androidx.annotation.StringRes val levelRes: Int, val color: Color)
 
 @Composable
 fun SkillCard(data: MasteryData) {
@@ -463,7 +463,7 @@ fun SkillCard(data: MasteryData) {
                 color = Color.White
             )
             Text(
-                text = data.level,
+                text = stringResource(data.levelRes),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = TextGray
@@ -656,8 +656,8 @@ fun StatsScreenPreview() {
                 StatsUiState(
                     weeklyActivity = listOf(10, 20, 15, 30, 25, 40, 35),
                     skillMastery = listOf(
-                        MasteryData("Language", 85, "Veteran", RoyalBlue),
-                        MasteryData("UI/UX", 60, "Sophomore", WarningOrange)
+                        MasteryData("Language", 85, R.string.mastery_level_veteran, RoyalBlue),
+                        MasteryData("UI/UX", 60, R.string.mastery_level_sophomore, WarningOrange)
                     ),
                     flashcardsViewed = "1,234",
                     currentStreak = "7",

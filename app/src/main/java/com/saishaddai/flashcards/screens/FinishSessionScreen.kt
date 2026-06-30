@@ -222,7 +222,10 @@ fun FinishSessionContent(
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
                     icon = Icons.Default.Star,
-                    text = stringResource(R.string.finish_current_level, sessionResult?.title ?: ""),
+                    text = stringResource(
+                        R.string.finish_current_level,
+                        sessionResult?.masteryLevel?.let { stringResource(it.nameRes) } ?: ""
+                    ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
@@ -346,7 +349,7 @@ fun FinishSessionScreenPreview() {
         FinishSessionScreen(
             uiState = UiState.Success(
                 FinishSessionUiData(
-                    sessionResult = SessionResult(5.0, 50.0, "Intermediate"),
+                    sessionResult = SessionResult(5.0, 50.0, com.saishaddai.flashcards.model.MasteryLevel.SOPHOMORE),
                     navigateToDeckList = false
                 )
             ),

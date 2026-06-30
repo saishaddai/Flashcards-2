@@ -1,8 +1,8 @@
 package com.saishaddai.flashcards.repository.impl
 
-import androidx.compose.ui.graphics.Color
 import com.saishaddai.flashcards.data.local.StudyDao
 import com.saishaddai.flashcards.model.DeckType
+import com.saishaddai.flashcards.model.MasteryLevel
 import com.saishaddai.flashcards.repository.StatsRepository
 import com.saishaddai.flashcards.screens.MasteryData
 import com.saishaddai.flashcards.ui.theme.*
@@ -42,11 +42,12 @@ class RoomStatsRepository(
             val allDecks = DeckType.values().map { type ->
                 val mastery = masteries.find { it.deckId == type.id }
                 if (mastery != null) {
+                    val masteryLevel = MasteryLevel.fromProgress(mastery.progress.toInt())
                     MasteryData(
                         title = mastery.deckName,
                         percentage = mastery.progress.toInt(),
-                        level = mastery.level,
-                        color = getMasteryColor(mastery.level)
+                        levelRes = masteryLevel.nameRes,
+                        color = masteryLevel.color
                     )
                 } else {
                     // Manual mapping for friendly names
@@ -72,27 +73,17 @@ class RoomStatsRepository(
                         DeckType.GRAPHQL -> "GraphQL"
                         DeckType.SENSORS -> "Sensors"
                     }
+                    val masteryLevel = MasteryLevel.NOT_STARTED
                     MasteryData(
                         title = friendlyName,
                         percentage = 0,
-                        level = "Novice",
-                        color = getMasteryColor("Novice")
+                        levelRes = masteryLevel.nameRes,
+                        color = masteryLevel.color
                     )
                 }
             }
 
             allDecks.sortedByDescending { it.percentage }
-        }
-    }
-
-    private fun getMasteryColor(level: String): Color {
-        return when (level) {
-            "Novice" -> TextGray
-            "Intermediate" -> WarningOrange
-            "Advanced" -> SuccessGreen
-            "Expert" -> RoyalBlue
-            "Master" -> Gold
-            else -> TextGray
         }
     }
 

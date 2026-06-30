@@ -55,7 +55,7 @@ class RoomStudyRepository(
             deckId = deck.id,
             deckName = deck.name,
             progress = result.newProgress,
-            level = result.title,
+            level = result.masteryLevel.name,
             lastReviewed = endTime
         )
 

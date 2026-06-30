@@ -1,5 +1,6 @@
 package com.saishaddai.flashcards.utils
 
+import com.saishaddai.flashcards.model.MasteryLevel
 import kotlin.math.min
 
 class SessionCalculator {
@@ -15,17 +16,10 @@ class SessionCalculator {
         // 2. Consistency multiplier
         val multiplier = 1 + (0.03 * daysStreak)
 
-        // 3. Monthly Bonus & Title
+        // 3. Monthly Bonus
         var bonus = 0.0
-        val title = when {
-            daysStreak >= 30 -> {
-                bonus = 10.0
-                "Master"
-            }
-            accumulatedProgress < 20 -> "Novice"
-            accumulatedProgress < 50 -> "Intermediate"
-            accumulatedProgress < 80 -> "Advanced"
-            else -> "Expert"
+        if (daysStreak >= 30) {
+            bonus = 10.0
         }
 
         // 4. Session progress
@@ -34,12 +28,15 @@ class SessionCalculator {
         // 5. New accumulated progress (max 100)
         val newProgress = min(accumulatedProgress + sessionProgress, 100.0)
 
-        return SessionResult(sessionProgress, newProgress, title)
+        // 6. Mastery Level
+        val masteryLevel = MasteryLevel.fromProgress(newProgress.toInt())
+
+        return SessionResult(sessionProgress, newProgress, masteryLevel)
     }
 }
 
 data class SessionResult(
     val sessionProgress: Double,
     val newProgress: Double,
-    val title: String
+    val masteryLevel: MasteryLevel
 )

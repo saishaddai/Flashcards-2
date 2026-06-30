@@ -48,7 +48,7 @@ class StatsVisualTest {
     fun skillCard_rendersCorrectPercentage() {
         val testPercentage = 75
         val testTitle = "Kotlin"
-        val testLevel = "Veteran"
+        val testLevelRes = com.saishaddai.flashcards.R.string.mastery_level_veteran
 
         composeTestRule.setContent {
             Flashcards2Theme {
@@ -56,7 +56,7 @@ class StatsVisualTest {
                     data = MasteryData(
                         title = testTitle,
                         percentage = testPercentage,
-                        level = testLevel,
+                        levelRes = testLevelRes,
                         color = androidx.compose.ui.graphics.Color.Blue
                     )
                 )
@@ -65,7 +65,7 @@ class StatsVisualTest {
 
         // Verify title and level
         composeTestRule.onNodeWithText(testTitle).assertIsDisplayed()
-        composeTestRule.onNodeWithText(testLevel).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Veteran").assertIsDisplayed()
         
         // Verify percentage text inside the progress indicator
         composeTestRule.onNodeWithText("$testPercentage%").assertIsDisplayed()

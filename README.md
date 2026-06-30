@@ -57,6 +57,14 @@ All the designs are provided by Google Stitch
     <td><img src="screenshots/flashcard.png" width="300"></td>
     <td><img src="screenshots/summary.png" width="300"></td>
   </tr>
+  <tr>
+    <td><b>Settings</b></td>
+    <td><b>Stats</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/settings.png" width="300"></td>
+    <td><img src="screenshots/stats.png" width="300"></td>
+  </tr>
   
   
 </table>

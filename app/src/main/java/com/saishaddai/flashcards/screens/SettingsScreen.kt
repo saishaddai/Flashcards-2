@@ -274,42 +274,17 @@ fun SettingsScreenContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             // NOTIFICATIONS
-            SectionHeader(title = stringResource(R.string.settings_section_notifications))
-            SwitchSetting(
-                icon = Icons.Default.Notifications,
-                title = stringResource(R.string.settings_daily_reminders),
-                description = stringResource(R.string.settings_daily_reminders_description),
-                checked = userSettings.studyReminders,
-                testTag = TestTags.SETTINGS_DAILY_REMINDERS,
-                onCheckedChange = { enabled ->
+            NotificationSettings(
+                userSettings = userSettings,
+                onStudyRemindersChanged = { enabled ->
                     if (enabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                     } else {
                         onStudyRemindersChanged(enabled)
                     }
-                }
-            )
-
-            ActionSetting(
-                icon = Icons.Default.AccessTime,
-                title = stringResource(R.string.settings_preferred_study_time),
-                description = stringResource(R.string.settings_preferred_study_time_description),
-                actionLabel = userSettings.preferredStudyTime,
-                testTag = TestTags.SETTINGS_STUDY_TIME,
-                enabled = userSettings.studyReminders,
-                modifier = Modifier.padding(start = 24.dp),
-                onClick = { showTimePicker.value = true }
-            )
-
-            SwitchSetting(
-                icon = Icons.AutoMirrored.Filled.VolumeUp,
-                title = stringResource(R.string.settings_notification_sound),
-                description = stringResource(R.string.settings_notification_sound_description),
-                checked = userSettings.notificationSound,
-                testTag = TestTags.SETTINGS_NOTIFICATION_SOUND,
-                enabled = userSettings.studyReminders,
-                modifier = Modifier.padding(start = 24.dp),
-                onCheckedChange = onNotificationSoundChanged
+                },
+                onTimePickerClick = { showTimePicker.value = true },
+                onNotificationSoundChanged = onNotificationSoundChanged
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -335,6 +310,46 @@ fun SettingsScreenContent(
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
+}
+
+@Composable
+fun NotificationSettings(
+    userSettings: UserSettings,
+    onStudyRemindersChanged: (Boolean) -> Unit,
+    onTimePickerClick: () -> Unit,
+    onNotificationSoundChanged: (Boolean) -> Unit
+) {
+    SectionHeader(title = stringResource(R.string.settings_section_notifications))
+    SwitchSetting(
+        icon = Icons.Default.Notifications,
+        title = stringResource(R.string.settings_daily_reminders),
+        description = stringResource(R.string.settings_daily_reminders_description),
+        checked = userSettings.studyReminders,
+        testTag = TestTags.SETTINGS_DAILY_REMINDERS,
+        onCheckedChange = onStudyRemindersChanged
+    )
+
+    ActionSetting(
+        icon = Icons.Default.AccessTime,
+        title = stringResource(R.string.settings_preferred_study_time),
+        description = stringResource(R.string.settings_preferred_study_time_description),
+        actionLabel = userSettings.preferredStudyTime,
+        testTag = TestTags.SETTINGS_STUDY_TIME,
+        enabled = userSettings.studyReminders,
+        modifier = Modifier.padding(start = 24.dp),
+        onClick = onTimePickerClick
+    )
+
+    SwitchSetting(
+        icon = Icons.AutoMirrored.Filled.VolumeUp,
+        title = stringResource(R.string.settings_notification_sound),
+        description = stringResource(R.string.settings_notification_sound_description),
+        checked = userSettings.notificationSound,
+        testTag = TestTags.SETTINGS_NOTIFICATION_SOUND,
+        enabled = userSettings.studyReminders,
+        modifier = Modifier.padding(start = 24.dp),
+        onCheckedChange = onNotificationSoundChanged
+    )
 }
 
 @Composable

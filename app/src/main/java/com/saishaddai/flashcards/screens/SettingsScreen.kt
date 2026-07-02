@@ -4,7 +4,13 @@ import android.Manifest
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,6 +43,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -61,6 +68,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -320,36 +328,98 @@ fun NotificationSettings(
     onNotificationSoundChanged: (Boolean) -> Unit
 ) {
     SectionHeader(title = stringResource(R.string.settings_section_notifications))
-    SwitchSetting(
-        icon = Icons.Default.Notifications,
-        title = stringResource(R.string.settings_daily_reminders),
-        description = stringResource(R.string.settings_daily_reminders_description),
-        checked = userSettings.studyReminders,
-        testTag = TestTags.SETTINGS_DAILY_REMINDERS,
-        onCheckedChange = onStudyRemindersChanged
-    )
+    
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize(),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (userSettings.studyReminders) DeepBlue else SurfaceDark
+        )
+    ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            // Master Toggle Row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Notifications,
+                        contentDescription = null,
+                        tint = RoyalBlue,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = stringResource(R.string.settings_daily_reminders),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                }
+                Switch(
+                    checked = userSettings.studyReminders,
+                    onCheckedChange = onStudyRemindersChanged,
+                    modifier = Modifier.testTag(TestTags.SETTINGS_DAILY_REMINDERS + "_switch"),
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color.White,
+                        checkedTrackColor = RoyalBlue,
+                        uncheckedThumbColor = Color.White,
+                        uncheckedTrackColor = SurfaceDark
+                    )
+                )
+            }
 
-    ActionSetting(
-        icon = Icons.Default.AccessTime,
-        title = stringResource(R.string.settings_preferred_study_time),
-        description = stringResource(R.string.settings_preferred_study_time_description),
-        actionLabel = userSettings.preferredStudyTime,
-        testTag = TestTags.SETTINGS_STUDY_TIME,
-        enabled = userSettings.studyReminders,
-        modifier = Modifier.padding(start = 24.dp),
-        onClick = onTimePickerClick
-    )
+            AnimatedVisibility(
+                visible = userSettings.studyReminders,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
+            ) {
+                Column {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        color = MutedBlue.copy(alpha = 0.5f)
+                    )
+                    
+                    ActionSetting(
+                        icon = Icons.Default.AccessTime,
+                        title = stringResource(R.string.settings_preferred_study_time),
+                        description = stringResource(R.string.settings_preferred_study_time_description),
+                        actionLabel = userSettings.preferredStudyTime,
+                        testTag = TestTags.SETTINGS_STUDY_TIME,
+                        onClick = onTimePickerClick
+                    )
 
-    SwitchSetting(
-        icon = Icons.AutoMirrored.Filled.VolumeUp,
-        title = stringResource(R.string.settings_notification_sound),
-        description = stringResource(R.string.settings_notification_sound_description),
-        checked = userSettings.notificationSound,
-        testTag = TestTags.SETTINGS_NOTIFICATION_SOUND,
-        enabled = userSettings.studyReminders,
-        modifier = Modifier.padding(start = 24.dp),
-        onCheckedChange = onNotificationSoundChanged
-    )
+                    SwitchSetting(
+                        icon = Icons.AutoMirrored.Filled.VolumeUp,
+                        title = stringResource(R.string.settings_notification_sound),
+                        description = stringResource(R.string.settings_notification_sound_description),
+                        checked = userSettings.notificationSound,
+                        testTag = TestTags.SETTINGS_NOTIFICATION_SOUND,
+                        onCheckedChange = onNotificationSoundChanged
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    Text(
+                        text = stringResource(
+                            R.string.settings_next_reminder,
+                            userSettings.preferredStudyTime,
+                            if (userSettings.notificationSound) " " else stringResource(R.string.settings_next_reminder_silent)
+                        ),
+                        color = TextGray,
+                        fontSize = 12.sp,
+                        fontStyle = FontStyle.Italic,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Start
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable

@@ -154,6 +154,8 @@
     <string name="settings_daily_reminders_description">Keep your streak alive</string>
     <string name="settings_notification_sound">Notification Sound</string>">
     <string name="settings_notification_sound_description">Play alert sound for reminders</string>
+    <string name="settings_next_reminder">Next reminder: Tomorrow at %1$s%2$s</string>
+    <string name="settings_next_reminder_silent"> (Silent)</string>
 
     <string name="settings_section_system">SYSTEM</string>
     <string name="settings_system_restart">Restart Mastery Experience</string>

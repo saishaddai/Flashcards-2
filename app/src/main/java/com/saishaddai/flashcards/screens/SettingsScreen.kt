@@ -1,10 +1,18 @@
 package com.saishaddai.flashcards.screens
 
 import android.Manifest
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,6 +45,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -59,8 +68,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -77,8 +88,14 @@ import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
+import com.saishaddai.flashcards.viewmodel.SettingsEvent
 import com.saishaddai.flashcards.viewmodel.SettingsUiData
+import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
+
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
 
 const val DEFAULT_FLASHCARDS_PER_SESSION = 20
 const val DEFAULT_DAILY_GOAL = 50
@@ -86,6 +103,7 @@ const val DEFAULT_DAILY_GOAL = 50
 @Composable
 fun SettingsScreen(
     uiState: UiState<SettingsUiData>,
+    events: Flow<SettingsEvent>,
     onRestartMasteryClicked: () -> Unit,
     onPreferredStudyTimeChanged: (Int, Int) -> Unit,
     onFlashcardsPerSessionChanged: (Int) -> Unit,
@@ -97,31 +115,50 @@ fun SettingsScreen(
     onNotificationSoundChanged: (Boolean) -> Unit,
     onRetry: () -> Unit
 ) {
-    when (uiState) {
-        is UiState.Loading -> {
-            FullLoader(message = null)
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(events) {
+        events.collect { event ->
+            when (event) {
+                is SettingsEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(event.message)
+                }
+            }
         }
-        is UiState.Success -> {
-            SettingsScreenContent(
-                isLoading = uiState.data.isActionLoading,
-                userSettings = uiState.data.userSettings,
-                onRestartMasteryClicked = onRestartMasteryClicked,
-                onPreferredStudyTimeChanged = onPreferredStudyTimeChanged,
-                onFlashcardsPerSessionChanged = onFlashcardsPerSessionChanged,
-                onDailyStudyGoalChanged = onDailyStudyGoalChanged,
-                onQuickStartChanged = onQuickStartChanged,
-                onShowAnswersChanged = onShowAnswersChanged,
-                onShowSuggestionsChanged = onShowSuggestionsChanged,
-                onStudyRemindersChanged = onStudyRemindersChanged,
-                onNotificationSoundChanged = onNotificationSoundChanged
-            )
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (uiState) {
+            is UiState.Loading -> {
+                FullLoader(message = null)
+            }
+            is UiState.Success -> {
+                SettingsScreenContent(
+                    isLoading = uiState.data.isActionLoading,
+                    userSettings = uiState.data.userSettings,
+                    onRestartMasteryClicked = onRestartMasteryClicked,
+                    onPreferredStudyTimeChanged = onPreferredStudyTimeChanged,
+                    onFlashcardsPerSessionChanged = onFlashcardsPerSessionChanged,
+                    onDailyStudyGoalChanged = onDailyStudyGoalChanged,
+                    onQuickStartChanged = onQuickStartChanged,
+                    onShowAnswersChanged = onShowAnswersChanged,
+                    onShowSuggestionsChanged = onShowSuggestionsChanged,
+                    onStudyRemindersChanged = onStudyRemindersChanged,
+                    onNotificationSoundChanged = onNotificationSoundChanged
+                )
+            }
+            is UiState.Error -> {
+                ErrorView(
+                    message = uiState.message,
+                    onRetry = onRetry
+                )
+            }
         }
-        is UiState.Error -> {
-            ErrorView(
-                message = uiState.message,
-                onRetry = onRetry
-            )
-        }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 
@@ -274,42 +311,17 @@ fun SettingsScreenContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             // NOTIFICATIONS
-            SectionHeader(title = stringResource(R.string.settings_section_notifications))
-            SwitchSetting(
-                icon = Icons.Default.Notifications,
-                title = stringResource(R.string.settings_daily_reminders),
-                description = stringResource(R.string.settings_daily_reminders_description),
-                checked = userSettings.studyReminders,
-                testTag = TestTags.SETTINGS_DAILY_REMINDERS,
-                onCheckedChange = { enabled ->
+            NotificationSettings(
+                userSettings = userSettings,
+                onStudyRemindersChanged = { enabled ->
                     if (enabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                     } else {
                         onStudyRemindersChanged(enabled)
                     }
-                }
-            )
-
-            ActionSetting(
-                icon = Icons.Default.AccessTime,
-                title = stringResource(R.string.settings_preferred_study_time),
-                description = stringResource(R.string.settings_preferred_study_time_description),
-                actionLabel = userSettings.preferredStudyTime,
-                testTag = TestTags.SETTINGS_STUDY_TIME,
-                enabled = userSettings.studyReminders,
-                modifier = Modifier.padding(start = 24.dp),
-                onClick = { showTimePicker.value = true }
-            )
-
-            SwitchSetting(
-                icon = Icons.AutoMirrored.Filled.VolumeUp,
-                title = stringResource(R.string.settings_notification_sound),
-                description = stringResource(R.string.settings_notification_sound_description),
-                checked = userSettings.notificationSound,
-                testTag = TestTags.SETTINGS_NOTIFICATION_SOUND,
-                enabled = userSettings.studyReminders,
-                modifier = Modifier.padding(start = 24.dp),
-                onCheckedChange = onNotificationSoundChanged
+                },
+                onTimePickerClick = { showTimePicker.value = true },
+                onNotificationSoundChanged = onNotificationSoundChanged
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -333,6 +345,120 @@ fun SettingsScreenContent(
             SettingsFooter()
             
             Spacer(modifier = Modifier.height(32.dp))
+        }
+    }
+}
+
+@Composable
+fun NotificationSettings(
+    userSettings: UserSettings,
+    onStudyRemindersChanged: (Boolean) -> Unit,
+    onTimePickerClick: () -> Unit,
+    onNotificationSoundChanged: (Boolean) -> Unit
+) {
+    val context = LocalContext.current
+    SectionHeader(title = stringResource(R.string.settings_section_notifications))
+    
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize(),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (userSettings.studyReminders) DeepBlue else SurfaceDark
+        )
+    ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            // Master Toggle Row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Notifications,
+                        contentDescription = null,
+                        tint = RoyalBlue,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = stringResource(R.string.settings_daily_reminders),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                }
+                Switch(
+                    checked = userSettings.studyReminders,
+                    onCheckedChange = onStudyRemindersChanged,
+                    modifier = Modifier.testTag(TestTags.SETTINGS_DAILY_REMINDERS + "_switch"),
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color.White,
+                        checkedTrackColor = RoyalBlue,
+                        uncheckedThumbColor = Color.White,
+                        uncheckedTrackColor = SurfaceDark
+                    )
+                )
+            }
+
+            AnimatedVisibility(
+                visible = userSettings.studyReminders,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
+            ) {
+                Column {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        color = MutedBlue.copy(alpha = 0.5f)
+                    )
+                    
+                    ActionSetting(
+                        icon = Icons.Default.AccessTime,
+                        title = stringResource(R.string.settings_preferred_study_time),
+                        description = stringResource(R.string.settings_preferred_study_time_description),
+                        actionLabel = userSettings.preferredStudyTime,
+                        testTag = TestTags.SETTINGS_STUDY_TIME,
+                        onClick = onTimePickerClick
+                    )
+
+                    SwitchSetting(
+                        icon = Icons.AutoMirrored.Filled.VolumeUp,
+                        title = stringResource(R.string.settings_notification_sound),
+                        description = stringResource(R.string.settings_notification_sound_description),
+                        checked = userSettings.notificationSound,
+                        testTag = TestTags.SETTINGS_NOTIFICATION_SOUND,
+                        onCheckedChange = { enabled ->
+                            onNotificationSoundChanged(enabled)
+                            if (enabled) {
+                                try {
+                                    val notification: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                                    val r = RingtoneManager.getRingtone(context, notification)
+                                    r.play()
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
+                            }
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    Text(
+                        text = stringResource(
+                            R.string.settings_next_reminder,
+                            userSettings.preferredStudyTime,
+                            if (userSettings.notificationSound) "" else stringResource(R.string.settings_next_reminder_silent)
+                        ),
+                        color = TextGray,
+                        fontSize = 12.sp,
+                        fontStyle = FontStyle.Italic,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Start
+                    )
+                }
+            }
         }
     }
 }
@@ -683,6 +809,7 @@ fun SettingsScreenPreview() {
                     isActionLoading = false
                 )
             ),
+            events = kotlinx.coroutines.flow.emptyFlow(),
             onRestartMasteryClicked = {},
             onPreferredStudyTimeChanged = { _, _ -> },
             onFlashcardsPerSessionChanged = {},

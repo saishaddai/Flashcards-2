@@ -177,6 +177,7 @@ fun NavigationWrapper() {
 
                     SettingsScreen(
                         uiState = uiState,
+                        events = viewModel.events,
                         onRestartMasteryClicked = viewModel::onRestartMasteryClicked,
                         onPreferredStudyTimeChanged = viewModel::onPreferredStudyTimeChanged,
                         onFlashcardsPerSessionChanged = viewModel::onFlashcardsPerSessionChanged,

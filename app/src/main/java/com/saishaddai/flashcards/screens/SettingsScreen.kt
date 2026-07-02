@@ -1,6 +1,8 @@
 package com.saishaddai.flashcards.screens
 
 import android.Manifest
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -66,6 +68,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -85,8 +88,14 @@ import com.saishaddai.flashcards.screens.commons.Header
 import com.saishaddai.flashcards.ui.theme.*
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
+import com.saishaddai.flashcards.viewmodel.SettingsEvent
 import com.saishaddai.flashcards.viewmodel.SettingsUiData
+import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
+
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
 
 const val DEFAULT_FLASHCARDS_PER_SESSION = 20
 const val DEFAULT_DAILY_GOAL = 50
@@ -94,6 +103,7 @@ const val DEFAULT_DAILY_GOAL = 50
 @Composable
 fun SettingsScreen(
     uiState: UiState<SettingsUiData>,
+    events: Flow<SettingsEvent>,
     onRestartMasteryClicked: () -> Unit,
     onPreferredStudyTimeChanged: (Int, Int) -> Unit,
     onFlashcardsPerSessionChanged: (Int) -> Unit,
@@ -105,31 +115,50 @@ fun SettingsScreen(
     onNotificationSoundChanged: (Boolean) -> Unit,
     onRetry: () -> Unit
 ) {
-    when (uiState) {
-        is UiState.Loading -> {
-            FullLoader(message = null)
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(events) {
+        events.collect { event ->
+            when (event) {
+                is SettingsEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(event.message)
+                }
+            }
         }
-        is UiState.Success -> {
-            SettingsScreenContent(
-                isLoading = uiState.data.isActionLoading,
-                userSettings = uiState.data.userSettings,
-                onRestartMasteryClicked = onRestartMasteryClicked,
-                onPreferredStudyTimeChanged = onPreferredStudyTimeChanged,
-                onFlashcardsPerSessionChanged = onFlashcardsPerSessionChanged,
-                onDailyStudyGoalChanged = onDailyStudyGoalChanged,
-                onQuickStartChanged = onQuickStartChanged,
-                onShowAnswersChanged = onShowAnswersChanged,
-                onShowSuggestionsChanged = onShowSuggestionsChanged,
-                onStudyRemindersChanged = onStudyRemindersChanged,
-                onNotificationSoundChanged = onNotificationSoundChanged
-            )
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (uiState) {
+            is UiState.Loading -> {
+                FullLoader(message = null)
+            }
+            is UiState.Success -> {
+                SettingsScreenContent(
+                    isLoading = uiState.data.isActionLoading,
+                    userSettings = uiState.data.userSettings,
+                    onRestartMasteryClicked = onRestartMasteryClicked,
+                    onPreferredStudyTimeChanged = onPreferredStudyTimeChanged,
+                    onFlashcardsPerSessionChanged = onFlashcardsPerSessionChanged,
+                    onDailyStudyGoalChanged = onDailyStudyGoalChanged,
+                    onQuickStartChanged = onQuickStartChanged,
+                    onShowAnswersChanged = onShowAnswersChanged,
+                    onShowSuggestionsChanged = onShowSuggestionsChanged,
+                    onStudyRemindersChanged = onStudyRemindersChanged,
+                    onNotificationSoundChanged = onNotificationSoundChanged
+                )
+            }
+            is UiState.Error -> {
+                ErrorView(
+                    message = uiState.message,
+                    onRetry = onRetry
+                )
+            }
         }
-        is UiState.Error -> {
-            ErrorView(
-                message = uiState.message,
-                onRetry = onRetry
-            )
-        }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 
@@ -327,6 +356,7 @@ fun NotificationSettings(
     onTimePickerClick: () -> Unit,
     onNotificationSoundChanged: (Boolean) -> Unit
 ) {
+    val context = LocalContext.current
     SectionHeader(title = stringResource(R.string.settings_section_notifications))
     
     Card(
@@ -399,7 +429,18 @@ fun NotificationSettings(
                         description = stringResource(R.string.settings_notification_sound_description),
                         checked = userSettings.notificationSound,
                         testTag = TestTags.SETTINGS_NOTIFICATION_SOUND,
-                        onCheckedChange = onNotificationSoundChanged
+                        onCheckedChange = { enabled ->
+                            onNotificationSoundChanged(enabled)
+                            if (enabled) {
+                                try {
+                                    val notification: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                                    val r = RingtoneManager.getRingtone(context, notification)
+                                    r.play()
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
+                            }
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -408,7 +449,7 @@ fun NotificationSettings(
                         text = stringResource(
                             R.string.settings_next_reminder,
                             userSettings.preferredStudyTime,
-                            if (userSettings.notificationSound) " " else stringResource(R.string.settings_next_reminder_silent)
+                            if (userSettings.notificationSound) "" else stringResource(R.string.settings_next_reminder_silent)
                         ),
                         color = TextGray,
                         fontSize = 12.sp,
@@ -768,6 +809,7 @@ fun SettingsScreenPreview() {
                     isActionLoading = false
                 )
             ),
+            events = kotlinx.coroutines.flow.emptyFlow(),
             onRestartMasteryClicked = {},
             onPreferredStudyTimeChanged = { _, _ -> },
             onFlashcardsPerSessionChanged = {},

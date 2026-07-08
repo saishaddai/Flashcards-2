@@ -45,7 +45,7 @@ val appModule = module {
     single<SessionRepository> { RoomSessionRepository(get()) }
     single<DeckRepository<Deck>> { OfflineDeckRepository(get(), get()) }
     single<StatsRepository> { RoomStatsRepository(get()) }
-    single<SettingsRepository> { DataStoreSettingsRepository(androidContext()) }
+    single<SettingsRepository> { DataStoreSettingsRepository(androidContext(), get(), get()) }
     single<StudyRepository> { RoomStudyRepository(get(), get()) }
 
     // ViewModels

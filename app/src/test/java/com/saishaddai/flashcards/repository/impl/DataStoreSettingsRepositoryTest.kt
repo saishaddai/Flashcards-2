@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
+import com.saishaddai.flashcards.data.local.SessionSummaryDao
+import com.saishaddai.flashcards.data.local.StudyDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -23,6 +25,7 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DataStoreSettingsRepositoryTest {
@@ -36,6 +39,8 @@ class DataStoreSettingsRepositoryTest {
     private lateinit var dataStore: DataStore<Preferences>
     private lateinit var repository: DataStoreSettingsRepository
     private lateinit var context: Context
+    private val studyDao: StudyDao = mock()
+    private val sessionSummaryDao: SessionSummaryDao = mock()
 
     @Before
     fun setUp() {
@@ -54,7 +59,7 @@ class DataStoreSettingsRepositoryTest {
         // But the current implementation uses the extension property Context.dataStore.
         // To make it testable, we'll need to refactor DataStoreSettingsRepository slightly
         // to accept DataStore as a dependency.
-        repository = DataStoreSettingsRepository(context, dataStore)
+        repository = DataStoreSettingsRepository(context, studyDao, sessionSummaryDao, dataStore)
     }
 
     @After
@@ -102,10 +107,16 @@ class DataStoreSettingsRepositoryTest {
     }
 
     @Test
-    fun `restartMasteryExperience clears values`() = runTest(testDispatcher) {
+    fun `restartMasteryExperience calls delete on DAOs but preserves settings`() = runTest(testDispatcher) {
         repository.saveFlashcardsPerSession(40)
         repository.restartMasteryExperience()
+        
+        verify(studyDao).deleteAllSessions()
+        verify(studyDao).deleteAllDeckMastery()
+        verify(studyDao).deleteAllDailyActivity()
+        verify(sessionSummaryDao).deleteAllSessions()
+        
         val settings = repository.getSettings().first()
-        assertEquals(20, settings.flashcardsPerSession) // Should return to default
+        assertEquals(40, settings.flashcardsPerSession) // Settings should be preserved
     }
 }

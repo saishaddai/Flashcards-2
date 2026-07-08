@@ -9,6 +9,8 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.saishaddai.flashcards.data.local.SessionSummaryDao
+import com.saishaddai.flashcards.data.local.StudyDao
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.UserSettings
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +22,8 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 
 class DataStoreSettingsRepository(
     private val context: Context,
+    private val studyDao: StudyDao,
+    private val sessionSummaryDao: SessionSummaryDao,
     private val internalDataStore: DataStore<Preferences>? = null
 ) : SettingsRepository {
 
@@ -61,7 +65,10 @@ class DataStoreSettingsRepository(
         }
 
     override suspend fun restartMasteryExperience() {
-        dataStore.edit { it.clear() }
+        studyDao.deleteAllSessions()
+        studyDao.deleteAllDeckMastery()
+        studyDao.deleteAllDailyActivity()
+        sessionSummaryDao.deleteAllSessions()
     }
 
     override suspend fun saveFlashcardsPerSession(count: Int) {

@@ -51,4 +51,13 @@ interface StudyDao {
         insertDeckMastery(deckMastery)
         insertDailyActivity(dailyActivity)
     }
+
+    @Query("DELETE FROM study_sessions")
+    suspend fun deleteAllSessions()
+
+    @Query("DELETE FROM deck_mastery")
+    suspend fun deleteAllDeckMastery()
+
+    @Query("DELETE FROM daily_activity")
+    suspend fun deleteAllDailyActivity()
 }

@@ -70,6 +70,7 @@ fun FinishSessionScreen(
     cardsReviewed: Int,
     startTime: Long,
     endTime: Long,
+    totalTimeMillis: Long,
     onFinishSession: () -> Unit,
     onShareSummary: (Deck) -> Unit,
     onBackToDecksClicked: () -> Unit,
@@ -93,6 +94,7 @@ fun FinishSessionScreen(
                 cardsReviewed = cardsReviewed,
                 startTime = startTime,
                 endTime = endTime,
+                totalTimeMillis = totalTimeMillis,
                 sessionResult = uiState.data.sessionResult,
                 onBackToDecksClicked = onBackToDecksClicked,
                 onShareSummary = onShareSummary
@@ -114,6 +116,7 @@ fun FinishSessionContent(
     cardsReviewed: Int,
     startTime: Long,
     endTime: Long,
+    totalTimeMillis: Long,
     sessionResult: SessionResult?,
     onBackToDecksClicked: () -> Unit,
     onShareSummary: (Deck) -> Unit
@@ -202,7 +205,7 @@ fun FinishSessionContent(
                         unit = stringResource(R.string.finish_card_unit_cards),
                         icon = Icons.Default.Style
                     )
-                    val durationMins = ((endTime - startTime) / (1000 * 60)).toInt().coerceAtLeast(1)
+                    val durationMins = (totalTimeMillis / (1000 * 60)).toInt().coerceAtLeast(1)
                     InfoCard(
                         title = stringResource(R.string.finish_card_label_duration),
                         value = durationMins.toString(),
@@ -357,6 +360,7 @@ fun FinishSessionScreenPreview() {
             cardsReviewed = 20,
             startTime = 0L,
             endTime = 1000L * 60 * 12,
+            totalTimeMillis = 1000L * 60 * 10,
             onFinishSession = {},
             onShareSummary = {},
             onBackToDecksClicked = {},

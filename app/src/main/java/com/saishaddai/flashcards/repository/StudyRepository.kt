@@ -8,7 +8,8 @@ interface StudyRepository {
         deck: Deck,
         cardsReviewed: Int,
         startTime: Long,
-        endTime: Long
+        endTime: Long,
+        durationMillis: Long
     ): SessionResult
     
     suspend fun getCurrentStreak(): Int

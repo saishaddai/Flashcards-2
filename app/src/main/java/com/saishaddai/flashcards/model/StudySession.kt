@@ -10,6 +10,7 @@ data class StudySession(
     val cardsReviewed: Int,
     val startTime: Long,
     val endTime: Long,
+    val durationMillis: Long,
     val xpGained: Double,
     val streakAtTime: Int
 )

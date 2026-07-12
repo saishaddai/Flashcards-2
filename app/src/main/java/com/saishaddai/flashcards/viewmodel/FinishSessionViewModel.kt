@@ -22,11 +22,11 @@ class FinishSessionViewModel(
     private val _uiState = MutableStateFlow<UiState<FinishSessionUiData>>(UiState.Loading)
     val uiState: StateFlow<UiState<FinishSessionUiData>> = _uiState.asStateFlow()
 
-    fun saveSession(deck: Deck, cardsReviewed: Int, startTime: Long, endTime: Long) {
+    fun saveSession(deck: Deck, cardsReviewed: Int, startTime: Long, endTime: Long, durationMillis: Long) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             try {
-                val result = studyRepository.completeSession(deck, cardsReviewed, startTime, endTime)
+                val result = studyRepository.completeSession(deck, cardsReviewed, startTime, endTime, durationMillis)
                 _uiState.value = UiState.Success(FinishSessionUiData(sessionResult = result))
             } catch (e: Exception) {
                 _uiState.value = UiState.Error("Failed to save session", e)

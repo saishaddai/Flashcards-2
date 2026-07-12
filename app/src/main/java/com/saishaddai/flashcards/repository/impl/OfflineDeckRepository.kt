@@ -10,6 +10,9 @@ import com.saishaddai.flashcards.repository.SessionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import timber.log.Timber
+
+import kotlinx.coroutines.flow.firstOrNull
 
 class OfflineDeckRepository(
     private val flashcardRepository: FlashcardRepository<DeckType, Flashcard>,
@@ -17,13 +20,23 @@ class OfflineDeckRepository(
 ) : DeckRepository<Deck> {
 
     override suspend fun getData(): List<Deck> = withContext(Dispatchers.IO) {
-        val allSessions = sessionRepository.getAllSessions().first()
+        val allSessions = try {
+            Timber.d("Fetching all sessions...")
+            sessionRepository.getAllSessions().firstOrNull() ?: emptyList()
+        } catch (e: Exception) {
+            Timber.e(e, "Error fetching sessions in OfflineDeckRepository")
+            emptyList()
+        }
+
+        Timber.d("Mapping decks (count: ${decks.size})...")
         decks.map { deck ->
             val mastery = allSessions.find { it.deckId == deck.id }?.currentXP ?: 0
-            val cardCount = if (deck.cardCount == 0) {
-                flashcardRepository.getDataCount(DeckType.fromId(deck.id))
-            } else {
-                deck.cardCount
+            val cardCount = try {
+                val deckType = DeckType.fromId(deck.id)
+                flashcardRepository.getDataCount(deckType)
+            } catch (e: Exception) {
+                Timber.e(e, "Error getting card count for deck ${deck.id}")
+                0
             }
             deck.copy(mastery = mastery, cardCount = cardCount)
         }

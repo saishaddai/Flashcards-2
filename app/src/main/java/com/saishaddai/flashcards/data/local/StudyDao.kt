@@ -38,7 +38,7 @@ interface StudyDao {
     @Query("SELECT * FROM daily_activity ORDER BY date DESC LIMIT 30")
     fun getRecentActivity(): Flow<List<DailyActivity>>
 
-    @Query("SELECT SUM(endTime - startTime) FROM study_sessions")
+    @Query("SELECT SUM(durationMillis) FROM study_sessions")
     fun getTotalStudyTimeMillis(): Flow<Long?>
 
     @Transaction

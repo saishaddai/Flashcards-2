@@ -26,7 +26,8 @@ class RoomStudyRepository(
         deck: Deck,
         cardsReviewed: Int,
         startTime: Long,
-        endTime: Long
+        endTime: Long,
+        durationMillis: Long
     ): SessionResult {
         val today = dateFormatter.format(Calendar.getInstance().time)
         val streak = calculateStreak()
@@ -47,6 +48,7 @@ class RoomStudyRepository(
             cardsReviewed = cardsReviewed,
             startTime = startTime,
             endTime = endTime,
+            durationMillis = durationMillis,
             xpGained = result.sessionProgress,
             streakAtTime = streak
         )

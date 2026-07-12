@@ -56,6 +56,7 @@ import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.utils.getMasteryLevel
 import com.saishaddai.flashcards.viewmodel.DecksUiState
+import timber.log.Timber
 
 @Composable
 fun DeckListScreen(

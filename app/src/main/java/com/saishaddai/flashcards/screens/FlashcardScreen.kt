@@ -45,6 +45,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.Flashcard
@@ -65,8 +69,25 @@ fun FlashcardScreen(
     onFinishSession: (Int) -> Unit,
     onCancelSessionClick: () -> Unit,
     onFinishedSessionClick: () -> Unit,
+    onStartTimer: () -> Unit,
+    onPauseTimer: () -> Unit,
     onRetry: () -> Unit
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> onStartTimer()
+                Lifecycle.Event.ON_PAUSE -> onPauseTimer()
+                else -> {}
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     when (uiState) {
         is UiState.Loading -> {
             FullLoader(message = stringResource(R.string.loading))
@@ -428,6 +449,8 @@ fun FlashcardScreenPreview() {
             onFinishSession = {},
             onCancelSessionClick = {},
             onFinishedSessionClick = {},
+            onStartTimer = {},
+            onPauseTimer = {},
             onRetry = {}
         )
     }

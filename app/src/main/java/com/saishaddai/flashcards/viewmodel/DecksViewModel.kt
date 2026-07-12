@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+import timber.log.Timber
+
 data class DecksUiState(
     val decks: List<Deck> = emptyList(),
     val showEmptyDeckDialog: Boolean = false
@@ -44,8 +46,10 @@ class DecksViewModel(
                     emptyList()
                 }
                 _uiState.value = UiState.Success(DecksUiState(decks = finalDecks))
-            } catch (e: Exception) {
-                _uiState.value = UiState.Error("Failed to load decks", e)
+            } catch (e: Throwable) {
+                Timber.e(e, "Failed to load decks")
+                val errorMessage = "Critical Error:\n${e.javaClass.simpleName}\n${e.message ?: "No message"}"
+                _uiState.value = UiState.Error(errorMessage, e)
             }
         }
     }

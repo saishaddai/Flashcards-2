@@ -32,8 +32,23 @@ class FlashcardViewModel(
     private var startTime: Long = System.currentTimeMillis()
     private var cardsReviewedCount: Int = 0
     private var endTime: Long = 0
+    private var totalActiveTimeMillis: Long = 0L
+    private var lastStartTime: Long = 0L
 
-    fun getSessionSummary() = Triple(cardsReviewedCount, startTime, endTime)
+    fun getSessionSummary() = Quadruple(cardsReviewedCount, startTime, endTime, totalActiveTimeMillis)
+
+    fun startTimer() {
+        if (lastStartTime == 0L) {
+            lastStartTime = System.currentTimeMillis()
+        }
+    }
+
+    fun pauseTimer() {
+        if (lastStartTime != 0L) {
+            totalActiveTimeMillis += System.currentTimeMillis() - lastStartTime
+            lastStartTime = 0L
+        }
+    }
 
     init {
         loadFlashcards()
@@ -54,6 +69,7 @@ class FlashcardViewModel(
                         showAnswer = settings.showAnswers
                     )
                 )
+                startTimer() // Start timer once loaded
             } catch (e: Exception) {
                 _uiState.value = UiState.Error("Failed to load flashcards", e)
             }
@@ -79,6 +95,7 @@ class FlashcardViewModel(
     }
 
     fun onFinishSession(finalPage: Int) {
+        pauseTimer()
         cardsReviewedCount = maxOf(cardsReviewedCount, finalPage + 1)
         endTime = System.currentTimeMillis()
         val currentState = _uiState.value
@@ -86,4 +103,13 @@ class FlashcardViewModel(
             _uiState.value = UiState.Success(currentState.data.copy(isFinished = true))
         }
     }
+}
+
+data class Quadruple<out A, out B, out C, out D>(
+    val first: A,
+    val second: B,
+    val third: C,
+    val fourth: D
+) : java.io.Serializable {
+    override fun toString(): String = "($first, $second, $third, $fourth)"
 }

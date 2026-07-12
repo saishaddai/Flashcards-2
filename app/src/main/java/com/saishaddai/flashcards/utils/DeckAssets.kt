@@ -4,6 +4,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BubbleChart
 import androidx.compose.material.icons.filled.ForkRight
+import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.filled.Hub
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PhoneAndroid
@@ -34,8 +36,8 @@ object DeckAssets {
             LIBRARIES.id -> R.drawable.libraries_icon
             DESIGN_PATTERNS.id -> R.drawable.patterns_icon
             COROUTINES.id -> Icons.Default.ForkRight
-            FIREBASE.id -> R.drawable.firebase_icon
-            GRAPHQL.id -> R.drawable.graphql_icon
+            FIREBASE.id -> Icons.Default.Cloud
+            GRAPHQL.id -> Icons.Default.Hub
             SENSORS.id -> Icons.Default.Sensors
             else -> Icons.Default.Add
         }

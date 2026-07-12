@@ -90,7 +90,7 @@ fun NavigationWrapper() {
                     val uiState by viewModel.uiState.collectAsState()
 
                     androidx.compose.runtime.LaunchedEffect(Unit) {
-                        viewModel.saveSession(route.deck, route.cardsReviewed, route.startTime, route.endTime)
+                        viewModel.saveSession(route.deck, route.cardsReviewed, route.startTime, route.endTime, route.durationMillis)
                     }
 
                     FinishSessionScreen(
@@ -99,6 +99,7 @@ fun NavigationWrapper() {
                         cardsReviewed = route.cardsReviewed,
                         startTime = route.startTime,
                         endTime = route.endTime,
+                        totalTimeMillis = route.durationMillis,
                         onFinishSession = {
                             backStack.resetTo(DeckList)
                         },
@@ -106,7 +107,13 @@ fun NavigationWrapper() {
                         onBackToDecksClicked = viewModel::onBackToDecksClicked,
                         onNavigationHandled = viewModel::onNavigationHandled,
                         onRetry = {
-                            viewModel.saveSession(route.deck, route.cardsReviewed, route.startTime, route.endTime)
+                            viewModel.saveSession(
+                                route.deck,
+                                route.cardsReviewed,
+                                route.startTime,
+                                route.endTime,
+                                route.durationMillis
+                            )
                         }
                     )
                 }
@@ -125,9 +132,11 @@ fun NavigationWrapper() {
                         onFinishSession = viewModel::onFinishSession,
                         onCancelSessionClick = { backStack.navigateBack() },
                         onFinishedSessionClick = {
-                            val (reviewed, start, end) = viewModel.getSessionSummary()
-                            backStack.navigateTo(FinishSession(route.deck, reviewed, start, end))
+                            val (reviewed, start, end, duration) = viewModel.getSessionSummary()
+                            backStack.navigateTo(FinishSession(route.deck, reviewed, start, end, duration))
                         },
+                        onStartTimer = viewModel::startTimer,
+                        onPauseTimer = viewModel::pauseTimer,
                         onRetry = viewModel::loadFlashcards
                     )
                 }

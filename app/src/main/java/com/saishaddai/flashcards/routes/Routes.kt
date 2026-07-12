@@ -26,6 +26,7 @@ sealed interface Route : NavKey {
         val deck: Deck,
         val cardsReviewed: Int,
         val startTime: Long,
-        val endTime: Long
+        val endTime: Long,
+        val durationMillis: Long
     ) : Route
 }

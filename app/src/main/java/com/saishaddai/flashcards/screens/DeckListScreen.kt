@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -289,11 +290,13 @@ fun DeckCard(deck: Deck, onClick: () -> Unit, onDoubleClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(150.dp)
-            .semantics { selected = deck.isSelected }
             .combinedClickable(
                 onClick = onClick,
-                onDoubleClick = onDoubleClick
-            ),
+                onDoubleClick = onDoubleClick,
+                role = Role.Button
+            )
+            .testTag("${TestTags.DECKS_LIST_CARD}_${deck.id}")
+            .semantics(mergeDescendants = true) { selected = deck.isSelected },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = SurfaceDark

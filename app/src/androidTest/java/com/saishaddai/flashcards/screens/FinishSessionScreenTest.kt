@@ -3,13 +3,11 @@ package com.saishaddai.flashcards.screens
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
-import com.saishaddai.flashcards.utils.TestTags
 import org.junit.Rule
 import org.junit.Test
 
@@ -33,6 +31,7 @@ class FinishSessionScreenTest {
                     cardsReviewed = 20,
                     startTime = 0L,
                     endTime = 1000L * 60 * 12, // 12 mins
+                    totalTimeMillis = 1000L * 60 * 12,
                     sessionResult = null,
                     onBackToDecksClicked = {},
                     onShareSummary = {}
@@ -67,6 +66,7 @@ class FinishSessionScreenTest {
                     cardsReviewed = 10,
                     startTime = 0L,
                     endTime = 1000L,
+                    totalTimeMillis = 1000L,
                     sessionResult = null,
                     onBackToDecksClicked = { backClicked = true },
                     onShareSummary = {}
@@ -92,6 +92,7 @@ class FinishSessionScreenTest {
                     cardsReviewed = 10,
                     startTime = 0L,
                     endTime = 1000L,
+                    totalTimeMillis = 1000L,
                     sessionResult = null,
                     onBackToDecksClicked = { backClicked = true },
                     onShareSummary = {}
@@ -114,6 +115,7 @@ class FinishSessionScreenTest {
                     cardsReviewed = 10,
                     startTime = 0L,
                     endTime = 1000L,
+                    totalTimeMillis = 1000L,
                     sessionResult = null,
                     onBackToDecksClicked = {},
                     onShareSummary = { shareSummaryCalled = true }

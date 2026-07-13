@@ -13,6 +13,7 @@ object TestTags {
     const val PROMO_CARD = "promo_card"
 
     //Deck List Screen
+    const val DECKS_LIST_CARD = "deck_card"
     const val DECKS_LIST_DECK_TITLE = "deck_title"
     const val DECKS_LIST_DECK_COUNT = "deck_count"
     const val DECKS_EMPTY_STATE = "decks_empty_state"

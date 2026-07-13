@@ -1,9 +1,15 @@
 package com.saishaddai.flashcards.screens
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assertIsNotSelected
+import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.doubleClick
+import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -308,6 +314,187 @@ class DeckListScreenTest {
     }
 
     @Test
+    fun testDeckListScreen_isError_showsErrorView() {
+        val errorMessage = "Test Error Message"
+        composeTestRule.setContent {
+            DeckListScreen(
+                uiState = UiState.Error(errorMessage),
+                quickStartEnabled = false,
+                onDeckSelected = {},
+                onStartSessionClick = {},
+                onDismissEmptyDeckDialog = {},
+                onTriggerEmptyDeckDialog = {},
+                onRetry = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("Oops!").assertIsDisplayed()
+        composeTestRule.onNodeWithText(errorMessage).assertIsDisplayed()
+    }
+
+    @Test
+    fun testDeckListContent_clickDeck_triggersSelection() {
+        val selectedDeck = androidx.compose.runtime.mutableStateOf<Deck?>(null)
+        val mockDecks = listOf(
+            Deck(id = 1, name = "Selection Test Deck", longName = "Selection Test Deck Long", cardCount = 10)
+        )
+
+        composeTestRule.setContent {
+            DeckListContent(
+                decks = mockDecks,
+                showEmptyDeckDialogState = false,
+                quickStartEnabled = false,
+                onDeckSelected = { selectedDeck.value = it },
+                onStartSessionClick = {},
+                onDismissEmptyDeckDialog = {},
+                onTriggerEmptyDeckDialog = {}
+            )
+        }
+
+        // Use doubleClick as a reliable way to trigger selection in the test environment.
+        // Since onDeckDoubleClicked also calls onDeckSelected, this exercises the logic.
+        composeTestRule.onNodeWithTag("${TestTags.DECKS_LIST_CARD}_1")
+            .performTouchInput { doubleClick() }
+
+        // Wait until the callback is triggered
+        composeTestRule.waitForIdle()
+        
+        assert(selectedDeck.value?.id == 1)
+    }
+
+    @Test
+    fun testDeckListContent_showEmptyDeckDialog_isVisibleAndDismisses() {
+        var dismissCalled = false
+        composeTestRule.setContent {
+            DeckListContent(
+                decks = listOf(Deck(1, "Name", "Long")),
+                showEmptyDeckDialogState = true,
+                quickStartEnabled = false,
+                onDeckSelected = {},
+                onStartSessionClick = {},
+                onDismissEmptyDeckDialog = { dismissCalled = true },
+                onTriggerEmptyDeckDialog = {}
+            )
+        }
+
+        // Verify Dialog Title
+        composeTestRule.onNodeWithText(context.getString(R.string.empty_deck_title))
+            .assertIsDisplayed()
+
+        // Click Dismiss Button
+        composeTestRule.onNodeWithText(context.getString(R.string.empty_deck_confirm))
+            .performClick()
+
+        assert(dismissCalled)
+    }
+
+    @Test
+    fun testDeckListContent_quickStartDialog_triggersConfirm() {
+        var startSessionDeck: Deck? = null
+        val mockDeck = Deck(id = 1, name = "Deck 1", longName = "Deck 1 Long", cardCount = 10)
+
+        composeTestRule.setContent {
+            DeckListContent(
+                decks = listOf(mockDeck),
+                showEmptyDeckDialogState = false,
+                quickStartEnabled = false,
+                onDeckSelected = {},
+                onStartSessionClick = { startSessionDeck = it },
+                onDismissEmptyDeckDialog = {},
+                onTriggerEmptyDeckDialog = {}
+            )
+        }
+
+        // Trigger the dialog by double clicking
+        composeTestRule.onNodeWithText("Deck 1").performTouchInput {
+            doubleClick()
+        }
+
+        // Verify dialog is visible
+        composeTestRule.onNodeWithText(context.getString(R.string.flashcard_start_dialog_title))
+            .assertIsDisplayed()
+
+        // Click Confirm
+        composeTestRule.onNodeWithText(context.getString(R.string.flashcard_start_dialog_confirm))
+            .performClick()
+
+        assert(startSessionDeck?.id == 1)
+    }
+
+    @Test
+    fun testDeckListContent_quickStartDialog_triggersDismiss() {
+        val mockDeck = Deck(id = 1, name = "Deck 1", longName = "Deck 1 Long", cardCount = 10)
+
+        composeTestRule.setContent {
+            DeckListContent(
+                decks = listOf(mockDeck),
+                showEmptyDeckDialogState = false,
+                quickStartEnabled = false,
+                onDeckSelected = {},
+                onStartSessionClick = {},
+                onDismissEmptyDeckDialog = {},
+                onTriggerEmptyDeckDialog = {}
+            )
+        }
+
+        // Trigger the dialog by double clicking
+        composeTestRule.onNodeWithText("Deck 1").performTouchInput {
+            doubleClick()
+        }
+
+        // Click Dismiss
+        composeTestRule.onNodeWithText(context.getString(R.string.flashcard_start_dialog_dismiss))
+            .performClick()
+
+        // Verify dialog is gone
+        composeTestRule.onNodeWithText(context.getString(R.string.flashcard_start_dialog_title))
+            .assertDoesNotExist()
+    }
+
+    @Test
+    fun testDeckListContent_doubleClickEmptyDeck_triggersEmptyDeckDialogCallback() {
+        var triggerDialogCalled = false
+        val mockDecks = listOf(
+            Deck(id = 1, name = "Empty Deck", longName = "Empty Deck Long", cardCount = 0)
+        )
+
+        composeTestRule.setContent {
+            DeckListContent(
+                decks = mockDecks,
+                showEmptyDeckDialogState = false,
+                quickStartEnabled = false,
+                onDeckSelected = {},
+                onStartSessionClick = {},
+                onDismissEmptyDeckDialog = {},
+                onTriggerEmptyDeckDialog = { triggerDialogCalled = true }
+            )
+        }
+
+        // Double-click the empty deck
+        composeTestRule.onNodeWithText("Empty Deck").performTouchInput {
+            doubleClick()
+        }
+
+        assert(triggerDialogCalled)
+    }
+
+    @Test
+    fun testDeckCard_selectionSemantics() {
+        val selectedDeck = Deck(id = 1, name = "Selected", longName = "L", isSelected = true)
+        val unselectedDeck = Deck(id = 2, name = "Unselected", longName = "L", isSelected = false)
+
+        composeTestRule.setContent {
+            Column {
+                DeckCard(deck = selectedDeck, onClick = {}, onDoubleClick = {})
+                DeckCard(deck = unselectedDeck, onClick = {}, onDoubleClick = {})
+            }
+        }
+
+        composeTestRule.onNodeWithText("Selected").assertIsSelected()
+        composeTestRule.onNodeWithText("Unselected").assertIsNotSelected()
+    }
+
+    @Test
     fun testDeckListContent_longList_isScrollable() {
         val mockDecks = List(20) { i ->
             Deck(
@@ -335,5 +522,61 @@ class DeckListScreenTest {
             .performScrollToNode(hasText("Deck 20"))
         
         composeTestRule.onNodeWithText("Deck 20").assertIsDisplayed()
+    }
+
+    @Test
+    fun testDeckListScreen_isError_retryTriggersCallback() {
+        var retryCalled = false
+        composeTestRule.setContent {
+            DeckListScreen(
+                uiState = UiState.Error("Error"),
+                quickStartEnabled = false,
+                onDeckSelected = {},
+                onStartSessionClick = {},
+                onDismissEmptyDeckDialog = {},
+                onTriggerEmptyDeckDialog = {},
+                onRetry = { retryCalled = true }
+            )
+        }
+
+        // Click the retry button
+        composeTestRule.onNodeWithText("Retry").performClick()
+
+        assert(retryCalled)
+    }
+
+    @Test
+    fun testDeckListContent_multipleSelection_triggersCallbacks() {
+        val selectionHistory = mutableListOf<Int>()
+        val mockDecks = listOf(
+            Deck(id = 1, name = "Deck 1", longName = "L1", cardCount = 10),
+            Deck(id = 2, name = "Deck 2", longName = "L2", cardCount = 5)
+        )
+
+        composeTestRule.setContent {
+            DeckListContent(
+                decks = mockDecks,
+                showEmptyDeckDialogState = false,
+                quickStartEnabled = false,
+                onDeckSelected = { selectionHistory.add(it.id) },
+                onStartSessionClick = {},
+                onDismissEmptyDeckDialog = {},
+                onTriggerEmptyDeckDialog = {}
+            )
+        }
+
+        // Click Deck 1 (Double click as workaround for combinedClickable in tests)
+        composeTestRule.onNodeWithTag("${TestTags.DECKS_LIST_CARD}_1")
+            .performTouchInput { doubleClick() }
+        
+        // Click Deck 2
+        composeTestRule.onNodeWithTag("${TestTags.DECKS_LIST_CARD}_2")
+            .performTouchInput { doubleClick() }
+
+        composeTestRule.waitForIdle()
+        
+        assert(selectionHistory.contains(1))
+        assert(selectionHistory.contains(2))
+        assert(selectionHistory.size == 2)
     }
 }

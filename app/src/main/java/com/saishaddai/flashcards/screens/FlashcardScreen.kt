@@ -32,8 +32,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -45,10 +45,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.Flashcard
@@ -56,7 +55,12 @@ import com.saishaddai.flashcards.screens.commons.BlueButton
 import com.saishaddai.flashcards.screens.commons.ErrorView
 import com.saishaddai.flashcards.screens.commons.FullLoader
 import com.saishaddai.flashcards.screens.commons.TransparentButton
-import com.saishaddai.flashcards.ui.theme.*
+import com.saishaddai.flashcards.ui.theme.DarkBackground
+import com.saishaddai.flashcards.ui.theme.ElectricBlue
+import com.saishaddai.flashcards.ui.theme.Flashcards2Theme
+import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.ui.theme.SurfaceDark
+import com.saishaddai.flashcards.ui.theme.TextGray
 import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.viewmodel.FlashcardsUiData
 

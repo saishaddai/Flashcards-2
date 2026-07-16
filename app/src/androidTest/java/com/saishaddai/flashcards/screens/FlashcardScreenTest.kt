@@ -163,7 +163,10 @@ class FlashcardScreenTest {
             Flashcards2Theme {
                 FlashcardContent(
                     deck = testDeck,
-                    flashcards = listOf(FlashcardModel(1, 1, "Q", "A")),
+                    flashcards = listOf(
+                        FlashcardModel(1, 1, "Q1", "A1"),
+                        FlashcardModel(1, 2, "Q2", "A2")
+                    ),
                     showAnswer = false,
                     isFinished = false,
                     onShowResponseClicked = {},
@@ -193,7 +196,8 @@ class FlashcardScreenTest {
                 FlashcardContent(
                     deck = testDeck,
                     flashcards = listOf(
-                        FlashcardModel(1, 1, "Q1", "A1")
+                        FlashcardModel(1, 1, "Q1", "A1"),
+                        FlashcardModel(1, 2, "Q2", "A2")
                     ),
                     showAnswer = false,
                     isFinished = false,
@@ -218,7 +222,10 @@ class FlashcardScreenTest {
             Flashcards2Theme {
                 FlashcardContent(
                     deck = testDeck,
-                    flashcards = listOf(FlashcardModel(1, 1, "Q", "A")),
+                    flashcards = listOf(
+                        FlashcardModel(1, 1, "Q1", "A1"),
+                        FlashcardModel(1, 2, "Q2", "A2")
+                    ),
                     showAnswer = false,
                     isFinished = false,
                     onShowResponseClicked = {},

@@ -71,6 +71,31 @@ All the designs are provided by Google Stitch
 
 ---
 
+## Topics in Decks
+
+The following is the list of topics I added flashcards about:
+- Android Core
+- CD /CI
+- Jetpack Compose
+- Coroutines
+- Databases (SQLite and SQLDelight)
+- Dependency Injection (Koin, Hilt and Dagger)
+- Firebase
+- Gradle
+- GraphQL
+- Jetpack (other libs)
+- Kotlin Multiplatform
+- 3rd Party ibraries
+- Material Design
+- Navigation (2 and 3)
+- Object Oriented Programming
+- Design Patterns
+- Security
+- Sensors
+- Testing
+
+---
+
 ## 🤝 Contributing
 
 This is a personal practice project, but contributions, ideas, and suggestions are welcome! Feel free to open issues or submit pull requests.

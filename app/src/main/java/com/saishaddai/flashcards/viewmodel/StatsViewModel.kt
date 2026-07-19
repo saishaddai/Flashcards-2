@@ -17,7 +17,7 @@ data class StatsUiState(
     val skillMastery: List<MasteryData> = emptyList(),
     val flashcardsViewed: String = "0",
     val currentStreak: String = "0 Days",
-    val studyTime: String = "0h",
+    val studyTime: String = "0m",
     val masteredDecks: String = "0%",
     val weeklyComparison: Int = 0,
     val isSkillsExpanded: Boolean = false,

@@ -329,15 +329,16 @@ class StatsScreenTest {
         // Click the info icon
         composeTestRule.onNodeWithTag(TestTags.STATS_WEEKLY_ACTIVITY_DESCRIPTION).performClick()
 
-        // Verify dialog title and description
+        // Verify dialog title and description using test tags
         val expectedTitle = context.getString(R.string.stats_weekly_activity_info_title)
         val expectedDesc = context.getString(R.string.stats_weekly_activity_info_desc)
-        composeTestRule.onNodeWithText(expectedTitle).assertIsDisplayed()
-        composeTestRule.onNodeWithText(expectedDesc).assertIsDisplayed()
+        
+        composeTestRule.onNodeWithTag(TestTags.STATS_INFO_DIALOG_TITLE).assert(hasText(expectedTitle)).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.STATS_INFO_DIALOG_DESC).assert(hasText(expectedDesc)).assertIsDisplayed()
 
         // Close dialog
         composeTestRule.onNodeWithText(context.getString(R.string.stats_info_dialog_confirm)).performClick()
-        composeTestRule.onNodeWithText(expectedTitle).assertDoesNotExist()
+        composeTestRule.onNodeWithTag(TestTags.STATS_INFO_DIALOG_TITLE).assertDoesNotExist()
     }
 
     @Test
@@ -374,15 +375,16 @@ class StatsScreenTest {
         // Click the info icon
         composeTestRule.onNodeWithTag(TestTags.STATS_SKILL_MASTERY_DESCRIPTION).performClick()
 
-        // Verify dialog title and description
+        // Verify dialog title and description using test tags
         val expectedTitle = context.getString(R.string.stats_skill_mastery_info_title)
         val expectedDesc = context.getString(R.string.stats_skill_mastery_info_desc)
-        composeTestRule.onNodeWithText(expectedTitle).assertIsDisplayed()
-        composeTestRule.onNodeWithText(expectedDesc).assertIsDisplayed()
+        
+        composeTestRule.onNodeWithTag(TestTags.STATS_INFO_DIALOG_TITLE).assert(hasText(expectedTitle)).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.STATS_INFO_DIALOG_DESC).assert(hasText(expectedDesc)).assertIsDisplayed()
 
         // Close dialog
         composeTestRule.onNodeWithText(context.getString(R.string.stats_info_dialog_confirm)).performClick()
-        composeTestRule.onNodeWithText(expectedTitle).assertDoesNotExist()
+        composeTestRule.onNodeWithTag(TestTags.STATS_INFO_DIALOG_TITLE).assertDoesNotExist()
     }
 
     @Test

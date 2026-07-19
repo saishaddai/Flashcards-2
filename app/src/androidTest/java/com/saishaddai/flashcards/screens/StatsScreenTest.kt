@@ -90,6 +90,7 @@ class StatsScreenTest {
             StatsScreen(
                 uiState = UiState.Success(
                     StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                         weeklyComparison = 15
                     )
                 ),
@@ -121,6 +122,7 @@ class StatsScreenTest {
             StatsScreen(
                 uiState = UiState.Success(
                     StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                         weeklyComparison = -8
                     )
                 ),
@@ -152,6 +154,7 @@ class StatsScreenTest {
             StatsScreen(
                 uiState = UiState.Success(
                     StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                         weeklyComparison = 0
                     )
                 ),

@@ -423,6 +423,7 @@ class StatsScreenTest {
             StatsScreen(
                 uiState = UiState.Success(
                     StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
                         skillMastery = masteryData,
                         isSkillsExpanded = isSkillsExpanded
                     )
@@ -467,6 +468,7 @@ class StatsScreenTest {
             StatsScreen(
                 uiState = UiState.Success(
                     StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                         flashcardsViewed = "1,500",
                         currentStreak = "10 Days",
                         studyTime = "5h 20m",
@@ -496,7 +498,9 @@ class StatsScreenTest {
 
         composeTestRule.setContent {
             StatsScreen(
-                uiState = UiState.Success(StatsUiState()),
+                uiState = UiState.Success(StatsUiState(
+                    weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
+                )),
                 promoDeck = mockDeck,
                 showSuggestions = showSuggestions,
                 onViewAllSkillsClicked = {},
@@ -526,6 +530,7 @@ class StatsScreenTest {
             StatsScreen(
                 uiState = UiState.Success(
                     StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                         skillMastery = emptyList()
                     )
                 ),

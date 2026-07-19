@@ -9,7 +9,7 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -379,4 +379,167 @@ class StatsScreenTest {
         composeTestRule.onNodeWithText(context.getString(R.string.stats_info_dialog_confirm)).performClick()
         composeTestRule.onNodeWithText(expectedTitle).assertDoesNotExist()
     }
+
+    @Test
+    fun testStatsScreen_isError_showsErrorViewAndRetries() {
+        var retryCalled = false
+        val errorMessage = "Test Error"
+        
+        composeTestRule.setContent {
+            StatsScreen(
+                uiState = UiState.Error(errorMessage),
+                promoDeck = null,
+                showSuggestions = true,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onRetry = { retryCalled = true },
+                onPromoClick = { _ -> },
+            )
+        }
+
+        composeTestRule.onNodeWithText("Oops!").assertIsDisplayed()
+        composeTestRule.onNodeWithText(errorMessage).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Retry").performClick()
+
+        assertTrue("Retry callback should have been triggered", retryCalled)
+    }
+
+    @Test
+    fun testStatsScreen_skillMastery_viewAllAndShowLess() {
+        var isSkillsExpanded by mutableStateOf(false)
+        val masteryData = listOf(
+            MasteryData("Skill 1", 80, R.string.mastery_level_experienced, Color.Green),
+            MasteryData("Skill 2", 60, R.string.mastery_level_sophomore, Color.Yellow),
+            MasteryData("Skill 3", 40, R.string.mastery_level_novice, Color.Gray)
+        )
+
+        composeTestRule.setContent {
+            StatsScreen(
+                uiState = UiState.Success(
+                    StatsUiState(
+                        skillMastery = masteryData,
+                        isSkillsExpanded = isSkillsExpanded
+                    )
+                ),
+                promoDeck = null,
+                showSuggestions = true,
+                onViewAllSkillsClicked = { isSkillsExpanded = !isSkillsExpanded },
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onRetry = {},
+                onPromoClick = { _ -> },
+            )
+        }
+
+        // Initially only 2 skills should be shown (take(2))
+        composeTestRule.onNodeWithText("Skill 1").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Skill 2").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Skill 3").assertDoesNotExist()
+
+        // Click View All
+        composeTestRule.onNodeWithTag(TestTags.STATS_SKILL_MASTERY_VIEW_ALL).performClick()
+        
+        // All skills should be shown
+        composeTestRule.onNodeWithText("Skill 1").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Skill 2").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Skill 3").assertIsDisplayed()
+
+        // Button text should change to "Show Less"
+        val showLessText = context.getString(R.string.stats_skill_mastery_show_less)
+        composeTestRule.onNodeWithText(showLessText).assertIsDisplayed()
+
+        // Click Show Less
+        composeTestRule.onNodeWithTag(TestTags.STATS_SKILL_MASTERY_VIEW_ALL).performClick()
+        
+        // Only 2 skills again
+        composeTestRule.onNodeWithText("Skill 3").assertDoesNotExist()
+    }
+
+    @Test
+    fun testStatsScreen_atAGlance_displaysCorrectValues() {
+        composeTestRule.setContent {
+            StatsScreen(
+                uiState = UiState.Success(
+                    StatsUiState(
+                        flashcardsViewed = "1,500",
+                        currentStreak = "10 Days",
+                        studyTime = "5h 20m",
+                        masteredDecks = "75%"
+                    )
+                ),
+                promoDeck = null,
+                showSuggestions = true,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onRetry = {},
+                onPromoClick = { _ -> },
+            )
+        }
+
+        composeTestRule.onNodeWithText("1,500").assertIsDisplayed()
+        composeTestRule.onNodeWithText("10 Days").assertIsDisplayed()
+        composeTestRule.onNodeWithText("5h 20m").assertIsDisplayed()
+        composeTestRule.onNodeWithText("75%").assertIsDisplayed()
+    }
+
+    @Test
+    fun testStatsScreen_showSuggestions_controlsPromoVisibility() {
+        val mockDeck = Deck(id = 1, name = "Promo", longName = "Promo Deck")
+        var showSuggestions by mutableStateOf(true)
+
+        composeTestRule.setContent {
+            StatsScreen(
+                uiState = UiState.Success(StatsUiState()),
+                promoDeck = mockDeck,
+                showSuggestions = showSuggestions,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onRetry = {},
+                onPromoClick = { _ -> },
+            )
+        }
+
+        val startNowText = context.getString(R.string.promo_widget_confirm)
+
+        // Should be displayed when showSuggestions is true
+        composeTestRule.onNodeWithText(startNowText).performScrollTo().assertIsDisplayed()
+
+        // Disable suggestions
+        showSuggestions = false
+        composeTestRule.waitForIdle()
+
+        // Should not be displayed
+        composeTestRule.onNodeWithText(startNowText).assertDoesNotExist()
+    }
+
+    @Test
+    fun testStatsScreen_emptySkillsList_doesNotCrash() {
+        composeTestRule.setContent {
+            StatsScreen(
+                uiState = UiState.Success(
+                    StatsUiState(
+                        skillMastery = emptyList()
+                    )
+                ),
+                promoDeck = null,
+                showSuggestions = true,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onRetry = {},
+                onPromoClick = { _ -> },
+            )
+        }
+
+        // Verify section title is still displayed
+        composeTestRule.onNodeWithText("Skill Mastery").assertIsDisplayed()
+        
+        // No skills should be visible
+        val viewAllText = context.getString(R.string.stats_skill_mastery_view_all)
+        composeTestRule.onNodeWithText(viewAllText).assertIsDisplayed()
+    }
 }
+

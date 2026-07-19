@@ -9,7 +9,7 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -18,6 +18,8 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.test.platform.app.InstrumentationRegistry
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.ui.theme.ErrorRed
+import com.saishaddai.flashcards.ui.theme.SuccessGreen
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.viewmodel.StatsUiState
@@ -88,6 +90,7 @@ class StatsScreenTest {
             StatsScreen(
                 uiState = UiState.Success(
                     StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                         weeklyComparison = 15
                     )
                 ),
@@ -101,16 +104,16 @@ class StatsScreenTest {
             )
         }
 
-        // Check number text and color (Green: 0xFF10B981)
+        // Check number text and color (Green)
         composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_NUMBER)
             .assertIsDisplayed()
             .assert(hasText("+15%"))
-            .assert(hasColor(Color(0xFF10B981)))
+            .assert(hasColor(SuccessGreen))
 
         // Check icon presence and color
         composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_ICON)
             .assertIsDisplayed()
-            .assert(hasColor(Color(0xFF10B981)))
+            .assert(hasColor(SuccessGreen))
     }
 
     @Test
@@ -119,6 +122,7 @@ class StatsScreenTest {
             StatsScreen(
                 uiState = UiState.Success(
                     StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                         weeklyComparison = -8
                     )
                 ),
@@ -132,16 +136,16 @@ class StatsScreenTest {
             )
         }
 
-        // Check number text and color (Red: 0xFFEF4444)
+        // Check number text and color (Red)
         composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_NUMBER)
             .assertIsDisplayed()
             .assert(hasText("-8%"))
-            .assert(hasColor(Color(0xFFEF4444)))
+            .assert(hasColor(ErrorRed))
 
         // Check icon presence and color
         composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_ICON)
             .assertIsDisplayed()
-            .assert(hasColor(Color(0xFFEF4444)))
+            .assert(hasColor(ErrorRed))
     }
 
     @Test
@@ -150,6 +154,7 @@ class StatsScreenTest {
             StatsScreen(
                 uiState = UiState.Success(
                     StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                         weeklyComparison = 0
                     )
                 ),
@@ -324,15 +329,16 @@ class StatsScreenTest {
         // Click the info icon
         composeTestRule.onNodeWithTag(TestTags.STATS_WEEKLY_ACTIVITY_DESCRIPTION).performClick()
 
-        // Verify dialog title and description
+        // Verify dialog title and description using test tags
         val expectedTitle = context.getString(R.string.stats_weekly_activity_info_title)
         val expectedDesc = context.getString(R.string.stats_weekly_activity_info_desc)
-        composeTestRule.onNodeWithText(expectedTitle).assertIsDisplayed()
-        composeTestRule.onNodeWithText(expectedDesc).assertIsDisplayed()
+        
+        composeTestRule.onNodeWithTag(TestTags.STATS_INFO_DIALOG_TITLE).assert(hasText(expectedTitle)).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.STATS_INFO_DIALOG_DESC).assert(hasText(expectedDesc)).assertIsDisplayed()
 
         // Close dialog
         composeTestRule.onNodeWithText(context.getString(R.string.stats_info_dialog_confirm)).performClick()
-        composeTestRule.onNodeWithText(expectedTitle).assertDoesNotExist()
+        composeTestRule.onNodeWithTag(TestTags.STATS_INFO_DIALOG_TITLE).assertDoesNotExist()
     }
 
     @Test
@@ -369,14 +375,183 @@ class StatsScreenTest {
         // Click the info icon
         composeTestRule.onNodeWithTag(TestTags.STATS_SKILL_MASTERY_DESCRIPTION).performClick()
 
-        // Verify dialog title and description
+        // Verify dialog title and description using test tags
         val expectedTitle = context.getString(R.string.stats_skill_mastery_info_title)
         val expectedDesc = context.getString(R.string.stats_skill_mastery_info_desc)
-        composeTestRule.onNodeWithText(expectedTitle).assertIsDisplayed()
-        composeTestRule.onNodeWithText(expectedDesc).assertIsDisplayed()
+        
+        composeTestRule.onNodeWithTag(TestTags.STATS_INFO_DIALOG_TITLE).assert(hasText(expectedTitle)).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.STATS_INFO_DIALOG_DESC).assert(hasText(expectedDesc)).assertIsDisplayed()
 
         // Close dialog
         composeTestRule.onNodeWithText(context.getString(R.string.stats_info_dialog_confirm)).performClick()
-        composeTestRule.onNodeWithText(expectedTitle).assertDoesNotExist()
+        composeTestRule.onNodeWithTag(TestTags.STATS_INFO_DIALOG_TITLE).assertDoesNotExist()
+    }
+
+    @Test
+    fun testStatsScreen_isError_showsErrorViewAndRetries() {
+        var retryCalled = false
+        val errorMessage = "Test Error"
+        
+        composeTestRule.setContent {
+            StatsScreen(
+                uiState = UiState.Error(errorMessage),
+                promoDeck = null,
+                showSuggestions = true,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onRetry = { retryCalled = true },
+                onPromoClick = { _ -> },
+            )
+        }
+
+        composeTestRule.onNodeWithText("Oops!").assertIsDisplayed()
+        composeTestRule.onNodeWithText(errorMessage).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Retry").performClick()
+
+        assertTrue("Retry callback should have been triggered", retryCalled)
+    }
+
+    @Test
+    fun testStatsScreen_skillMastery_viewAllAndShowLess() {
+        var isSkillsExpanded by mutableStateOf(false)
+        val masteryData = listOf(
+            MasteryData("Skill 1", 80, R.string.mastery_level_experienced, Color.Green),
+            MasteryData("Skill 2", 60, R.string.mastery_level_sophomore, Color.Yellow),
+            MasteryData("Skill 3", 40, R.string.mastery_level_novice, Color.Gray)
+        )
+
+        composeTestRule.setContent {
+            StatsScreen(
+                uiState = UiState.Success(
+                    StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
+                        skillMastery = masteryData,
+                        isSkillsExpanded = isSkillsExpanded
+                    )
+                ),
+                promoDeck = null,
+                showSuggestions = true,
+                onViewAllSkillsClicked = { isSkillsExpanded = !isSkillsExpanded },
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onRetry = {},
+                onPromoClick = { _ -> },
+            )
+        }
+
+        // Initially only 2 skills should be shown (take(2))
+        composeTestRule.onNodeWithText("Skill 1").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Skill 2").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Skill 3").assertDoesNotExist()
+
+        // Click View All
+        composeTestRule.onNodeWithTag(TestTags.STATS_SKILL_MASTERY_VIEW_ALL).performClick()
+        
+        // All skills should be shown
+        composeTestRule.onNodeWithText("Skill 1").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Skill 2").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Skill 3").assertIsDisplayed()
+
+        // Button text should change to "Show Less"
+        val showLessText = context.getString(R.string.stats_skill_mastery_show_less)
+        composeTestRule.onNodeWithText(showLessText).assertIsDisplayed()
+
+        // Click Show Less
+        composeTestRule.onNodeWithTag(TestTags.STATS_SKILL_MASTERY_VIEW_ALL).performClick()
+        
+        // Only 2 skills again
+        composeTestRule.onNodeWithText("Skill 3").assertDoesNotExist()
+    }
+
+    @Test
+    fun testStatsScreen_atAGlance_displaysCorrectValues() {
+        composeTestRule.setContent {
+            StatsScreen(
+                uiState = UiState.Success(
+                    StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
+                        flashcardsViewed = "1,500",
+                        currentStreak = "10 Days",
+                        studyTime = "5h 20m",
+                        masteredDecks = "75%"
+                    )
+                ),
+                promoDeck = null,
+                showSuggestions = true,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onRetry = {},
+                onPromoClick = { _ -> },
+            )
+        }
+
+        composeTestRule.onNodeWithText("1,500").assertIsDisplayed()
+        composeTestRule.onNodeWithText("10 Days").assertIsDisplayed()
+        composeTestRule.onNodeWithText("5h 20m").assertIsDisplayed()
+        composeTestRule.onNodeWithText("75%").assertIsDisplayed()
+    }
+
+    @Test
+    fun testStatsScreen_showSuggestions_controlsPromoVisibility() {
+        val mockDeck = Deck(id = 1, name = "Promo", longName = "Promo Deck")
+        var showSuggestions by mutableStateOf(true)
+
+        composeTestRule.setContent {
+            StatsScreen(
+                uiState = UiState.Success(StatsUiState(
+                    weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
+                )),
+                promoDeck = mockDeck,
+                showSuggestions = showSuggestions,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onRetry = {},
+                onPromoClick = { _ -> },
+            )
+        }
+
+        val startNowText = context.getString(R.string.promo_widget_confirm)
+
+        // Should be displayed when showSuggestions is true
+        composeTestRule.onNodeWithText(startNowText).performScrollTo().assertIsDisplayed()
+
+        // Disable suggestions
+        showSuggestions = false
+        composeTestRule.waitForIdle()
+
+        // Should not be displayed
+        composeTestRule.onNodeWithText(startNowText).assertDoesNotExist()
+    }
+
+    @Test
+    fun testStatsScreen_emptySkillsList_doesNotCrash() {
+        composeTestRule.setContent {
+            StatsScreen(
+                uiState = UiState.Success(
+                    StatsUiState(
+                        weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
+                        skillMastery = emptyList()
+                    )
+                ),
+                promoDeck = null,
+                showSuggestions = true,
+                onViewAllSkillsClicked = {},
+                onInfoClick = { _, _ -> },
+                onDismissInfoDialog = {},
+                onRetry = {},
+                onPromoClick = { _ -> },
+            )
+        }
+
+        // Verify section title is still displayed
+        composeTestRule.onNodeWithText("Skill Mastery").assertIsDisplayed()
+        
+        // No skills should be visible
+        val viewAllText = context.getString(R.string.stats_skill_mastery_view_all)
+        composeTestRule.onNodeWithText(viewAllText).assertIsDisplayed()
     }
 }
+

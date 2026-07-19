@@ -39,6 +39,8 @@ object TestTags {
     const val STATS_STUDY_TIME = "stats_study_time"
     const val STATS_MASTERED_DECKS = "stats_mastered_decks"
     const val STATS_SKILL_MASTERY_VIEW_ALL = "stats_mastered_view_all"
+    const val STATS_INFO_DIALOG_TITLE = "stats_info_dialog_title"
+    const val STATS_INFO_DIALOG_DESC = "stats_info_dialog_desc"
 
 
 }

@@ -624,13 +624,15 @@ private fun StatsInfoDialog(
             Text(
                 text = title,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color.White,
+                modifier = Modifier.testTag(TestTags.STATS_INFO_DIALOG_TITLE)
             )
         },
         text = {
             Text(
                 text = description,
-                color = TextGray
+                color = TextGray,
+                modifier = Modifier.testTag(TestTags.STATS_INFO_DIALOG_DESC)
             )
         },
         confirmButton = {

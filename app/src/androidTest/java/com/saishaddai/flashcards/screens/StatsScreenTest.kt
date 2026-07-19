@@ -18,6 +18,8 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.test.platform.app.InstrumentationRegistry
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.model.Deck
+import com.saishaddai.flashcards.ui.theme.ErrorRed
+import com.saishaddai.flashcards.ui.theme.SuccessGreen
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.viewmodel.StatsUiState
@@ -101,16 +103,16 @@ class StatsScreenTest {
             )
         }
 
-        // Check number text and color (Green: 0xFF10B981)
+        // Check number text and color (Green)
         composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_NUMBER)
             .assertIsDisplayed()
             .assert(hasText("+15%"))
-            .assert(hasColor(Color(0xFF10B981)))
+            .assert(hasColor(SuccessGreen))
 
         // Check icon presence and color
         composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_ICON)
             .assertIsDisplayed()
-            .assert(hasColor(Color(0xFF10B981)))
+            .assert(hasColor(SuccessGreen))
     }
 
     @Test
@@ -132,16 +134,16 @@ class StatsScreenTest {
             )
         }
 
-        // Check number text and color (Red: 0xFFEF4444)
+        // Check number text and color (Red)
         composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_NUMBER)
             .assertIsDisplayed()
             .assert(hasText("-8%"))
-            .assert(hasColor(Color(0xFFEF4444)))
+            .assert(hasColor(ErrorRed))
 
         // Check icon presence and color
         composeTestRule.onNodeWithTag(TestTags.STATS_PROGRESS_ICON)
             .assertIsDisplayed()
-            .assert(hasColor(Color(0xFFEF4444)))
+            .assert(hasColor(ErrorRed))
     }
 
     @Test

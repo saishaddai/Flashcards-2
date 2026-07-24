@@ -6,6 +6,7 @@ import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.UserSettings
+import com.saishaddai.flashcards.utils.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -53,33 +54,39 @@ class FlashcardViewModelTest {
         // Wait for loadFlashcards to finish
         advanceUntilIdle()
 
-        assertEquals(2, viewModel.flashcards.value.size)
-        assertFalse(viewModel.showAnswer.value)
-        assertFalse(viewModel.isFinished.value)
+        val state = viewModel.uiState.value
+        assertTrue(state is UiState.Success)
+        val data = (state as UiState.Success).data
+        assertEquals(2, data.flashcards.size)
+        assertFalse(data.showAnswer)
+        assertFalse(data.isFinished)
     }
 
     @Test
-    fun `onShowResponseClicked updates showAnswer state`() {
-        assertFalse(viewModel.showAnswer.value)
+    fun `onShowResponseClicked updates showAnswer state`() = runTest {
+        advanceUntilIdle()
+        assertFalse((viewModel.uiState.value as UiState.Success).data.showAnswer)
         viewModel.onShowResponseClicked()
-        assertTrue(viewModel.showAnswer.value)
+        assertTrue((viewModel.uiState.value as UiState.Success).data.showAnswer)
     }
 
     @Test
-    fun `onFinishSession updates isFinished state`() {
-        assertFalse(viewModel.isFinished.value)
-        viewModel.onFinishSession()
-        assertTrue(viewModel.isFinished.value)
+    fun `onFinishSession updates isFinished state`() = runTest {
+        advanceUntilIdle()
+        assertFalse((viewModel.uiState.value as UiState.Success).data.isFinished)
+        viewModel.onFinishSession(0)
+        assertTrue((viewModel.uiState.value as UiState.Success).data.isFinished)
     }
 
     @Test
     fun `onPageChanged resets showAnswer state based on settings`() = runTest {
-        viewModel.onShowResponseClicked()
-        assertTrue(viewModel.showAnswer.value)
-
-        viewModel.onPageChanged()
         advanceUntilIdle()
-        assertFalse(viewModel.showAnswer.value)
+        viewModel.onShowResponseClicked()
+        assertTrue((viewModel.uiState.value as UiState.Success).data.showAnswer)
+
+        viewModel.onPageChanged(0)
+        advanceUntilIdle()
+        assertFalse((viewModel.uiState.value as UiState.Success).data.showAnswer)
     }
 
     // A simple fake repository for testing

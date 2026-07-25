@@ -1,5 +1,6 @@
 package com.saishaddai.flashcards.viewmodel
 
+import android.app.Application
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.UserSettings
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.mock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SettingsViewModelTest {
@@ -25,12 +27,13 @@ class SettingsViewModelTest {
 
     private lateinit var viewModel: SettingsViewModel
     private lateinit var repository: FakeSettingsRepository
+    private val application: Application = mock()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         repository = FakeSettingsRepository()
-        viewModel = SettingsViewModel(repository)
+        viewModel = SettingsViewModel(application, repository)
     }
 
     @After

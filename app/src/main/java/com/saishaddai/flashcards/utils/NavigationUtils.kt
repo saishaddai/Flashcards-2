@@ -2,13 +2,12 @@ package com.saishaddai.flashcards.utils
 
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
-import com.saishaddai.flashcards.routes.Route
 
-fun NavBackStack<NavKey>.navigateTo(route: Route) = add(route)
+fun <T : NavKey> NavBackStack<T>.navigateTo(route: T) = add(route)
 
-fun NavBackStack<NavKey>.navigateBack() = removeLastOrNull()
+fun <T : NavKey> NavBackStack<T>.navigateBack() = removeLastOrNull()
 
-fun NavBackStack<NavKey>.resetTo(route: Route) {
+fun <T : NavKey> NavBackStack<T>.resetTo(route: T) {
     clear()
     add(route)
 }

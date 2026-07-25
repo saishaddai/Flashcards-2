@@ -3,6 +3,7 @@ package com.saishaddai.flashcards.viewmodel
 import android.app.Application
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.repository.DeckRepository
+import com.saishaddai.flashcards.utils.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -43,13 +44,15 @@ class DecksViewModelTest {
     fun `initial state is correct and loads decks`() = runTest {
         viewModel = DecksViewModel(application, repository)
         
-        assertTrue(viewModel.isLoading.value)
+        assertTrue(viewModel.uiState.value is UiState.Loading)
         
         advanceUntilIdle()
 
-        assertFalse(viewModel.isLoading.value)
-        assertEquals(2, viewModel.decks.value.size)
-        assertFalse(viewModel.showEmptyDeckDialog.value)
+        val state = viewModel.uiState.value
+        assertTrue(state is UiState.Success)
+        val data = (state as UiState.Success).data
+        assertEquals(2, data.decks.size)
+        assertFalse(data.showEmptyDeckDialog)
     }
 
     @Test
@@ -57,11 +60,13 @@ class DecksViewModelTest {
         viewModel = DecksViewModel(application, repository)
         advanceUntilIdle()
 
-        val secondDeck = viewModel.decks.value[1]
+        val currentState = (viewModel.uiState.value as UiState.Success).data
+        val secondDeck = currentState.decks[1]
         viewModel.onDeckSelected(secondDeck)
 
-        assertTrue(viewModel.decks.value[1].isSelected)
-        assertFalse(viewModel.decks.value[0].isSelected)
+        val updatedState = (viewModel.uiState.value as UiState.Success).data
+        assertTrue(updatedState.decks[1].isSelected)
+        assertFalse(updatedState.decks[0].isSelected)
     }
 
     @Test
@@ -90,7 +95,8 @@ class DecksViewModelTest {
         advanceUntilIdle()
 
         viewModel.onStartSession()
-        assertTrue(viewModel.showEmptyDeckDialog.value)
+        val state = (viewModel.uiState.value as UiState.Success).data
+        assertTrue(state.showEmptyDeckDialog)
     }
 
     @Test
@@ -99,7 +105,8 @@ class DecksViewModelTest {
         advanceUntilIdle()
 
         viewModel.onStartSession()
-        assertFalse(viewModel.showEmptyDeckDialog.value)
+        val state = (viewModel.uiState.value as UiState.Success).data
+        assertFalse(state.showEmptyDeckDialog)
     }
 
     @Test
@@ -109,10 +116,10 @@ class DecksViewModelTest {
         advanceUntilIdle()
 
         viewModel.onStartSession()
-        assertTrue(viewModel.showEmptyDeckDialog.value)
+        assertTrue((viewModel.uiState.value as UiState.Success).data.showEmptyDeckDialog)
 
         viewModel.dismissEmptyDeckDialog()
-        assertFalse(viewModel.showEmptyDeckDialog.value)
+        assertFalse((viewModel.uiState.value as UiState.Success).data.showEmptyDeckDialog)
     }
 
     class FakeDeckRepository: DeckRepository<Deck> {

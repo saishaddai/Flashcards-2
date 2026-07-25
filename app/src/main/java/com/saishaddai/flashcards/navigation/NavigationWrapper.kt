@@ -44,8 +44,9 @@ import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun NavigationWrapper() {
-    val backStack: NavBackStack<NavKey> = rememberNavBackStack(DeckList)
+fun NavigationWrapper(
+    backStack: NavBackStack<NavKey> = rememberNavBackStack(DeckList)
+) {
     val currentKey = backStack.lastOrNull() as? Route
 
     Scaffold(

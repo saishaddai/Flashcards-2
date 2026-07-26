@@ -126,11 +126,11 @@ class SettingsScreenTest {
         // Reminders are OFF
         composeTestRule.onNodeWithTag(TestTags.SETTINGS_DAILY_REMINDERS + "_switch").assertIsOff()
 
-        // Verify dependents are disabled
-        composeTestRule.onNodeWithTag(TestTags.SETTINGS_NOTIFICATION_SOUND + "_switch").assertIsNotEnabled()
+        // Verify dependents are hidden (due to AnimatedVisibility)
+        composeTestRule.onNodeWithTag(TestTags.SETTINGS_NOTIFICATION_SOUND + "_switch").assertDoesNotExist()
         
         val actionLabel = defaultSettings.preferredStudyTime
-        composeTestRule.onNodeWithText(actionLabel).assertIsNotEnabled()
+        composeTestRule.onNodeWithText(actionLabel).assertDoesNotExist()
     }
 
     @Test

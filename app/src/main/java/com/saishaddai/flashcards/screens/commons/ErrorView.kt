@@ -20,11 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.saishaddai.flashcards.ui.theme.DarkBackground
 import com.saishaddai.flashcards.ui.theme.ErrorRed
 import com.saishaddai.flashcards.ui.theme.RoyalBlue
+import com.saishaddai.flashcards.utils.TestTags
 
 @Composable
 fun ErrorView(
@@ -35,7 +37,8 @@ fun ErrorView(
         modifier = Modifier
             .fillMaxSize()
             .background(DarkBackground)
-            .padding(24.dp),
+            .padding(24.dp)
+            .testTag(TestTags.ERROR_VIEW),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -50,19 +53,22 @@ fun ErrorView(
             text = "Oops!",
             color = Color.White,
             fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.testTag(TestTags.ERROR_VIEW_TITLE)
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = message,
             color = Color.Gray,
             fontSize = 16.sp,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            modifier = Modifier.testTag(TestTags.ERROR_VIEW_MESSAGE)
         )
         Spacer(modifier = Modifier.height(32.dp))
         Button(
             onClick = onRetry,
-            colors = ButtonDefaults.buttonColors(containerColor = RoyalBlue)
+            colors = ButtonDefaults.buttonColors(containerColor = RoyalBlue),
+            modifier = Modifier.testTag(TestTags.ERROR_VIEW_RETRY_BUTTON)
         ) {
             Text(text = "Retry", color = Color.White)
         }

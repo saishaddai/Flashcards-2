@@ -1,0 +1,4 @@
+- [x] Add new `TestTags` for `ErrorView`
+- [x] Apply `TestTags` to `ErrorView.kt`
+- [x] Create `CommonComposablesTest.kt` with tests for `BlueButton`, `TransparentButton`, and `ErrorView`
+- [x] Verify compilation of Android tests

@@ -42,5 +42,9 @@ object TestTags {
     const val STATS_INFO_DIALOG_TITLE = "stats_info_dialog_title"
     const val STATS_INFO_DIALOG_DESC = "stats_info_dialog_desc"
 
-
+    // Error View
+    const val ERROR_VIEW = "error_view"
+    const val ERROR_VIEW_TITLE = "error_view_title"
+    const val ERROR_VIEW_MESSAGE = "error_view_message"
+    const val ERROR_VIEW_RETRY_BUTTON = "error_view_retry_button"
 }

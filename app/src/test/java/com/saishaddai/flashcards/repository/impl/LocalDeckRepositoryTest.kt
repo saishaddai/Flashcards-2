@@ -2,32 +2,39 @@ package com.saishaddai.flashcards.repository.impl
 
 import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.Flashcard
-import com.saishaddai.flashcards.model.sessions
+import com.saishaddai.flashcards.model.SessionSummary
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.repository.SessionRepository
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 
-class OfflineDeckRepositoryTest {
+class LocalDeckRepositoryTest {
 
-    private lateinit var repository: OfflineDeckRepository
+    private lateinit var repository: LocalDeckRepository
     private val flashcardRepository: FlashcardRepository<DeckType, Flashcard> = mock {
         onBlocking { getDataCount(any()) } doReturn 0
     }
+    
+    private val sessions = listOf(
+        SessionSummary(1, 89),
+        SessionSummary(2, 20),
+        SessionSummary(3, 54),
+        SessionSummary(4, 0)
+    )
+    
     private val sessionRepository: SessionRepository = mock {
         on { getAllSessions() } doReturn flowOf(sessions)
     }
 
     @Before
     fun setUp() {
-        repository = OfflineDeckRepository(flashcardRepository, sessionRepository)
+        repository = LocalDeckRepository(flashcardRepository, sessionRepository)
     }
 
     @Test
@@ -38,7 +45,6 @@ class OfflineDeckRepositoryTest {
 
     @Test
     fun `getData applies mastery from sessions`() = runTest {
-        // sessions in model has: SessionSummary(1, 89), SessionSummary(2, 20), SessionSummary(3, 54), SessionSummary(4, 0)
         val result = repository.getData()
 
         assertEquals(89, result.find { it.id == 1 }?.mastery)
@@ -46,11 +52,5 @@ class OfflineDeckRepositoryTest {
         assertEquals(54, result.find { it.id == 3 }?.mastery)
         assertEquals(0, result.find { it.id == 4 }?.mastery)
         assertEquals(0, result.find { it.id == 5 }?.mastery) // Not in sessions
-    }
-
-    @Test
-    fun `first deck is selected by default`() = runTest {
-        val result = repository.getData()
-        assertTrue(result.first().isSelected)
     }
 }

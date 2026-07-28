@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class RoomStatsRepository(
+class LocalStatsRepository(
     private val studyDao: StudyDao
 ) : StatsRepository {
 

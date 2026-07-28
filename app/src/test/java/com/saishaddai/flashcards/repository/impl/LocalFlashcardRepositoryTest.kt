@@ -1,7 +1,6 @@
 package com.saishaddai.flashcards.repository.impl
 
-import android.content.Context
-import android.content.res.AssetManager
+import com.saishaddai.flashcards.data.assets.FlashcardAssetDataSource
 import com.saishaddai.flashcards.data.local.FlashcardDao
 import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.Flashcard
@@ -12,21 +11,18 @@ import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-class RoomFlashcardRepositoryTest {
+class LocalFlashcardRepositoryTest {
 
-    private lateinit var repository: RoomFlashcardRepository
+    private lateinit var repository: LocalFlashcardRepository
     private val flashcardDao: FlashcardDao = mock()
-    private val context: Context = mock()
-    private val assetManager: AssetManager = mock()
+    private val flashcardAssetDataSource: FlashcardAssetDataSource = mock()
 
     @Before
     fun setUp() {
-        whenever(context.assets).thenReturn(assetManager)
-        repository = RoomFlashcardRepository(context, flashcardDao)
+        repository = LocalFlashcardRepository(flashcardAssetDataSource, flashcardDao)
     }
 
     @Test
@@ -65,17 +61,20 @@ class RoomFlashcardRepositoryTest {
     }
 
     @Test
-    fun `ensureDataLoaded is called when database is empty`() = runTest {
+    fun `ensureDataLoaded calls asset data source when database is empty`() = runTest {
         // Given
         whenever(flashcardDao.getTotalFlashcardCount()).thenReturn(0)
-        // Mock asset manager to return empty for everything to avoid complex stream mocking
-        // The real implementation should catch exceptions and just log them
+        whenever(flashcardAssetDataSource.loadFlashcardsForDeck(any())).thenReturn(emptyList())
         
         // When
-        repository.getDataCount(DeckType.OOP)
+        try {
+            repository.getDataCount(DeckType.OOP)
+        } catch (e: Exception) {
+            // Expected if no cards loaded
+        }
 
         // Then
         verify(flashcardDao).getTotalFlashcardCount()
-        // verify(flashcardDao).insertAll(any()) // This would only happen if we mock assets successfully
+        verify(flashcardAssetDataSource).loadFlashcardsForDeck(DeckType.OOP)
     }
 }

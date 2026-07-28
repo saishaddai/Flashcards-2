@@ -1,24 +1,18 @@
 package com.saishaddai.flashcards.repository.impl
 
-import android.content.Context
+import com.saishaddai.flashcards.data.assets.FlashcardAssetDataSource
 import com.saishaddai.flashcards.data.local.FlashcardDao
 import com.saishaddai.flashcards.model.DeckType
 import com.saishaddai.flashcards.model.Flashcard
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
 import timber.log.Timber
 
-class RoomFlashcardRepository(
-    private val context: Context,
+class LocalFlashcardRepository(
+    private val flashcardAssetDataSource: FlashcardAssetDataSource,
     private val flashcardDao: FlashcardDao
 ) : FlashcardRepository<DeckType, Flashcard> {
-
-    private val json = Json {
-        ignoreUnknownKeys = true
-        coerceInputValues = true
-    }
 
     override suspend fun getData(type: DeckType, size: Int): List<Flashcard> =
         withContext(Dispatchers.IO) {
@@ -36,22 +30,12 @@ class RoomFlashcardRepository(
         try {
             val count = flashcardDao.getTotalFlashcardCount()
             if (count == 0) {
-                Timber.d("Database empty, pre-populating from JSON assets...")
+                Timber.d("Database empty, pre-populating from assets...")
                 val allFlashcards = mutableListOf<Flashcard>()
 
                 DeckType.entries.forEach { deckType ->
-                    try {
-                        val fileName = deckType.jsonFile
-                        if (fileName.isEmpty()) return@forEach
-                        
-                        val jsonString = context.assets.open("decks/$fileName")
-                            .bufferedReader()
-                            .use { it.readText() }
-                        val deckCards = json.decodeFromString<List<Flashcard>>(jsonString)
-                        allFlashcards.addAll(deckCards)
-                    } catch (e: Exception) {
-                        Timber.e(e, "Error loading flashcards for ${deckType.name} from ${deckType.jsonFile}")
-                    }
+                    val deckCards = flashcardAssetDataSource.loadFlashcardsForDeck(deckType)
+                    allFlashcards.addAll(deckCards)
                 }
 
                 if (allFlashcards.isNotEmpty()) {

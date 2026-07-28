@@ -8,13 +8,11 @@ import com.saishaddai.flashcards.repository.DeckRepository
 import com.saishaddai.flashcards.repository.FlashcardRepository
 import com.saishaddai.flashcards.repository.SessionRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-import kotlinx.coroutines.flow.firstOrNull
-
-class OfflineDeckRepository(
+class LocalDeckRepository(
     private val flashcardRepository: FlashcardRepository<DeckType, Flashcard>,
     private val sessionRepository: SessionRepository
 ) : DeckRepository<Deck> {
@@ -24,7 +22,7 @@ class OfflineDeckRepository(
             Timber.d("Fetching all sessions...")
             sessionRepository.getAllSessions().firstOrNull() ?: emptyList()
         } catch (e: Exception) {
-            Timber.e(e, "Error fetching sessions in OfflineDeckRepository")
+            Timber.e(e, "Error fetching sessions in LocalDeckRepository")
             emptyList()
         }
 

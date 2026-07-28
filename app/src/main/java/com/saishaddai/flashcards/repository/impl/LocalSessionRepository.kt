@@ -5,7 +5,7 @@ import com.saishaddai.flashcards.model.SessionSummary
 import com.saishaddai.flashcards.repository.SessionRepository
 import kotlinx.coroutines.flow.Flow
 
-class RoomSessionRepository(
+class LocalSessionRepository(
     private val sessionSummaryDao: SessionSummaryDao
 ) : SessionRepository {
     override fun getAllSessions(): Flow<List<SessionSummary>> = sessionSummaryDao.getAllSessions()

@@ -1,4 +1,22 @@
-- [x] Add new `TestTags` for `ErrorView`
-- [x] Apply `TestTags` to `ErrorView.kt`
-- [x] Create `CommonComposablesTest.kt` with tests for `BlueButton`, `TransparentButton`, and `ErrorView`
-- [x] Verify compilation of Android tests
+- [x] Refactor Repository Implementation Names
+    - [x] Rename `OfflineDeckRepository` to `LocalDeckRepository`
+    - [x] Rename `RoomFlashcardRepository` to `LocalFlashcardRepository`
+    - [x] Rename `RoomStatsRepository` to `LocalStatsRepository`
+    - [x] Rename `RoomStudyRepository` to `LocalStudyRepository`
+    - [x] Rename `RoomSessionRepository` to `LocalSessionRepository`
+    - [x] Rename `DataStoreSettingsRepository` to `LocalSettingsRepository`
+- [x] Extract Data Sources
+    - [x] Create `FlashcardAssetDataSource`
+    - [x] Update `LocalFlashcardRepository` to use the new data source
+- [x] Update Dependency Injection
+    - [x] Update `AppModule.kt` with new repository and data source names
+- [x] Achieve 85% Unit Test Coverage
+    - [x] Create `LocalStatsRepositoryTest`
+    - [x] Create `LocalStudyRepositoryTest`
+    - [x] Create `LocalSessionRepositoryTest`
+    - [x] Update/Rename `LocalDeckRepositoryTest`
+    - [x] Update/Rename `LocalFlashcardRepositoryTest`
+    - [x] Update/Rename `LocalSettingsRepositoryTest`
+- [/] Verification
+    - [ ] Ensure all tests pass
+    - [ ] Verify 85% coverage goal

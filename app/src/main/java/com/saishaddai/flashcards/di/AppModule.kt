@@ -1,6 +1,8 @@
 package com.saishaddai.flashcards.di
 
 import androidx.room.Room
+import com.saishaddai.flashcards.data.assets.FlashcardAssetDataSource
+import com.saishaddai.flashcards.data.assets.FlashcardAssetDataSourceImpl
 import com.saishaddai.flashcards.data.local.AppDatabase
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.DeckType
@@ -11,12 +13,7 @@ import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.StatsRepository
 import com.saishaddai.flashcards.repository.SessionRepository
 import com.saishaddai.flashcards.repository.StudyRepository
-import com.saishaddai.flashcards.repository.impl.DataStoreSettingsRepository
-import com.saishaddai.flashcards.repository.impl.RoomFlashcardRepository
-import com.saishaddai.flashcards.repository.impl.RoomSessionRepository
-import com.saishaddai.flashcards.repository.impl.RoomStatsRepository
-import com.saishaddai.flashcards.repository.impl.RoomStudyRepository
-import com.saishaddai.flashcards.repository.impl.OfflineDeckRepository
+import com.saishaddai.flashcards.repository.impl.*
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import com.saishaddai.flashcards.viewmodel.FinishSessionViewModel
 import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
@@ -40,13 +37,16 @@ val appModule = module {
     single { get<AppDatabase>().studyDao() }
     single { get<AppDatabase>().flashcardDao() }
 
+    // Data Sources
+    single<FlashcardAssetDataSource> { FlashcardAssetDataSourceImpl(androidContext()) }
+
     // Repositories
-    single<FlashcardRepository<DeckType, Flashcard>> { RoomFlashcardRepository(androidContext(), get()) }
-    single<SessionRepository> { RoomSessionRepository(get()) }
-    single<DeckRepository<Deck>> { OfflineDeckRepository(get(), get()) }
-    single<StatsRepository> { RoomStatsRepository(get()) }
-    single<SettingsRepository> { DataStoreSettingsRepository(androidContext(), get(), get()) }
-    single<StudyRepository> { RoomStudyRepository(get(), get()) }
+    single<FlashcardRepository<DeckType, Flashcard>> { LocalFlashcardRepository(get(), get()) }
+    single<SessionRepository> { LocalSessionRepository(get()) }
+    single<DeckRepository<Deck>> { LocalDeckRepository(get(), get()) }
+    single<StatsRepository> { LocalStatsRepository(get()) }
+    single<SettingsRepository> { LocalSettingsRepository(androidContext(), get(), get()) }
+    single<StudyRepository> { LocalStudyRepository(get(), get()) }
 
     // ViewModels
     viewModel { DecksViewModel(androidApplication(), get()) }

@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class RoomStudyRepository(
+class LocalStudyRepository(
     private val studyDao: StudyDao,
     private val settingsRepository: SettingsRepository,
     private val calculator: SessionCalculator = SessionCalculator()

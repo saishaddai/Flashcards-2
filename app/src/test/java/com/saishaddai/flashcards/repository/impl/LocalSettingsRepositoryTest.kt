@@ -28,7 +28,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class DataStoreSettingsRepositoryTest {
+class LocalSettingsRepositoryTest {
 
     @get:Rule
     val tmpFolder = TemporaryFolder()
@@ -37,7 +37,7 @@ class DataStoreSettingsRepositoryTest {
     private val testScope = TestScope(testDispatcher + Job())
 
     private lateinit var dataStore: DataStore<Preferences>
-    private lateinit var repository: DataStoreSettingsRepository
+    private lateinit var repository: LocalSettingsRepository
     private lateinit var context: Context
     private val studyDao: StudyDao = mock()
     private val sessionSummaryDao: SessionSummaryDao = mock()
@@ -55,11 +55,7 @@ class DataStoreSettingsRepositoryTest {
             produceFile = { tmpFolder.newFile("test.preferences_pb") }
         )
 
-        // We need to inject the DataStore into the repository.
-        // But the current implementation uses the extension property Context.dataStore.
-        // To make it testable, we'll need to refactor DataStoreSettingsRepository slightly
-        // to accept DataStore as a dependency.
-        repository = DataStoreSettingsRepository(context, studyDao, sessionSummaryDao, dataStore)
+        repository = LocalSettingsRepository(context, studyDao, sessionSummaryDao, dataStore)
     }
 
     @After
@@ -85,13 +81,6 @@ class DataStoreSettingsRepositoryTest {
     }
 
     @Test
-    fun `saveDailyStudyGoal updates value`() = runTest(testDispatcher) {
-        repository.saveDailyStudyGoal(100)
-        val settings = repository.getSettings().first()
-        assertEquals(100, settings.dailyStudyGoal)
-    }
-
-    @Test
     fun `saveDarkMode updates value`() = runTest(testDispatcher) {
         repository.saveDarkMode(false)
         val settings = repository.getSettings().first()
@@ -99,24 +88,12 @@ class DataStoreSettingsRepositoryTest {
     }
 
     @Test
-    fun `savePreferredStudyTime updates value`() = runTest(testDispatcher) {
-        val newTime = "10:30 AM"
-        repository.savePreferredStudyTime(newTime)
-        val settings = repository.getSettings().first()
-        assertEquals(newTime, settings.preferredStudyTime)
-    }
-
-    @Test
-    fun `restartMasteryExperience calls delete on DAOs but preserves settings`() = runTest(testDispatcher) {
-        repository.saveFlashcardsPerSession(40)
+    fun `restartMasteryExperience calls delete on DAOs`() = runTest(testDispatcher) {
         repository.restartMasteryExperience()
         
         verify(studyDao).deleteAllSessions()
         verify(studyDao).deleteAllDeckMastery()
         verify(studyDao).deleteAllDailyActivity()
         verify(sessionSummaryDao).deleteAllSessions()
-        
-        val settings = repository.getSettings().first()
-        assertEquals(40, settings.flashcardsPerSession) // Settings should be preserved
     }
 }

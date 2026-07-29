@@ -1,55 +1,44 @@
-# Implementation Plan - Repository Refactoring and Test Coverage
+# Implementation Plan - Fix SettingsViewModel WorkManager Dependency
 
-This plan outlines the refactoring of the `com.saishaddai.flashcards.repository.impl` package to unify the naming convention, improve code organization, and achieve comprehensive unit test coverage.
+This plan addresses the `IllegalStateException` in `SettingsViewModelTest` caused by a hard dependency on `WorkManager` via `WorkerUtils`. I will decouple the reminder scheduling logic into an interface to make it mockable in unit tests.
 
 ## User Review Required
 
 > [!IMPORTANT]
-> The renaming of repositories will affect the Dependency Injection setup (likely Hilt or manual DI). I will need to update the DI modules/providers as well.
+> This change introduces a new interface `ReminderScheduler` and refactors `SettingsViewModel` to use constructor injection for this dependency. This improves the app's architecture but requires updating the Koin dependency injection module.
 
 ## Proposed Changes
 
-### Repository Renaming
-Unify the naming convention by using the `Local...Repository` prefix for all local persistence implementations.
+### Reminder Scheduling
 
-#### [MODIFY] `OfflineDeckRepository` -> `LocalDeckRepository`
-#### [MODIFY] `RoomFlashcardRepository` -> `LocalFlashcardRepository`
-#### [MODIFY] `RoomStatsRepository` -> `LocalStatsRepository`
-#### [MODIFY] `RoomStudyRepository` -> `LocalStudyRepository`
-#### [MODIFY] `RoomSessionRepository` -> `LocalSessionRepository`
-#### [MODIFY] `DataStoreSettingsRepository` -> `LocalSettingsRepository`
+#### [NEW] [ReminderScheduler.kt](file:///Users/sai/Projects/Flashcards-2/app/src/main/java/com/saishaddai/flashcards/worker/ReminderScheduler.kt)
+- Define `ReminderScheduler` interface with `scheduleDailyReminder` and `cancelDailyReminder` methods.
+- Provide a `WorkManagerReminderScheduler` implementation that delegates to the existing `WorkerUtils`.
 
-### New Classes (Data Sources)
-Extract data-specific logic into separate data sources to improve testability and separate concerns.
+### Dependency Injection
 
-#### [NEW] `FlashcardAssetDataSource`
-- Extract the JSON asset loading logic from `LocalFlashcardRepository`.
-- This allows testing `LocalFlashcardRepository` without mocking the `Context` and `AssetManager` for JSON parsing.
+#### [MODIFY] [AppModule.kt](file:///Users/sai/Projects/Flashcards-2/app/src/main/java/com/saishaddai/flashcards/di/AppModule.kt)
+- Add a provider for `ReminderScheduler` using `WorkManagerReminderScheduler`.
 
-### Unit Test Coverage
-Create or update unit tests for all repositories in the `impl` package.
+### ViewModel Refactoring
 
-#### [NEW] `LocalStatsRepositoryTest`
-- Test weekly activity mapping.
-- Test skill mastery calculation.
-- Test streak and study time logic.
+#### [MODIFY] [SettingsViewModel.kt](file:///Users/sai/Projects/Flashcards-2/app/src/main/java/com/saishaddai/flashcards/viewmodel/SettingsViewModel.kt)
+- Update the constructor to accept a `ReminderScheduler` dependency.
+- Replace direct calls to `WorkerUtils` with calls to the injected `reminderScheduler`.
 
-#### [NEW] `LocalStudyRepositoryTest`
-- Test session completion logic.
-- Test progress calculation integration with `SessionCalculator`.
-- Test daily goal verification.
+### Unit Test Fixes
 
-#### [NEW] `LocalSessionRepositoryTest`
-- Test standard CRUD operations for sessions.
-
-#### [MODIFY] Update existing tests
-- Rename and update `OfflineDeckRepositoryTest` to `LocalDeckRepositoryTest`.
-- Rename and update `RoomFlashcardRepositoryTest` to `LocalFlashcardRepositoryTest`.
-- Rename and update `DataStoreSettingsRepositoryTest` to `LocalSettingsRepositoryTest`.
+#### [MODIFY] [SettingsViewModelTest.kt](file:///Users/sai/Projects/Flashcards-2/app/src/test/java/com/saishaddai/flashcards/viewmodel/SettingsViewModelTest.kt)
+- Mock the `ReminderScheduler` interface.
+- Pass the mock to the `SettingsViewModel` constructor.
+- This removes the need for `WorkManager` initialization during unit testing.
 
 ## Verification Plan
 
 ### Automated Tests
-- Run all unit tests in the `com.saishaddai.flashcards.repository.impl` package:
-  `./gradlew testDebugUnitTest --tests "com.saishaddai.flashcards.repository.impl.*"`
-- Verify that the app still compiles and runs after renaming (DI verification).
+- Run unit tests for `SettingsViewModel`:
+  `./gradlew testDebugUnitTest --tests com.saishaddai.flashcards.viewmodel.SettingsViewModelTest`
+- Ensure the project compiles successfully.
+
+### Manual Verification
+- Deploy the app and toggle study reminders in Settings to ensure they are still being scheduled correctly via `WorkManager`.

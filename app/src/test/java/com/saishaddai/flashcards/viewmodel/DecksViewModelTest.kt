@@ -56,6 +56,18 @@ class DecksViewModelTest {
     }
 
     @Test
+    fun `loadDecks handles error from repository`() = runTest {
+        repository.shouldFail = true
+        viewModel = DecksViewModel(application, repository)
+        
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertTrue(state is UiState.Error)
+        assertEquals("Critical Error:\nRuntimeException\nRepository failure", (state as UiState.Error).message)
+    }
+
+    @Test
     fun `onDeckSelected updates selected state`() = runTest {
         viewModel = DecksViewModel(application, repository)
         advanceUntilIdle()
@@ -124,11 +136,13 @@ class DecksViewModelTest {
 
     class FakeDeckRepository: DeckRepository<Deck> {
         var decks = listOf(
-            Deck(1, "Deck1", "Deck1 LN"),
-            Deck(2, "Deck2", "Deck2 LN")
+            Deck(1, "Deck1", "Deck1 LN", cardCount = 10),
+            Deck(2, "Deck2", "Deck2 LN", cardCount = 15)
         )
+        var shouldFail = false
 
         override suspend fun getData(): List<Deck> {
+            if (shouldFail) throw RuntimeException("Repository failure")
             return decks
         }
     }

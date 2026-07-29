@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.UserSettings
 import com.saishaddai.flashcards.utils.UiState
-import com.saishaddai.flashcards.worker.WorkerUtils
+import com.saishaddai.flashcards.worker.ReminderScheduler
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +34,8 @@ sealed class SettingsEvent {
 @OptIn(FlowPreview::class)
 class SettingsViewModel(
     application: Application,
-    private val repository: SettingsRepository
+    private val repository: SettingsRepository,
+    private val reminderScheduler: ReminderScheduler
 ) : AndroidViewModel(application) {
 
     private val _isActionLoading = MutableStateFlow(false)
@@ -70,10 +71,10 @@ class SettingsViewModel(
             _rescheduleRemindersRequest.debounce(1000L).collect {
                 val settings = repository.getSettings().first()
                 if (settings.studyReminders) {
-                    WorkerUtils.scheduleDailyReminder(getApplication(), settings.preferredStudyTime)
+                    reminderScheduler.scheduleDailyReminder(settings.preferredStudyTime)
                     _events.emit(SettingsEvent.ShowSnackbar("Reminder scheduled for ${settings.preferredStudyTime}"))
                 } else {
-                    WorkerUtils.cancelDailyReminder(getApplication())
+                    reminderScheduler.cancelDailyReminder()
                     _events.emit(SettingsEvent.ShowSnackbar("Reminders disabled"))
                 }
             }
@@ -98,7 +99,7 @@ class SettingsViewModel(
         viewModelScope.launch {
             val amPm = if (hour < 12) "AM" else "PM"
             val hourFormatted = if (hour % 12 == 0) 12 else hour % 12
-            val time = String.format(Locale.getDefault(), "%02d:%02d %s", hourFormatted, minute, amPm)
+            val time = String.format(Locale.US, "%02d:%02d %s", hourFormatted, minute, amPm)
             repository.savePreferredStudyTime(time)
             _rescheduleRemindersRequest.emit(Unit)
         }

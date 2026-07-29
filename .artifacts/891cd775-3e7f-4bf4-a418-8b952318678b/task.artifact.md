@@ -1,22 +1,7 @@
-- [x] Refactor Repository Implementation Names
-    - [x] Rename `OfflineDeckRepository` to `LocalDeckRepository`
-    - [x] Rename `RoomFlashcardRepository` to `LocalFlashcardRepository`
-    - [x] Rename `RoomStatsRepository` to `LocalStatsRepository`
-    - [x] Rename `RoomStudyRepository` to `LocalStudyRepository`
-    - [x] Rename `RoomSessionRepository` to `LocalSessionRepository`
-    - [x] Rename `DataStoreSettingsRepository` to `LocalSettingsRepository`
-- [x] Extract Data Sources
-    - [x] Create `FlashcardAssetDataSource`
-    - [x] Update `LocalFlashcardRepository` to use the new data source
-- [x] Update Dependency Injection
-    - [x] Update `AppModule.kt` with new repository and data source names
-- [x] Achieve 85% Unit Test Coverage
-    - [x] Create `LocalStatsRepositoryTest`
-    - [x] Create `LocalStudyRepositoryTest`
-    - [x] Create `LocalSessionRepositoryTest`
-    - [x] Update/Rename `LocalDeckRepositoryTest`
-    - [x] Update/Rename `LocalFlashcardRepositoryTest`
-    - [x] Update/Rename `LocalSettingsRepositoryTest`
-- [/] Verification
-    - [ ] Ensure all tests pass
-    - [ ] Verify 85% coverage goal
+- [x] Decouple WorkManager from SettingsViewModel
+    - [x] Create `ReminderScheduler` interface and implementation
+    - [x] Update `AppModule.kt` for Dependency Injection
+    - [x] Refactor `SettingsViewModel.kt` to use injected `ReminderScheduler`
+- [x] Fix `SettingsViewModelTest.kt`
+    - [x] Mock `ReminderScheduler` in the test setup
+    - [x] Verify all tests pass

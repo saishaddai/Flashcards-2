@@ -14,6 +14,8 @@ import com.saishaddai.flashcards.repository.StatsRepository
 import com.saishaddai.flashcards.repository.SessionRepository
 import com.saishaddai.flashcards.repository.StudyRepository
 import com.saishaddai.flashcards.repository.impl.*
+import com.saishaddai.flashcards.worker.ReminderScheduler
+import com.saishaddai.flashcards.worker.WorkManagerReminderScheduler
 import com.saishaddai.flashcards.viewmodel.DecksViewModel
 import com.saishaddai.flashcards.viewmodel.FinishSessionViewModel
 import com.saishaddai.flashcards.viewmodel.FlashcardViewModel
@@ -39,6 +41,7 @@ val appModule = module {
 
     // Data Sources
     single<FlashcardAssetDataSource> { FlashcardAssetDataSourceImpl(androidContext()) }
+    single<ReminderScheduler> { WorkManagerReminderScheduler(androidContext()) }
 
     // Repositories
     single<FlashcardRepository<DeckType, Flashcard>> { LocalFlashcardRepository(get(), get()) }
@@ -53,5 +56,5 @@ val appModule = module {
     viewModel { (deckId: Int) -> FlashcardViewModel(androidApplication(), deckId, get(), get()) }
     viewModel { StatsViewModel(get()) }
     viewModel { FinishSessionViewModel(get()) }
-    viewModel { SettingsViewModel(androidApplication(), get()) }
+    viewModel { SettingsViewModel(androidApplication(), get(), get()) }
 }

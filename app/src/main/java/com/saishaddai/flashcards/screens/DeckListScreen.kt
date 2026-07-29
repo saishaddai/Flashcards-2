@@ -56,12 +56,12 @@ import com.saishaddai.flashcards.utils.DeckAssets
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
 import com.saishaddai.flashcards.utils.getMasteryLevel
-import com.saishaddai.flashcards.viewmodel.DecksUiState
+import com.saishaddai.flashcards.viewmodel.DecksUiData
 import timber.log.Timber
 
 @Composable
 fun DeckListScreen(
-    uiState: UiState<DecksUiState>,
+    uiState: UiState<DecksUiData>,
     quickStartEnabled: Boolean,
     onDeckSelected: (Deck) -> Unit,
     onStartSessionClick: (Deck) -> Unit,
@@ -372,7 +372,7 @@ fun DeckCard(deck: Deck, onClick: () -> Unit, onDoubleClick: () -> Unit) {
 fun DeckListScreenPreview() {
     DeckListScreen(
         uiState = UiState.Success(
-            DecksUiState(
+            DecksUiData(
                 decks = listOf(
                     Deck(1, "Kotlin", "Kotlin Fundamentals", mastery = 50, cardCount = 20, isSelected = true),
                     Deck(2, "Android", "Android Development", mastery = 30, cardCount = 15)

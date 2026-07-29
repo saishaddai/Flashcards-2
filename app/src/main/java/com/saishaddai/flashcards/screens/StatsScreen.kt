@@ -91,7 +91,7 @@ import com.saishaddai.flashcards.ui.theme.TextGray
 import com.saishaddai.flashcards.ui.theme.WarningOrange
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
-import com.saishaddai.flashcards.viewmodel.StatsUiState
+import com.saishaddai.flashcards.viewmodel.StatsUiData
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -101,7 +101,7 @@ var SemanticsPropertyReceiver.colorProperty by ColorKey
 
 @Composable
 fun StatsScreen(
-    uiState: UiState<StatsUiState>,
+    uiState: UiState<StatsUiData>,
     promoDeck: Deck?,
     showSuggestions: Boolean,
     onViewAllSkillsClicked: () -> Unit,
@@ -655,7 +655,7 @@ fun StatsScreenPreview() {
     Flashcards2Theme {
         StatsScreen(
             uiState = UiState.Success(
-                StatsUiState(
+                StatsUiData(
                     weeklyActivity = listOf(10, 20, 15, 30, 25, 40, 35),
                     skillMastery = listOf(
                         MasteryData("Language", 85, R.string.mastery_level_veteran, RoyalBlue),

@@ -3,6 +3,7 @@ package com.saishaddai.flashcards.viewmodel
 import android.app.Application
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.UserSettings
+import com.saishaddai.flashcards.worker.ReminderScheduler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -27,13 +28,14 @@ class SettingsViewModelTest {
 
     private lateinit var viewModel: SettingsViewModel
     private lateinit var repository: FakeSettingsRepository
+    private val reminderScheduler: ReminderScheduler = mock()
     private val application: Application = mock()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         repository = FakeSettingsRepository()
-        viewModel = SettingsViewModel(application, repository)
+        viewModel = SettingsViewModel(application, repository, reminderScheduler)
     }
 
     @After
@@ -43,6 +45,7 @@ class SettingsViewModelTest {
 
     @Test
     fun `userSettings flow provides data from repository`() = runTest {
+        advanceUntilIdle()
         val settings = viewModel.userSettings.first { it != null }
         assertNotNull(settings)
         assertEquals(20, settings?.flashcardsPerSession)
@@ -50,6 +53,7 @@ class SettingsViewModelTest {
 
     @Test
     fun `onRestartMasteryClicked calls repository`() = runTest {
+        advanceUntilIdle()
         viewModel.onRestartMasteryClicked()
         advanceUntilIdle()
         assertTrue(repository.restartCalled)
@@ -57,6 +61,7 @@ class SettingsViewModelTest {
 
     @Test
     fun `onPreferredStudyTimeChanged updates repository with formatted time`() = runTest {
+        advanceUntilIdle()
         viewModel.onPreferredStudyTimeChanged(14, 30) // 2:30 PM
         advanceUntilIdle()
         assertEquals("02:30 PM", repository.settings.value.preferredStudyTime)
@@ -76,6 +81,7 @@ class SettingsViewModelTest {
 
     @Test
     fun `onFlashcardsPerSessionChanged updates repository`() = runTest {
+        advanceUntilIdle()
         viewModel.onFlashcardsPerSessionChanged(30)
         advanceUntilIdle()
         assertEquals(30, repository.settings.value.flashcardsPerSession)
@@ -83,6 +89,7 @@ class SettingsViewModelTest {
 
     @Test
     fun `onDailyStudyGoalChanged updates repository`() = runTest {
+        advanceUntilIdle()
         viewModel.onDailyStudyGoalChanged(75)
         advanceUntilIdle()
         assertEquals(75, repository.settings.value.dailyStudyGoal)
@@ -90,6 +97,7 @@ class SettingsViewModelTest {
 
     @Test
     fun `onQuickStartChanged updates repository`() = runTest {
+        advanceUntilIdle()
         viewModel.onQuickStartChanged(false)
         advanceUntilIdle()
         assertEquals(false, repository.settings.value.quickStart)
@@ -97,6 +105,7 @@ class SettingsViewModelTest {
 
     @Test
     fun `onShowAnswersChanged updates repository`() = runTest {
+        advanceUntilIdle()
         viewModel.onShowAnswersChanged(false)
         advanceUntilIdle()
         assertEquals(false, repository.settings.value.showAnswers)
@@ -104,6 +113,7 @@ class SettingsViewModelTest {
 
     @Test
     fun `onShowSuggestionsChanged updates repository`() = runTest {
+        advanceUntilIdle()
         viewModel.onShowSuggestionsChanged(false)
         advanceUntilIdle()
         assertEquals(false, repository.settings.value.showSuggestions)
@@ -111,6 +121,7 @@ class SettingsViewModelTest {
 
     @Test
     fun `onStudyRemindersChanged updates repository`() = runTest {
+        advanceUntilIdle()
         viewModel.onStudyRemindersChanged(false)
         advanceUntilIdle()
         assertEquals(false, repository.settings.value.studyReminders)
@@ -118,6 +129,7 @@ class SettingsViewModelTest {
 
     @Test
     fun `onNotificationSoundChanged updates repository`() = runTest {
+        advanceUntilIdle()
         viewModel.onNotificationSoundChanged(true)
         advanceUntilIdle()
         assertEquals(true, repository.settings.value.notificationSound)

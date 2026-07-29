@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
-data class StatsUiState(
+data class StatsUiData(
     val weeklyActivity: List<Int> = emptyList(),
     val skillMastery: List<MasteryData> = emptyList(),
     val flashcardsViewed: String = "0",
@@ -28,8 +28,8 @@ class StatsViewModel(
     private val repository: StatsRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<StatsUiState>>(UiState.Loading)
-    val uiState: StateFlow<UiState<StatsUiState>> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<UiState<StatsUiData>>(UiState.Loading)
+    val uiState: StateFlow<UiState<StatsUiData>> = _uiState.asStateFlow()
 
     init {
         loadStats()
@@ -48,7 +48,7 @@ class StatsViewModel(
                 repository.getMasteredDecks(),
                 repository.getWeeklyComparison()
             ) { results ->
-                StatsUiState(
+                StatsUiData(
                     weeklyActivity = results[0] as List<Int>,
                     skillMastery = results[1] as List<MasteryData>,
                     flashcardsViewed = results[2] as String,

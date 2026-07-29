@@ -63,6 +63,19 @@ class FlashcardViewModelTest {
     }
 
     @Test
+    fun `loadFlashcards handles error`() = runTest {
+        repository.shouldFail = true
+        
+        // Re-init to trigger loadFlashcards
+        viewModel = FlashcardViewModel(application, deckId, repository, settingsRepository)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertTrue(state is UiState.Error)
+        assertEquals("Failed to load flashcards", (state as UiState.Error).message)
+    }
+
+    @Test
     fun `onShowResponseClicked updates showAnswer state`() = runTest {
         advanceUntilIdle()
         assertFalse((viewModel.uiState.value as UiState.Success).data.showAnswer)
@@ -91,7 +104,9 @@ class FlashcardViewModelTest {
 
     // A simple fake repository for testing
     class FakeFlashcardRepository : FlashcardRepository<DeckType, Flashcard> {
+        var shouldFail = false
         override suspend fun getData(type: DeckType, size: Int): List<Flashcard> {
+            if (shouldFail) throw RuntimeException("Error")
             return listOf(
                 Flashcard(1, 1, "Q1", "A1"),
                 Flashcard(1, 2, "Q2", "A2")

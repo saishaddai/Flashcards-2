@@ -173,4 +173,8 @@
     <string name="loading_stats">Getting Stats…</string>
     <string name="no_decks_available">No decks available. Please check back later.</string>
 
+    <!-- Notifications -->
+    <string name="notification_channel_name">Daily Study Reminders</string>
+    <string name="notification_reminder_text">Ready for your daily flashcards session?</string>
+
 </resources>

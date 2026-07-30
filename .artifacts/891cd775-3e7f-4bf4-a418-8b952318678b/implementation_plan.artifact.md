@@ -1,44 +1,35 @@
-# Implementation Plan - Fix SettingsViewModel WorkManager Dependency
+# Implementation Plan - Testing WorkManager
 
-This plan addresses the `IllegalStateException` in `SettingsViewModelTest` caused by a hard dependency on `WorkManager` via `WorkerUtils`. I will decouple the reminder scheduling logic into an interface to make it mockable in unit tests.
+This plan introduces automated testing for the `ReminderWorker` to ensure that background study reminders are correctly triggered based on user settings.
 
 ## User Review Required
 
 > [!IMPORTANT]
-> This change introduces a new interface `ReminderScheduler` and refactors `SettingsViewModel` to use constructor injection for this dependency. This improves the app's architecture but requires updating the Koin dependency injection module.
+> This plan adds a new test dependency `androidx.work:work-testing`. I will also need to mock Koin components during the test since `ReminderWorker` uses `KoinComponent`.
 
 ## Proposed Changes
 
-### Reminder Scheduling
+### Build Configuration
 
-#### [NEW] [ReminderScheduler.kt](file:///Users/sai/Projects/Flashcards-2/app/src/main/java/com/saishaddai/flashcards/worker/ReminderScheduler.kt)
-- Define `ReminderScheduler` interface with `scheduleDailyReminder` and `cancelDailyReminder` methods.
-- Provide a `WorkManagerReminderScheduler` implementation that delegates to the existing `WorkerUtils`.
+#### [MODIFY] [libs.versions.toml](file:///Users/sai/Projects/Flashcards-2/gradle/libs.versions.toml)
+- Add `androidx-work-testing` library definition.
 
-### Dependency Injection
+#### [MODIFY] [app/build.gradle.kts](file:///Users/sai/Projects/Flashcards-2/app/build.gradle.kts)
+- Add `androidTestImplementation(libs.androidx.work.testing)` dependency.
 
-#### [MODIFY] [AppModule.kt](file:///Users/sai/Projects/Flashcards-2/app/src/main/java/com/saishaddai/flashcards/di/AppModule.kt)
-- Add a provider for `ReminderScheduler` using `WorkManagerReminderScheduler`.
+### Instrumented Tests
 
-### ViewModel Refactoring
-
-#### [MODIFY] [SettingsViewModel.kt](file:///Users/sai/Projects/Flashcards-2/app/src/main/java/com/saishaddai/flashcards/viewmodel/SettingsViewModel.kt)
-- Update the constructor to accept a `ReminderScheduler` dependency.
-- Replace direct calls to `WorkerUtils` with calls to the injected `reminderScheduler`.
-
-### Unit Test Fixes
-
-#### [MODIFY] [SettingsViewModelTest.kt](file:///Users/sai/Projects/Flashcards-2/app/src/test/java/com/saishaddai/flashcards/viewmodel/SettingsViewModelTest.kt)
-- Mock the `ReminderScheduler` interface.
-- Pass the mock to the `SettingsViewModel` constructor.
-- This removes the need for `WorkManager` initialization during unit testing.
+#### [NEW] [ReminderWorkerTest.kt](file:///Users/sai/Projects/Flashcards-2/app/src/androidTest/java/com/saishaddai/flashcards/worker/ReminderWorkerTest.kt)
+- Create a test class in `androidTest`.
+- Use `TestListenableWorkerBuilder` to run the `ReminderWorker`.
+- Mock `SettingsRepository` to test both enabled and disabled reminder scenarios.
+- Verify that `doWork()` returns `ListenableWorker.Result.success()`.
 
 ## Verification Plan
 
 ### Automated Tests
-- Run unit tests for `SettingsViewModel`:
-  `./gradlew testDebugUnitTest --tests com.saishaddai.flashcards.viewmodel.SettingsViewModelTest`
-- Ensure the project compiles successfully.
+- Run the new worker test:
+  `./gradlew :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.saishaddai.flashcards.worker.ReminderWorkerTest`
 
 ### Manual Verification
-- Deploy the app and toggle study reminders in Settings to ensure they are still being scheduled correctly via `WorkManager`.
+- I'll provide `adb` commands in the walkthrough to manually trigger the worker on a real device for visual notification verification.

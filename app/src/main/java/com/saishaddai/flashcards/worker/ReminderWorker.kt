@@ -46,7 +46,7 @@ class ReminderWorker(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
-                "Daily Study Reminders",
+                applicationContext.getString(R.string.notification_channel_name),
                 NotificationManager.IMPORTANCE_DEFAULT
             )
             notificationManager.createNotificationChannel(channel)
@@ -55,7 +55,7 @@ class ReminderWorker(
         val notification = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_launcher_foreground) // Use your app icon
             .setContentTitle(applicationContext.getString(R.string.app_name))
-            .setContentText("Ready for your daily flashcards session?")
+            .setContentText(applicationContext.getString(R.string.notification_reminder_text))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .build()

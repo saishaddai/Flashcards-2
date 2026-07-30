@@ -1,7 +1,7 @@
-- [x] Decouple WorkManager from SettingsViewModel
-    - [x] Create `ReminderScheduler` interface and implementation
-    - [x] Update `AppModule.kt` for Dependency Injection
-    - [x] Refactor `SettingsViewModel.kt` to use injected `ReminderScheduler`
-- [x] Fix `SettingsViewModelTest.kt`
-    - [x] Mock `ReminderScheduler` in the test setup
-    - [x] Verify all tests pass
+- [x] Add WorkManager testing dependencies
+    - [x] Update `libs.versions.toml`
+    - [x] Update `app/build.gradle.kts`
+- [x] Create instrumented test for `ReminderWorker`
+    - [x] Set up Koin for testing in `androidTest`
+    - [x] Implement `ReminderWorkerTest`
+- [x] Verify test execution (compilation)

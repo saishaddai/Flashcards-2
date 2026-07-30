@@ -1,7 +1,0 @@
-- [x] Add WorkManager testing dependencies
-    - [x] Update `libs.versions.toml`
-    - [x] Update `app/build.gradle.kts`
-- [x] Create instrumented test for `ReminderWorker`
-    - [x] Set up Koin for testing in `androidTest`
-    - [x] Implement `ReminderWorkerTest`
-- [x] Verify test execution (compilation)

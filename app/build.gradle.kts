@@ -75,6 +75,7 @@ dependencies {
     testImplementation(libs.mockito.kotlin)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.work.testing)
     androidTestImplementation(libs.mockito.android)
     androidTestImplementation(libs.mockito.kotlin)
     androidTestImplementation(platform(libs.androidx.compose.bom))

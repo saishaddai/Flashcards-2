@@ -1,7 +1,0 @@
-- [x] Decouple WorkManager from SettingsViewModel
-    - [x] Create `ReminderScheduler` interface and implementation
-    - [x] Update `AppModule.kt` for Dependency Injection
-    - [x] Refactor `SettingsViewModel.kt` to use injected `ReminderScheduler`
-- [x] Fix `SettingsViewModelTest.kt`
-    - [x] Mock `ReminderScheduler` in the test setup
-    - [x] Verify all tests pass

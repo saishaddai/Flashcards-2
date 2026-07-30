@@ -22,7 +22,7 @@ import com.saishaddai.flashcards.ui.theme.ErrorRed
 import com.saishaddai.flashcards.ui.theme.SuccessGreen
 import com.saishaddai.flashcards.utils.TestTags
 import com.saishaddai.flashcards.utils.UiState
-import com.saishaddai.flashcards.viewmodel.StatsUiState
+import com.saishaddai.flashcards.viewmodel.StatsUiData
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -62,7 +62,7 @@ class StatsScreenTest {
         composeTestRule.setContent {
             StatsScreen(
                 uiState = UiState.Success(
-                    StatsUiState(
+                    StatsUiData(
                         weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
                         flashcardsViewed = "100",
                         currentStreak = "5",
@@ -89,7 +89,7 @@ class StatsScreenTest {
         composeTestRule.setContent {
             StatsScreen(
                 uiState = UiState.Success(
-                    StatsUiState(
+                    StatsUiData(
                         weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                         weeklyComparison = 15
                     )
@@ -121,7 +121,7 @@ class StatsScreenTest {
         composeTestRule.setContent {
             StatsScreen(
                 uiState = UiState.Success(
-                    StatsUiState(
+                    StatsUiData(
                         weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                         weeklyComparison = -8
                     )
@@ -153,7 +153,7 @@ class StatsScreenTest {
         composeTestRule.setContent {
             StatsScreen(
                 uiState = UiState.Success(
-                    StatsUiState(
+                    StatsUiData(
                         weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                         weeklyComparison = 0
                     )
@@ -188,7 +188,7 @@ class StatsScreenTest {
         composeTestRule.setContent {
             StatsScreen(
                 uiState = UiState.Success(
-                    StatsUiState(
+                    StatsUiData(
                         weeklyActivity = listOf(10, 20, 30, 42, 50, 60, 70),
                         flashcardsViewed = "1,234",
                         currentStreak = "7",
@@ -235,7 +235,7 @@ class StatsScreenTest {
         composeTestRule.setContent {
             StatsScreen(
                 uiState = UiState.Success(
-                    StatsUiState(
+                    StatsUiData(
                         weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70)
                     )
                 ),
@@ -261,7 +261,7 @@ class StatsScreenTest {
         composeTestRule.setContent {
             StatsScreen(
                 uiState = UiState.Success(
-                    StatsUiState(
+                    StatsUiData(
                         weeklyActivity = listOf(0, 0, 0, 0, 0, 0, 0)
                     )
                 ),
@@ -297,9 +297,9 @@ class StatsScreenTest {
 
     @Test
     fun testStatsScreen_clickWeeklyActivityInfo_showsDialog() {
-        var uiState by mutableStateOf<UiState<StatsUiState>>(
+        var uiState by mutableStateOf<UiState<StatsUiData>>(
             UiState.Success(
-                StatsUiState(
+                StatsUiData(
                     weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70)
                 )
             )
@@ -343,9 +343,9 @@ class StatsScreenTest {
 
     @Test
     fun testStatsScreen_clickSkillMasteryInfo_showsDialog() {
-        var uiState by mutableStateOf<UiState<StatsUiState>>(
+        var uiState by mutableStateOf<UiState<StatsUiData>>(
             UiState.Success(
-                StatsUiState(
+                StatsUiData(
                     weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70)
                 )
             )
@@ -424,7 +424,7 @@ class StatsScreenTest {
         composeTestRule.setContent {
             StatsScreen(
                 uiState = UiState.Success(
-                    StatsUiState(
+                    StatsUiData(
                         weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70),
                         skillMastery = masteryData,
                         isSkillsExpanded = isSkillsExpanded
@@ -469,7 +469,7 @@ class StatsScreenTest {
         composeTestRule.setContent {
             StatsScreen(
                 uiState = UiState.Success(
-                    StatsUiState(
+                    StatsUiData(
                         weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                         flashcardsViewed = "1,500",
                         currentStreak = "10 Days",
@@ -500,7 +500,7 @@ class StatsScreenTest {
 
         composeTestRule.setContent {
             StatsScreen(
-                uiState = UiState.Success(StatsUiState(
+                uiState = UiState.Success(StatsUiData(
                     weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                 )),
                 promoDeck = mockDeck,
@@ -531,7 +531,7 @@ class StatsScreenTest {
         composeTestRule.setContent {
             StatsScreen(
                 uiState = UiState.Success(
-                    StatsUiState(
+                    StatsUiData(
                         weeklyActivity = listOf(10, 20, 30, 40, 50, 60, 70), // Ensure container renders
                         skillMastery = emptyList()
                     )

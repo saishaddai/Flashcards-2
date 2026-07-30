@@ -1,4 +1,0 @@
-- `[x]` Refactor `NavigationWrapper.kt` to hoist `NavBackStack`
-- `[x]` Create `NavigationTest.kt` for instrumentation testing
-- `[x]` Verify changes with automated tests (Build successful)
-- `[x]` Create walkthrough summary

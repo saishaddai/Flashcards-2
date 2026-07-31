@@ -33,7 +33,8 @@ I'm trying to create a new version of Flashcards with everything I learned so fa
 - **Unit Test with Mokito**
 - **Instrumentation Tests with jUnit**
 - **Room**
-- **Android Studio**  
+- **Android Studio**
+- **Gemini (for the latest stages of development)**
 
 ---
 

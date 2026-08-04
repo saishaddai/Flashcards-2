@@ -16,6 +16,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.saishaddai.flashcards.R
 import com.saishaddai.flashcards.repository.UserSettings
 import com.saishaddai.flashcards.utils.TestTags
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -156,5 +157,53 @@ class SettingsScreenTest {
         composeTestRule.onNodeWithText(appVersion, substring = true)
             .performScrollTo()
             .assertIsDisplayed()
+    }
+
+    @Test
+    fun settingsScreen_clickingRestartMastery_showsConfirmationDialog() {
+        composeTestRule.setContent {
+            SettingsScreenContent(
+                isLoading = false,
+                userSettings = defaultSettings,
+                onRestartMasteryClicked = {},
+                onPreferredStudyTimeChanged = { _, _ -> }
+            )
+        }
+
+        val restartText = context.getString(R.string.settings_system_restart)
+        
+        // Scroll to and click the restart button
+        composeTestRule.onNodeWithText(restartText).performScrollTo().performClick()
+
+        // Verify dialog is shown
+        composeTestRule.onNodeWithTag("restart_dialog").assertIsDisplayed()
+    }
+
+    @Test
+    fun settingsScreen_confirmingRestartMastery_callsCallback() {
+        var restartClicked = false
+        composeTestRule.setContent {
+            SettingsScreenContent(
+                isLoading = false,
+                userSettings = defaultSettings,
+                onRestartMasteryClicked = { restartClicked = true },
+                onPreferredStudyTimeChanged = { _, _ -> }
+            )
+        }
+
+        val restartText = context.getString(R.string.settings_system_restart)
+        val confirmText = context.getString(R.string.settings_restart_dialog_confirm)
+
+        // Trigger dialog
+        composeTestRule.onNodeWithText(restartText).performScrollTo().performClick()
+
+        // Click confirm
+        composeTestRule.onNodeWithText(confirmText).performClick()
+
+        // Verify callback
+        assertTrue("onRestartMasteryClicked should have been called", restartClicked)
+        
+        // Verify dialog is dismissed (state managed in Composable)
+        composeTestRule.onNodeWithTag("restart_dialog").assertDoesNotExist()
     }
 }

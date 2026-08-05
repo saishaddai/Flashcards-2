@@ -17,7 +17,7 @@ class DeckAssetsTest {
 
     @Test
     fun `getIconForDeck upper boundary validation`() {
-        assertEquals(R.drawable.graphql_icon, DeckAssets.getIconForDeck(19))
+        assertEquals(Icons.Default.Hub, DeckAssets.getIconForDeck(19))
     }
 
     @Test
@@ -37,7 +37,7 @@ class DeckAssetsTest {
 
     @Test
     fun `getIconForDeck overflow boundary check`() {
-        assertEquals(Icons.Default.Add, DeckAssets.getIconForDeck(20))
+        assertEquals(Icons.Default.Sensors, DeckAssets.getIconForDeck(20))
     }
 
     @Test
@@ -62,9 +62,7 @@ class DeckAssetsTest {
             13 to R.drawable.gradle_icon,
             14 to R.drawable.ops_icon,
             15 to R.drawable.libraries_icon,
-            16 to R.drawable.patterns_icon,
-            18 to R.drawable.firebase_icon,
-            19 to R.drawable.graphql_icon
+            16 to R.drawable.patterns_icon
         )
 
         expectedMappings.forEach { (id, expectedResource) ->
@@ -81,7 +79,10 @@ class DeckAssetsTest {
             7 to Icons.Default.Storage,
             8 to Icons.Default.Link,
             9 to Icons.Default.Palette,
-            17 to Icons.Default.ForkRight
+            17 to Icons.Default.ForkRight,
+            18 to Icons.Default.Cloud,
+            19 to Icons.Default.Hub,
+            20 to Icons.Default.Sensors
         )
 
         expectedMappings.forEach { (id, expectedVector) ->
@@ -91,8 +92,8 @@ class DeckAssetsTest {
 
     @Test
     fun `getIconForDeck return type integrity check`() {
-        val drawableIds = listOf(1, 2, 3, 10, 11, 12, 13, 14, 15, 16, 18, 19)
-        val vectorIds = listOf(4, 5, 6, 7, 8, 9, 17, 0, 20) // Including defaults
+        val drawableIds = listOf(1, 2, 3, 10, 11, 12, 13, 14, 15, 16)
+        val vectorIds = listOf(4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 0, 21) // Including defaults
 
         drawableIds.forEach { id ->
             val result = DeckAssets.getIconForDeck(id)

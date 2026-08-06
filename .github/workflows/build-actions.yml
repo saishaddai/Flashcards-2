@@ -6,17 +6,28 @@ on:
   pull_request:
     branches: [ "master" ]
 
-env:
-  RUN_BUILD: true
-  RUN_UNIT_TEST: true
-  RUN_INSTRUMENTED_TEST: false
-  RUN_RELEASE_SIGNING: false
-  RUN_TEST_REPORTS: false
-
 jobs:
-  build:
+  configuration:
     runs-on: ubuntu-latest
-    if: ${{ env.RUN_BUILD == 'true' }}
+    outputs:
+      RUN_BUILD: ${{ steps.set-toggles.outputs.RUN_BUILD }}
+      RUN_UNIT_TEST: ${{ steps.set-toggles.outputs.RUN_UNIT_TEST }}
+      RUN_INSTRUMENTED_TEST: ${{ steps.set-toggles.outputs.RUN_INSTRUMENTED_TEST }}
+      RUN_RELEASE_SIGNING: ${{ steps.set-toggles.outputs.RUN_RELEASE_SIGNING }}
+      RUN_TEST_REPORTS: ${{ steps.set-toggles.outputs.RUN_TEST_REPORTS }}
+    steps:
+      - id: set-toggles
+        run: |
+          echo "RUN_BUILD=true" >> $GITHUB_OUTPUT
+          echo "RUN_UNIT_TEST=true" >> $GITHUB_OUTPUT
+          echo "RUN_INSTRUMENTED_TEST=false" >> $GITHUB_OUTPUT
+          echo "RUN_RELEASE_SIGNING=false" >> $GITHUB_OUTPUT
+          echo "RUN_TEST_REPORTS=false" >> $GITHUB_OUTPUT
+
+  build:
+    needs: configuration
+    if: needs.configuration.outputs.RUN_BUILD == 'true'
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -31,9 +42,9 @@ jobs:
         run: ./gradlew build
 
   unit-test:
+    needs: [configuration, build]
+    if: needs.configuration.outputs.RUN_UNIT_TEST == 'true'
     runs-on: ubuntu-latest
-    needs: build
-    if: ${{ env.RUN_UNIT_TEST == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,9 +59,9 @@ jobs:
         run: ./gradlew testDebugUnitTest
 
   instrumented-test:
+    needs: [configuration, build]
+    if: needs.configuration.outputs.RUN_INSTRUMENTED_TEST == 'true'
     runs-on: ubuntu-latest
-    needs: build
-    if: ${{ env.RUN_INSTRUMENTED_TEST == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -63,9 +74,9 @@ jobs:
         run: ./gradlew connectedDebugAndroidTest
 
   release-signing:
+    needs: [configuration, build]
+    if: needs.configuration.outputs.RUN_RELEASE_SIGNING == 'true'
     runs-on: ubuntu-latest
-    needs: build
-    if: ${{ env.RUN_RELEASE_SIGNING == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -83,9 +94,9 @@ jobs:
           path: app/build/outputs/apk/release/app-release.apk
 
   test-reports:
+    needs: [configuration, unit-test]
+    if: needs.configuration.outputs.RUN_TEST_REPORTS == 'true'
     runs-on: ubuntu-latest
-    needs: unit-test
-    if: ${{ env.RUN_TEST_REPORTS == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

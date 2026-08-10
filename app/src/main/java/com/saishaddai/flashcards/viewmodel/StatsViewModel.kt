@@ -38,24 +38,30 @@ class StatsViewModel(
     fun loadStats() {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
-            
-            combine(
-                repository.getWeeklyActivity(),
-                repository.getSkillMastery(),
+
+            val generalStatsFlow = combine(
                 repository.getFlashcardsViewed(),
                 repository.getCurrentStreak(),
                 repository.getStudyTime(),
                 repository.getMasteredDecks(),
                 repository.getWeeklyComparison()
-            ) { results ->
+            ) { viewed, streak, time, mastered, comparison ->
+                GeneralStats(viewed, streak, time, mastered, comparison)
+            }
+
+            combine(
+                repository.getWeeklyActivity(),
+                repository.getSkillMastery(),
+                generalStatsFlow
+            ) { weekly, skills, general ->
                 StatsUiData(
-                    weeklyActivity = results[0] as List<Int>,
-                    skillMastery = results[1] as List<MasteryData>,
-                    flashcardsViewed = results[2] as String,
-                    currentStreak = results[3] as String,
-                    studyTime = results[4] as String,
-                    masteredDecks = results[5] as String,
-                    weeklyComparison = results[6] as Int
+                    weeklyActivity = weekly,
+                    skillMastery = skills,
+                    flashcardsViewed = general.viewed,
+                    currentStreak = general.streak,
+                    studyTime = general.time,
+                    masteredDecks = general.mastered,
+                    weeklyComparison = general.comparison
                 )
             }.catch { e ->
                 _uiState.value = UiState.Error("Failed to load statistics", e)
@@ -64,6 +70,14 @@ class StatsViewModel(
             }
         }
     }
+
+    private data class GeneralStats(
+        val viewed: String,
+        val streak: String,
+        val time: String,
+        val mastered: String,
+        val comparison: Int
+    )
 
     fun onViewAllSkillsClicked() {
         val currentState = _uiState.value

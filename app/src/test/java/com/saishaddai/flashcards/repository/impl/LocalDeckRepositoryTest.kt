@@ -18,7 +18,7 @@ class LocalDeckRepositoryTest {
 
     private lateinit var repository: LocalDeckRepository
     private val flashcardRepository: FlashcardRepository<DeckType, Flashcard> = mock {
-        onBlocking { getDataCount(any()) } doReturn 0
+        on { getDataCount(any()) } doReturn 0
     }
     
     private val sessions = listOf(

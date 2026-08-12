@@ -33,7 +33,7 @@ val appModule = module {
             androidContext(),
             AppDatabase::class.java,
             "flashcards_db"
-        ).fallbackToDestructiveMigration().build()
+        ).fallbackToDestructiveMigration(dropAllTables = true).build()
     }
     single { get<AppDatabase>().sessionSummaryDao() }
     single { get<AppDatabase>().studyDao() }

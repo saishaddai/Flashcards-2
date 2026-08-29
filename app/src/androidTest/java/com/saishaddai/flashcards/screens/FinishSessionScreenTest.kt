@@ -40,7 +40,7 @@ class FinishSessionScreenTest {
                     endTime = 0L,
                     totalTimeMillis = 0L,
                     onFinishSession = {},
-                    onShareSummary = {},
+                    onShareSummary = { _ -> },
                     onBackToDecksClicked = {},
                     onNavigationHandled = {},
                     onRetry = {}
@@ -64,7 +64,7 @@ class FinishSessionScreenTest {
                     endTime = 0L,
                     totalTimeMillis = 0L,
                     onFinishSession = {},
-                    onShareSummary = {},
+                    onShareSummary = { _ -> },
                     onBackToDecksClicked = {},
                     onNavigationHandled = {},
                     onRetry = { retryCalled = true }
@@ -98,7 +98,7 @@ class FinishSessionScreenTest {
                     endTime = 1000L,
                     totalTimeMillis = 1000L,
                     onFinishSession = { finishSessionCalled = true },
-                    onShareSummary = {},
+                    onShareSummary = { _ -> },
                     onBackToDecksClicked = {},
                     onNavigationHandled = { navigationHandledCalled = true },
                     onRetry = {}
@@ -240,7 +240,7 @@ class FinishSessionScreenTest {
                     totalTimeMillis = 1000L,
                     sessionResult = null,
                     onBackToDecksClicked = {},
-                    onShareSummary = { shareSummaryCalled = true }
+                    onShareSummary = { _ -> shareSummaryCalled = true }
                 )
             }
         }

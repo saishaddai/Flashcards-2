@@ -1,5 +1,6 @@
 package com.saishaddai.flashcards.navigation
 
+import android.content.Intent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
@@ -12,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -89,6 +91,7 @@ fun NavigationWrapper(
                 entry<FinishSession> { route ->
                     val viewModel: FinishSessionViewModel = koinViewModel()
                     val uiState by viewModel.uiState.collectAsState()
+                    val context = LocalContext.current
 
                     androidx.compose.runtime.LaunchedEffect(Unit) {
                         viewModel.saveSession(route.deck, route.cardsReviewed, route.startTime, route.endTime, route.durationMillis)
@@ -104,7 +107,13 @@ fun NavigationWrapper(
                         onFinishSession = {
                             backStack.resetTo(DeckList)
                         },
-                        onShareSummary = {},
+                        onShareSummary = { message ->
+                            val intent = Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_TEXT, message)
+                            }
+                            context.startActivity(Intent.createChooser(intent, null))
+                        },
                         onBackToDecksClicked = viewModel::onBackToDecksClicked,
                         onNavigationHandled = viewModel::onNavigationHandled,
                         onRetry = {

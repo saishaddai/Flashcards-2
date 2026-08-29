@@ -79,6 +79,7 @@
 
     <string name="finish_button_back_to_decks">Back to Decks</string>
     <string name="finish_button_review_session">Review Session</string>
+    <string name="finish_share_message">I just finished a session for \'%1$s\'! I reviewed %2$d cards in %3$d minutes using the Flashcards App. #AndroidDev #Learning</string>
 
     <!-- InstructionsScreen -->
     <string name="instructions_guide_label">GUIDE</string>

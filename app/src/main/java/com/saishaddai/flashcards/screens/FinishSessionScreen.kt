@@ -72,7 +72,7 @@ fun FinishSessionScreen(
     endTime: Long,
     totalTimeMillis: Long,
     onFinishSession: () -> Unit,
-    onShareSummary: (Deck) -> Unit,
+    onShareSummary: (String) -> Unit,
     onBackToDecksClicked: () -> Unit,
     onNavigationHandled: () -> Unit,
     onRetry: () -> Unit
@@ -119,8 +119,16 @@ fun FinishSessionContent(
     totalTimeMillis: Long,
     sessionResult: SessionResult?,
     onBackToDecksClicked: () -> Unit,
-    onShareSummary: (Deck) -> Unit
+    onShareSummary: (String) -> Unit
 ) {
+    val durationMins = (totalTimeMillis / (1000 * 60)).toInt().coerceAtLeast(1)
+    val shareMessage = stringResource(
+        R.string.finish_share_message,
+        deck.name,
+        cardsReviewed,
+        durationMins
+    )
+
     val parties = remember {
         listOf(
             Party(
@@ -156,7 +164,7 @@ fun FinishSessionContent(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { onShareSummary(deck) }) {
+                    IconButton(onClick = { onShareSummary(shareMessage) }) {
                         Icon(
                             imageVector = Icons.Default.Share,
                             contentDescription = stringResource(R.string.finish_action_share_content_desc),
@@ -362,7 +370,7 @@ fun FinishSessionScreenPreview() {
             endTime = 1000L * 60 * 12,
             totalTimeMillis = 1000L * 60 * 10,
             onFinishSession = {},
-            onShareSummary = {},
+            onShareSummary = { _ -> },
             onBackToDecksClicked = {},
             onNavigationHandled = {},
             onRetry = {}

@@ -41,6 +41,9 @@ interface StudyDao {
     @Query("SELECT SUM(durationMillis) FROM study_sessions")
     fun getTotalStudyTimeMillis(): Flow<Long?>
 
+    @Query("SELECT SUM(durationMillis) FROM study_sessions WHERE endTime >= :since")
+    suspend fun getStudyTimeMillisSince(since: Long): Long?
+
     @Transaction
     suspend fun completeSession(
         session: StudySession,

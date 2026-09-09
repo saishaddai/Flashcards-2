@@ -241,12 +241,12 @@ fun FinishSessionContent(
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
                     icon = Icons.Default.Timer,
-                    text = stringResource(R.string.finish_weekly_time, 25),
+                    text = stringResource(R.string.finish_weekly_time, sessionResult?.weeklyTimeMins ?: 0),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AchievementReached(
                     icon = Icons.AutoMirrored.Filled.FactCheck,
-                    text = stringResource(R.string.finish_daily_goal_streak, 3),
+                    text = stringResource(R.string.finish_daily_goal_streak, sessionResult?.streak ?: 0),
                 )
                 Spacer(modifier = Modifier.height(32.dp))
                 BackToDecksButton(onClick = onBackToDecksClicked)

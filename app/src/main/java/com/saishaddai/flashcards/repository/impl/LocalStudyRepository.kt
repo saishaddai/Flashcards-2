@@ -75,7 +75,24 @@ class LocalStudyRepository(
 
         studyDao.completeSession(session, newDeckMastery, newDailyActivity)
 
-        return result
+        // Calculate updated statistics for the result
+        val updatedStreak = calculateStreak()
+        
+        val calendar = Calendar.getInstance()
+        calendar.firstDayOfWeek = Calendar.MONDAY
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        
+        val totalMillis = studyDao.getStudyTimeMillisSince(calendar.timeInMillis) ?: 0L
+        val weeklyTimeMins = (totalMillis / (1000 * 60)).toInt()
+
+        return result.copy(
+            streak = updatedStreak,
+            weeklyTimeMins = weeklyTimeMins
+        )
     }
 
     override suspend fun getCurrentStreak(): Int = calculateStreak()

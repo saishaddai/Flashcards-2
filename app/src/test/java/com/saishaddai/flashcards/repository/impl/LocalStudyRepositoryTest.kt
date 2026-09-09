@@ -50,12 +50,13 @@ class LocalStudyRepositoryTest {
         
         val sessionResult = SessionResult(10.0, 10.0, MasteryLevel.NOVICE)
         whenever(calculator.calculateProgress(any(), any(), any(), any())).thenReturn(sessionResult)
+        whenever(studyDao.getStudyTimeMillisSince(any())).thenReturn(0L)
 
         // When
         val result = repository.completeSession(deck, 5, 0L, 100L, 100L)
 
         // Then
-        assertEquals(sessionResult, result)
+        assertEquals(sessionResult.copy(streak = 0, weeklyTimeMins = 0), result)
         verify(studyDao).completeSession(any(), any(), any())
     }
 

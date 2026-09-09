@@ -38,5 +38,7 @@ class SessionCalculator {
 data class SessionResult(
     val sessionProgress: Double,
     val newProgress: Double,
-    val masteryLevel: MasteryLevel
+    val masteryLevel: MasteryLevel,
+    val streak: Int = 0,
+    val weeklyTimeMins: Int = 0
 )

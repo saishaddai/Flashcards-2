@@ -101,8 +101,6 @@ fun NavigationWrapper(
                         uiState = uiState,
                         deck = route.deck,
                         cardsReviewed = route.cardsReviewed,
-                        startTime = route.startTime,
-                        endTime = route.endTime,
                         totalTimeMillis = route.durationMillis,
                         onFinishSession = {
                             backStack.resetTo(DeckList)

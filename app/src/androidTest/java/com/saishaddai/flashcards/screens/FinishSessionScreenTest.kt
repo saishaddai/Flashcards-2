@@ -36,8 +36,6 @@ class FinishSessionScreenTest {
                     uiState = UiState.Loading,
                     deck = testDeck,
                     cardsReviewed = 0,
-                    startTime = 0L,
-                    endTime = 0L,
                     totalTimeMillis = 0L,
                     onFinishSession = {},
                     onShareSummary = { _ -> },
@@ -60,8 +58,6 @@ class FinishSessionScreenTest {
                     uiState = UiState.Error("Session Save Failed"),
                     deck = testDeck,
                     cardsReviewed = 0,
-                    startTime = 0L,
-                    endTime = 0L,
                     totalTimeMillis = 0L,
                     onFinishSession = {},
                     onShareSummary = { _ -> },
@@ -94,8 +90,6 @@ class FinishSessionScreenTest {
                     ),
                     deck = testDeck,
                     cardsReviewed = 10,
-                    startTime = 0L,
-                    endTime = 1000L,
                     totalTimeMillis = 1000L,
                     onFinishSession = { finishSessionCalled = true },
                     onShareSummary = { _ -> },
@@ -123,8 +117,6 @@ class FinishSessionScreenTest {
                 FinishSessionContent(
                     deck = testDeck,
                     cardsReviewed = 20,
-                    startTime = 0L,
-                    endTime = 1000L,
                     totalTimeMillis = 1000L,
                     sessionResult = result,
                     onBackToDecksClicked = {},
@@ -151,8 +143,6 @@ class FinishSessionScreenTest {
                 FinishSessionContent(
                     deck = testDeck,
                     cardsReviewed = 20,
-                    startTime = 0L,
-                    endTime = 1000L * 60 * 12, // 12 mins
                     totalTimeMillis = 1000L * 60 * 12,
                     sessionResult = null,
                     onBackToDecksClicked = {},
@@ -186,8 +176,6 @@ class FinishSessionScreenTest {
                 FinishSessionContent(
                     deck = testDeck,
                     cardsReviewed = 10,
-                    startTime = 0L,
-                    endTime = 1000L,
                     totalTimeMillis = 1000L,
                     sessionResult = null,
                     onBackToDecksClicked = { backClicked = true },
@@ -212,8 +200,6 @@ class FinishSessionScreenTest {
                 FinishSessionContent(
                     deck = testDeck,
                     cardsReviewed = 10,
-                    startTime = 0L,
-                    endTime = 1000L,
                     totalTimeMillis = 1000L,
                     sessionResult = null,
                     onBackToDecksClicked = { backClicked = true },
@@ -235,8 +221,6 @@ class FinishSessionScreenTest {
                 FinishSessionContent(
                     deck = testDeck,
                     cardsReviewed = 10,
-                    startTime = 0L,
-                    endTime = 1000L,
                     totalTimeMillis = 1000L,
                     sessionResult = null,
                     onBackToDecksClicked = {},

@@ -4,6 +4,8 @@ import com.saishaddai.flashcards.data.local.StudyDao
 import com.saishaddai.flashcards.model.DailyActivity
 import com.saishaddai.flashcards.model.Deck
 import com.saishaddai.flashcards.model.DeckMastery
+import com.saishaddai.flashcards.model.DeckType
+import com.saishaddai.flashcards.model.MasteryLevel
 import com.saishaddai.flashcards.model.StudySession
 import com.saishaddai.flashcards.repository.SettingsRepository
 import com.saishaddai.flashcards.repository.StudyRepository
@@ -89,9 +91,14 @@ class LocalStudyRepository(
         val totalMillis = studyDao.getStudyTimeMillisSince(calendar.timeInMillis) ?: 0L
         val weeklyTimeMins = (totalMillis / (1000 * 60)).toInt()
 
+        val totalProgress = studyDao.getTotalProgress() ?: 0.0
+        val globalAverage = totalProgress / DeckType.entries.size
+        val globalMasteryLevel = MasteryLevel.fromProgress(globalAverage.toInt())
+
         return result.copy(
             streak = updatedStreak,
-            weeklyTimeMins = weeklyTimeMins
+            weeklyTimeMins = weeklyTimeMins,
+            globalMasteryLevel = globalMasteryLevel
         )
     }
 

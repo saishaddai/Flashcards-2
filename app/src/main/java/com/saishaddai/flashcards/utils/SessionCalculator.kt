@@ -40,5 +40,6 @@ data class SessionResult(
     val newProgress: Double,
     val masteryLevel: MasteryLevel,
     val streak: Int = 0,
-    val weeklyTimeMins: Int = 0
+    val weeklyTimeMins: Int = 0,
+    val globalMasteryLevel: MasteryLevel? = null
 )

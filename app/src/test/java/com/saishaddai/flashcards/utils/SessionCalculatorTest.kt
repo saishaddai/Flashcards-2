@@ -28,6 +28,8 @@ class SessionCalculatorTest {
         assertEquals(100.0, result.sessionProgress, 0.01)
         assertEquals(100.0, result.newProgress, 0.01)
         assertEquals(MasteryLevel.MASTERED, result.masteryLevel)
+        assertEquals(0, result.streak)
+        assertEquals(0, result.weeklyTimeMins)
     }
 
     @Test
@@ -50,6 +52,7 @@ class SessionCalculatorTest {
         assertEquals(65.0, result.sessionProgress, 0.01)
         assertEquals(65.0, result.newProgress, 0.01)
         assertEquals(MasteryLevel.EXPERIENCED, result.masteryLevel)
+        assertEquals(0, result.streak)
     }
 
     @Test

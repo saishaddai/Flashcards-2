@@ -229,7 +229,7 @@ fun FinishSessionContent(
                     icon = Icons.Default.Star,
                     text = stringResource(
                         R.string.finish_current_level,
-                        sessionResult?.masteryLevel?.let { stringResource(it.nameRes) } ?: ""
+                        sessionResult?.globalMasteryLevel?.let { stringResource(it.nameRes) } ?: ""
                     ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))

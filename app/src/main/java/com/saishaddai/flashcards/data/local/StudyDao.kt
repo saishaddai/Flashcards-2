@@ -15,6 +15,9 @@ interface StudyDao {
     @Query("SELECT * FROM deck_mastery WHERE deckId = :deckId")
     suspend fun getDeckMastery(deckId: Int): DeckMastery?
 
+    @Query("SELECT SUM(progress) FROM deck_mastery")
+    suspend fun getTotalProgress(): Double?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDeckMastery(deckMastery: DeckMastery)
 

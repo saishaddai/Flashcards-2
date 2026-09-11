@@ -43,7 +43,7 @@ class FinishSessionViewModelTest {
     @Test
     fun `saveSession success updates uiState`() = runTest {
         val deck = Deck(1, "Test", "Test")
-        val result = SessionResult(10.0, 50.0, MasteryLevel.EXPERIENCED)
+        val result = SessionResult(10.0, 50.0, MasteryLevel.EXPERIENCED, globalMasteryLevel = MasteryLevel.NOVICE)
         whenever(studyRepository.completeSession(any(), any(), any(), any(), any())).thenReturn(result)
 
         viewModel.saveSession(deck, 10, 0, 1000, 1000)
@@ -73,7 +73,7 @@ class FinishSessionViewModelTest {
     fun `onBackToDecksClicked sets navigation flag`() = runTest {
         // First get to Success state
         val deck = Deck(1, "Test", "Test")
-        val result = SessionResult(10.0, 50.0, MasteryLevel.EXPERIENCED)
+        val result = SessionResult(10.0, 50.0, MasteryLevel.EXPERIENCED, globalMasteryLevel = MasteryLevel.NOVICE)
         whenever(studyRepository.completeSession(any(), any(), any(), any(), any())).thenReturn(result)
         viewModel.saveSession(deck, 10, 0, 1000, 1000)
         advanceUntilIdle()
@@ -87,7 +87,7 @@ class FinishSessionViewModelTest {
     fun `onNavigationHandled clears navigation flag`() = runTest {
         // First get to Success state with flag set
         val deck = Deck(1, "Test", "Test")
-        val result = SessionResult(10.0, 50.0, MasteryLevel.EXPERIENCED)
+        val result = SessionResult(10.0, 50.0, MasteryLevel.EXPERIENCED, globalMasteryLevel = MasteryLevel.NOVICE)
         whenever(studyRepository.completeSession(any(), any(), any(), any(), any())).thenReturn(result)
         viewModel.saveSession(deck, 10, 0, 1000, 1000)
         advanceUntilIdle()
